@@ -14,6 +14,9 @@ class Main extends Sprite
 	var inited:Bool;
 
 	/* ENTRY POINT */
+	// testing github
+	// still testing github
+	
 	
 	function resize(e) 
 	{
