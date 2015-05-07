@@ -19,6 +19,8 @@ class Main extends Sprite
 	{
 		if (!inited) init();
 		// else (resize or orientation change)
+
+		// Ima type stuff here, HI EWOUT
 	}
 	
 	function init() 
