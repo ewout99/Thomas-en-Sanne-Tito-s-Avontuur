@@ -24,6 +24,7 @@ class Main extends Sprite
 		// else (resize or orientation change)
 
 		// Ima type stuff here, HI EWOUT
+		// Ima type some more shit in here!!!! HIIIIIII
 	}
 	
 	function init() 
