@@ -34,6 +34,18 @@ class ApplicationMain {
 		var types = [];
 		
 		
+		urls.push ("img/Background.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/MenuButtonStart.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/MenuButtonStartHover.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
 		
 		if (config.assetsPrefix != null) {
 			

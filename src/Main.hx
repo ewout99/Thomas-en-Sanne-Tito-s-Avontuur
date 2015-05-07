@@ -1,8 +1,8 @@
 package ;
 
-import flash.display.Sprite;
-import flash.events.Event;
-import flash.Lib;
+import openfl.display.Sprite;
+import openfl.events.Event;
+import openfl.Lib;
 
 /**
  * ...
@@ -12,7 +12,7 @@ import flash.Lib;
 class Main extends Sprite 
 {
 	var inited:Bool;
-
+	var menu:MainMenu = new MainMenu ();
 	/* ENTRY POINT */
 	// testing github
 	// still testing github
@@ -22,7 +22,6 @@ class Main extends Sprite
 	{
 		if (!inited) init();
 		// else (resize or orientation change)
-
 		// Ima type stuff here, HI EWOUT
 		// Ima type some more shit in here!!!! HIIIIIII
 	}
@@ -31,11 +30,12 @@ class Main extends Sprite
 	{
 		if (inited) return;
 		inited = true;
-
+		trace ("2");
 		// (your code here)
+		createmenu ();
 		
-		// Stage:
-		// stage.stageWidth x stage.stageHeight @ stage.dpiScale
+		// Stage
+		// stage.stageWidth x stage.stageHeight @ stage.dpiScale;
 		
 		// Assets:
 		// nme.Assets.getBitmapData("img/assetname.jpg");
@@ -43,6 +43,11 @@ class Main extends Sprite
 
 	/* SETUP */
 
+	function createmenu()
+	{
+		addChild(menu);
+		trace ("1");
+	}
 	public function new() 
 	{
 		super();	

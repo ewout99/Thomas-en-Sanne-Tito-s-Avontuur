@@ -26,6 +26,12 @@ ApplicationMain.create = function() {
 	ApplicationMain.preloader.create(ApplicationMain.config);
 	var urls = [];
 	var types = [];
+	urls.push("img/Background.png");
+	types.push("IMAGE");
+	urls.push("img/MenuButtonStart.png");
+	types.push("IMAGE");
+	urls.push("img/MenuButtonStartHover.png");
+	types.push("IMAGE");
 	if(ApplicationMain.config.assetsPrefix != null) {
 		var _g1 = 0;
 		var _g = urls.length;
@@ -973,6 +979,7 @@ openfl.display.Sprite.prototype = $extend(openfl.display.DisplayObjectContainer.
 	,__class__: openfl.display.Sprite
 });
 var Main = function() {
+	this.menu = new MainMenu();
 	openfl.display.Sprite.call(this);
 	this.addEventListener(openfl.events.Event.ADDED_TO_STAGE,$bind(this,this.added));
 };
@@ -991,6 +998,12 @@ Main.prototype = $extend(openfl.display.Sprite.prototype,{
 	,init: function() {
 		if(this.inited) return;
 		this.inited = true;
+		haxe.Log.trace("2",{ fileName : "Main.hx", lineNumber : 33, className : "Main", methodName : "init"});
+		this.createmenu();
+	}
+	,createmenu: function() {
+		this.addChild(this.menu);
+		haxe.Log.trace("1",{ fileName : "Main.hx", lineNumber : 49, className : "Main", methodName : "createmenu"});
 	}
 	,added: function(e) {
 		this.removeEventListener(openfl.events.Event.ADDED_TO_STAGE,$bind(this,this.added));
@@ -1009,6 +1022,31 @@ DocumentClass.__name__ = ["DocumentClass"];
 DocumentClass.__super__ = Main;
 DocumentClass.prototype = $extend(Main.prototype,{
 	__class__: DocumentClass
+});
+var Button = function(image,imageHover) {
+	openfl.display.Sprite.call(this);
+	this.mainiamge = new openfl.display.Bitmap(openfl.Assets.getBitmapData(image));
+	this.mainImageHover = new openfl.display.Bitmap(openfl.Assets.getBitmapData(imageHover));
+	this.draw();
+	this.addEventListener(openfl.events.MouseEvent.MOUSE_OVER,$bind(this,this.OnMouseOver));
+	this.addEventListener(openfl.events.MouseEvent.MOUSE_OUT,$bind(this,this.OnMouseOut));
+};
+$hxClasses["Button"] = Button;
+Button.__name__ = ["Button"];
+Button.__super__ = openfl.display.Sprite;
+Button.prototype = $extend(openfl.display.Sprite.prototype,{
+	draw: function() {
+		this.addChild(this.mainiamge);
+	}
+	,OnMouseOver: function(e) {
+		this.removeChildren();
+		this.addChild(this.mainImageHover);
+	}
+	,OnMouseOut: function(e) {
+		this.removeChildren();
+		this.addChild(this.mainiamge);
+	}
+	,__class__: Button
 });
 var lime = {};
 lime.AssetLibrary = function() {
@@ -1073,6 +1111,15 @@ var DefaultAssetLibrary = function() {
 	this.className = new haxe.ds.StringMap();
 	lime.AssetLibrary.call(this);
 	var id;
+	id = "img/Background.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
+	id = "img/MenuButtonStart.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
+	id = "img/MenuButtonStartHover.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
 	var assetsPrefix = ApplicationMain.config.assetsPrefix;
 	if(assetsPrefix != null) {
 		var $it0 = this.path.keys();
@@ -1241,6 +1288,32 @@ HxOverrides.iter = function(a) {
 		return this.arr[this.cur++];
 	}};
 };
+var MainMenu = function() {
+	this.contact = new Button("img/MenuButtonStart.png","img/MenuButtonStartHover.png");
+	this.options = new Button("img/MenuButtonStart.png","img/MenuButtonStartHover.png");
+	this.levelSelect = new Button("img/MenuButtonStart.png","img/MenuButtonStartHover.png");
+	openfl.display.Sprite.call(this);
+	this.drawbackground();
+	this.drawmenu();
+};
+$hxClasses["MainMenu"] = MainMenu;
+MainMenu.__name__ = ["MainMenu"];
+MainMenu.__super__ = openfl.display.Sprite;
+MainMenu.prototype = $extend(openfl.display.Sprite.prototype,{
+	drawbackground: function() {
+		var background = new openfl.display.Bitmap(openfl.Assets.getBitmapData("img/Background.png"));
+		this.addChildAt(background,0);
+	}
+	,drawmenu: function() {
+		this.levelSelect.set_x((this.stage.stageWidth - this.levelSelect.get_width()) / 2);
+		this.levelSelect.set_y((this.stage.stageHeight - this.levelSelect.get_height()) / 2 - 25);
+		this.options.set_x((this.stage.stageWidth - this.options.get_width()) / 2);
+		this.options.set_y((this.stage.stageHeight - this.options.get_height()) / 2 + 25);
+		this.addChild(this.levelSelect);
+		this.addChild(this.options);
+	}
+	,__class__: MainMenu
+});
 var IMap = function() { };
 $hxClasses["IMap"] = IMap;
 IMap.__name__ = ["IMap"];
@@ -2948,6 +3021,7 @@ lime._backend.html5.HTML5Renderer.prototype = {
 		if(this.parent.window.backend.div != null) this.parent.context = lime.graphics.RenderContext.DOM(this.parent.window.backend.div); else if(this.parent.window.backend.canvas != null) {
 			var webgl = null;
 			if(webgl == null) this.parent.context = lime.graphics.RenderContext.CANVAS(this.parent.window.backend.canvas.getContext("2d")); else {
+				webgl = WebGLDebugUtils.makeDebugContext(webgl);
 				lime.graphics.opengl.GL.context = webgl;
 				this.parent.context = lime.graphics.RenderContext.OPENGL(lime.graphics.opengl.GL.context);
 			}
@@ -9534,6 +9608,341 @@ lime.utils.IMemoryRange.__name__ = ["lime","utils","IMemoryRange"];
 lime.utils.IMemoryRange.prototype = {
 	__class__: lime.utils.IMemoryRange
 };
+openfl.IAssetCache = function() { };
+$hxClasses["openfl.IAssetCache"] = openfl.IAssetCache;
+openfl.IAssetCache.__name__ = ["openfl","IAssetCache"];
+openfl.IAssetCache.prototype = {
+	__class__: openfl.IAssetCache
+};
+openfl.AssetCache = function() {
+	this.__enabled = true;
+	this.bitmapData = new haxe.ds.StringMap();
+	this.font = new haxe.ds.StringMap();
+	this.sound = new haxe.ds.StringMap();
+};
+$hxClasses["openfl.AssetCache"] = openfl.AssetCache;
+openfl.AssetCache.__name__ = ["openfl","AssetCache"];
+openfl.AssetCache.__interfaces__ = [openfl.IAssetCache];
+openfl.AssetCache.prototype = {
+	clear: function(prefix) {
+		if(prefix == null) {
+			this.bitmapData = new haxe.ds.StringMap();
+			this.font = new haxe.ds.StringMap();
+			this.sound = new haxe.ds.StringMap();
+		} else {
+			var keys = this.bitmapData.keys();
+			while( keys.hasNext() ) {
+				var key = keys.next();
+				if(StringTools.startsWith(key,prefix)) this.bitmapData.remove(key);
+			}
+			var keys1 = this.font.keys();
+			while( keys1.hasNext() ) {
+				var key1 = keys1.next();
+				if(StringTools.startsWith(key1,prefix)) this.font.remove(key1);
+			}
+			var keys2 = this.sound.keys();
+			while( keys2.hasNext() ) {
+				var key2 = keys2.next();
+				if(StringTools.startsWith(key2,prefix)) this.sound.remove(key2);
+			}
+		}
+	}
+	,getBitmapData: function(id) {
+		return this.bitmapData.get(id);
+	}
+	,getFont: function(id) {
+		return this.font.get(id);
+	}
+	,getSound: function(id) {
+		return this.sound.get(id);
+	}
+	,hasBitmapData: function(id) {
+		return this.bitmapData.exists(id);
+	}
+	,hasFont: function(id) {
+		return this.font.exists(id);
+	}
+	,hasSound: function(id) {
+		return this.sound.exists(id);
+	}
+	,removeBitmapData: function(id) {
+		return this.bitmapData.remove(id);
+	}
+	,removeFont: function(id) {
+		return this.font.remove(id);
+	}
+	,removeSound: function(id) {
+		return this.sound.remove(id);
+	}
+	,setBitmapData: function(id,bitmapData) {
+		this.bitmapData.set(id,bitmapData);
+	}
+	,setFont: function(id,font) {
+		this.font.set(id,font);
+	}
+	,setSound: function(id,sound) {
+		this.sound.set(id,sound);
+	}
+	,get_enabled: function() {
+		return this.__enabled;
+	}
+	,set_enabled: function(value) {
+		return this.__enabled = value;
+	}
+	,__class__: openfl.AssetCache
+};
+openfl.Assets = function() { };
+$hxClasses["openfl.Assets"] = openfl.Assets;
+openfl.Assets.__name__ = ["openfl","Assets"];
+openfl.Assets.addEventListener = function(type,listener,useCapture,priority,useWeakReference) {
+	if(useWeakReference == null) useWeakReference = false;
+	if(priority == null) priority = 0;
+	if(useCapture == null) useCapture = false;
+	openfl.Assets.dispatcher.addEventListener(type,listener,useCapture,priority,useWeakReference);
+};
+openfl.Assets.dispatchEvent = function(event) {
+	return openfl.Assets.dispatcher.dispatchEvent(event);
+};
+openfl.Assets.exists = function(id,type) {
+	return lime.Assets.exists(id,type);
+};
+openfl.Assets.getBitmapData = function(id,useCache) {
+	if(useCache == null) useCache = true;
+	if(useCache && openfl.Assets.cache.get_enabled() && openfl.Assets.cache.hasBitmapData(id)) {
+		var bitmapData = openfl.Assets.cache.getBitmapData(id);
+		if(openfl.Assets.isValidBitmapData(bitmapData)) return bitmapData;
+	}
+	var image = lime.Assets.getImage(id,false);
+	if(image != null) {
+		var bitmapData1 = openfl.display.BitmapData.fromImage(image);
+		if(useCache && openfl.Assets.cache.get_enabled()) openfl.Assets.cache.setBitmapData(id,bitmapData1);
+		return bitmapData1;
+	}
+	return null;
+};
+openfl.Assets.getBytes = function(id) {
+	return lime.Assets.getBytes(id);
+};
+openfl.Assets.getFont = function(id,useCache) {
+	if(useCache == null) useCache = true;
+	if(useCache && openfl.Assets.cache.get_enabled() && openfl.Assets.cache.hasFont(id)) return openfl.Assets.cache.getFont(id);
+	var limeFont = lime.Assets.getFont(id,false);
+	if(limeFont != null) {
+		var font = openfl.text.Font.__fromLimeFont(limeFont);
+		if(useCache && openfl.Assets.cache.get_enabled()) openfl.Assets.cache.setFont(id,font);
+		return font;
+	}
+	return new openfl.text.Font();
+};
+openfl.Assets.getLibrary = function(name) {
+	if(name == null || name == "") name = "default";
+	return lime.Assets.libraries.get(name);
+};
+openfl.Assets.getMovieClip = function(id) {
+	var libraryName = id.substring(0,id.indexOf(":"));
+	var symbolName;
+	var pos = id.indexOf(":") + 1;
+	symbolName = HxOverrides.substr(id,pos,null);
+	var library = openfl.Assets.getLibrary(libraryName);
+	if(library != null) {
+		if(library.exists(symbolName,"MOVIE_CLIP")) {
+			if(library.isLocal(symbolName,"MOVIE_CLIP")) return library.getMovieClip(symbolName); else haxe.Log.trace("[openfl.Assets] MovieClip asset \"" + id + "\" exists, but only asynchronously",{ fileName : "Assets.hx", lineNumber : 221, className : "openfl.Assets", methodName : "getMovieClip"});
+		} else haxe.Log.trace("[openfl.Assets] There is no MovieClip asset with an ID of \"" + id + "\"",{ fileName : "Assets.hx", lineNumber : 227, className : "openfl.Assets", methodName : "getMovieClip"});
+	} else haxe.Log.trace("[openfl.Assets] There is no asset library named \"" + libraryName + "\"",{ fileName : "Assets.hx", lineNumber : 233, className : "openfl.Assets", methodName : "getMovieClip"});
+	return null;
+};
+openfl.Assets.getMusic = function(id,useCache) {
+	if(useCache == null) useCache = true;
+	var path = lime.Assets.getPath(id);
+	if(path != null) return new openfl.media.Sound(new openfl.net.URLRequest(path));
+	return null;
+};
+openfl.Assets.getPath = function(id) {
+	return lime.Assets.getPath(id);
+};
+openfl.Assets.getSound = function(id,useCache) {
+	if(useCache == null) useCache = true;
+	if(useCache && openfl.Assets.cache.get_enabled() && openfl.Assets.cache.hasSound(id)) {
+		var sound = openfl.Assets.cache.getSound(id);
+		if(openfl.Assets.isValidSound(sound)) return sound;
+	}
+	var path = lime.Assets.getPath(id);
+	if(path != null) return new openfl.media.Sound(new openfl.net.URLRequest(path));
+	return null;
+};
+openfl.Assets.getText = function(id) {
+	return lime.Assets.getText(id);
+};
+openfl.Assets.hasEventListener = function(type) {
+	return openfl.Assets.dispatcher.hasEventListener(type);
+};
+openfl.Assets.isLocal = function(id,type,useCache) {
+	if(useCache == null) useCache = true;
+	if(useCache && openfl.Assets.cache.get_enabled()) {
+		if(type == "IMAGE" || type == null) {
+			if(openfl.Assets.cache.hasBitmapData(id)) return true;
+		}
+		if(type == "FONT" || type == null) {
+			if(openfl.Assets.cache.hasFont(id)) return true;
+		}
+		if(type == "SOUND" || type == "MUSIC" || type == null) {
+			if(openfl.Assets.cache.hasSound(id)) return true;
+		}
+	}
+	var libraryName = id.substring(0,id.indexOf(":"));
+	var symbolName;
+	var pos = id.indexOf(":") + 1;
+	symbolName = HxOverrides.substr(id,pos,null);
+	var library = openfl.Assets.getLibrary(libraryName);
+	if(library != null) return library.isLocal(symbolName,type);
+	return false;
+};
+openfl.Assets.isValidBitmapData = function(bitmapData) {
+	return bitmapData != null;
+	return true;
+};
+openfl.Assets.isValidSound = function(sound) {
+	return true;
+};
+openfl.Assets.list = function(type) {
+	return lime.Assets.list(type);
+};
+openfl.Assets.loadBitmapData = function(id,handler,useCache) {
+	if(useCache == null) useCache = true;
+	if(useCache && openfl.Assets.cache.get_enabled() && openfl.Assets.cache.hasBitmapData(id)) {
+		var bitmapData = openfl.Assets.cache.getBitmapData(id);
+		if(openfl.Assets.isValidBitmapData(bitmapData)) {
+			handler(bitmapData);
+			return;
+		}
+	}
+	lime.Assets.loadImage(id,function(image) {
+		if(image != null) {
+			var bitmapData1 = openfl.display.BitmapData.fromImage(image);
+			if(useCache && openfl.Assets.cache.get_enabled()) openfl.Assets.cache.setBitmapData(id,bitmapData1);
+			handler(bitmapData1);
+		}
+	},false);
+};
+openfl.Assets.loadBytes = function(id,handler) {
+	var libraryName = id.substring(0,id.indexOf(":"));
+	var symbolName;
+	var pos = id.indexOf(":") + 1;
+	symbolName = HxOverrides.substr(id,pos,null);
+	var library = openfl.Assets.getLibrary(libraryName);
+	if(library != null) {
+		if(library.exists(symbolName,"BINARY")) {
+			library.loadBytes(symbolName,handler);
+			return;
+		} else haxe.Log.trace("[openfl.Assets] There is no String or ByteArray asset with an ID of \"" + id + "\"",{ fileName : "Assets.hx", lineNumber : 546, className : "openfl.Assets", methodName : "loadBytes"});
+	} else haxe.Log.trace("[openfl.Assets] There is no asset library named \"" + libraryName + "\"",{ fileName : "Assets.hx", lineNumber : 552, className : "openfl.Assets", methodName : "loadBytes"});
+	handler(null);
+};
+openfl.Assets.loadFont = function(id,handler,useCache) {
+	if(useCache == null) useCache = true;
+	if(useCache && openfl.Assets.cache.get_enabled() && openfl.Assets.cache.hasFont(id)) {
+		handler(openfl.Assets.cache.getFont(id));
+		return;
+	}
+	var libraryName = id.substring(0,id.indexOf(":"));
+	var symbolName;
+	var pos = id.indexOf(":") + 1;
+	symbolName = HxOverrides.substr(id,pos,null);
+	var library = openfl.Assets.getLibrary(libraryName);
+	if(library != null) {
+		if(library.exists(symbolName,"FONT")) {
+			library.loadFont(symbolName,function(limeFont) {
+				var font = openfl.text.Font.__fromLimeFont(limeFont);
+				if(useCache && openfl.Assets.cache.get_enabled()) openfl.Assets.cache.setFont(id,font);
+				handler(font);
+			});
+			return;
+		} else haxe.Log.trace("[openfl.Assets] There is no Font asset with an ID of \"" + id + "\"",{ fileName : "Assets.hx", lineNumber : 611, className : "openfl.Assets", methodName : "loadFont"});
+	} else haxe.Log.trace("[openfl.Assets] There is no asset library named \"" + libraryName + "\"",{ fileName : "Assets.hx", lineNumber : 617, className : "openfl.Assets", methodName : "loadFont"});
+	handler(null);
+};
+openfl.Assets.loadLibrary = function(name,handler) {
+	lime.Assets.loadLibrary(name,handler);
+};
+openfl.Assets.loadMusic = function(id,handler,useCache) {
+	if(useCache == null) useCache = true;
+	handler(openfl.Assets.getMusic(id,useCache));
+};
+openfl.Assets.loadMovieClip = function(id,handler) {
+	var libraryName = id.substring(0,id.indexOf(":"));
+	var symbolName;
+	var pos = id.indexOf(":") + 1;
+	symbolName = HxOverrides.substr(id,pos,null);
+	var library = openfl.Assets.getLibrary(libraryName);
+	if(library != null) {
+		if(library.exists(symbolName,"MOVIE_CLIP")) {
+			library.loadMovieClip(symbolName,handler);
+			return;
+		} else haxe.Log.trace("[openfl.Assets] There is no MovieClip asset with an ID of \"" + id + "\"",{ fileName : "Assets.hx", lineNumber : 695, className : "openfl.Assets", methodName : "loadMovieClip"});
+	} else haxe.Log.trace("[openfl.Assets] There is no asset library named \"" + libraryName + "\"",{ fileName : "Assets.hx", lineNumber : 701, className : "openfl.Assets", methodName : "loadMovieClip"});
+	handler(null);
+};
+openfl.Assets.loadSound = function(id,handler,useCache) {
+	if(useCache == null) useCache = true;
+	handler(openfl.Assets.getSound(id,useCache));
+};
+openfl.Assets.loadText = function(id,handler) {
+	lime.Assets.loadText(id,handler);
+};
+openfl.Assets.registerLibrary = function(name,library) {
+	lime.Assets.registerLibrary(name,library);
+};
+openfl.Assets.removeEventListener = function(type,listener,capture) {
+	if(capture == null) capture = false;
+	openfl.Assets.dispatcher.removeEventListener(type,listener,capture);
+};
+openfl.Assets.resolveClass = function(name) {
+	return Type.resolveClass(name);
+};
+openfl.Assets.resolveEnum = function(name) {
+	var value = Type.resolveEnum(name);
+	return value;
+};
+openfl.Assets.unloadLibrary = function(name) {
+	lime.Assets.unloadLibrary(name);
+};
+openfl.Assets.library_onEvent = function(library,type) {
+	if(type == "change") {
+		openfl.Assets.cache.clear();
+		openfl.Assets.dispatchEvent(new openfl.events.Event(openfl.events.Event.CHANGE));
+	}
+};
+openfl.AssetLibrary = function() {
+	lime.AssetLibrary.call(this);
+};
+$hxClasses["openfl.AssetLibrary"] = openfl.AssetLibrary;
+openfl.AssetLibrary.__name__ = ["openfl","AssetLibrary"];
+openfl.AssetLibrary.__super__ = lime.AssetLibrary;
+openfl.AssetLibrary.prototype = $extend(lime.AssetLibrary.prototype,{
+	getMovieClip: function(id) {
+		return null;
+	}
+	,getMusic: function(id) {
+		return this.getSound(id);
+	}
+	,getSound: function(id) {
+		return null;
+	}
+	,loadMovieClip: function(id,handler) {
+		handler(this.getMovieClip(id));
+	}
+	,loadMusic: function(id,handler) {
+		handler(this.getMusic(id));
+	}
+	,loadSound: function(id,handler) {
+		handler(this.getSound(id));
+	}
+	,__class__: openfl.AssetLibrary
+});
+openfl._Assets = {};
+openfl._Assets.AssetType_Impl_ = function() { };
+$hxClasses["openfl._Assets.AssetType_Impl_"] = openfl._Assets.AssetType_Impl_;
+openfl._Assets.AssetType_Impl_.__name__ = ["openfl","_Assets","AssetType_Impl_"];
 openfl.display.MovieClip = function() {
 	openfl.display.Sprite.call(this);
 	this.__currentFrame = 0;
@@ -10007,24 +10416,29 @@ openfl.Memory._setPositionTemporarily = function(position,action) {
 	return value;
 };
 openfl.Memory.getByte = function(addr) {
+	if(addr < 0 || addr + 1 > openfl.Memory.len) throw "Bad address";
 	return openfl.Memory.gcRef.data.getInt8(addr);
 };
 openfl.Memory.getDouble = function(addr) {
+	if(addr < 0 || addr + 8 > openfl.Memory.len) throw "Bad address";
 	return openfl.Memory._setPositionTemporarily(addr,function() {
 		return openfl.Memory.gcRef.readDouble();
 	});
 };
 openfl.Memory.getFloat = function(addr) {
+	if(addr < 0 || addr + 4 > openfl.Memory.len) throw "Bad address";
 	return openfl.Memory._setPositionTemporarily(addr,function() {
 		return openfl.Memory.gcRef.readFloat();
 	});
 };
 openfl.Memory.getI32 = function(addr) {
+	if(addr < 0 || addr + 4 > openfl.Memory.len) throw "Bad address";
 	return openfl.Memory._setPositionTemporarily(addr,function() {
 		return openfl.Memory.gcRef.readInt();
 	});
 };
 openfl.Memory.getUI16 = function(addr) {
+	if(addr < 0 || addr + 2 > openfl.Memory.len) throw "Bad address";
 	return openfl.Memory._setPositionTemporarily(addr,function() {
 		return openfl.Memory.gcRef.readUnsignedShort();
 	});
@@ -10034,24 +10448,29 @@ openfl.Memory.select = function(inBytes) {
 	if(inBytes != null) openfl.Memory.len = inBytes.length; else openfl.Memory.len = 0;
 };
 openfl.Memory.setByte = function(addr,v) {
+	if(addr < 0 || addr + 1 > openfl.Memory.len) throw "Bad address";
 	openfl.Memory.gcRef.data.setUint8(addr,v);
 };
 openfl.Memory.setDouble = function(addr,v) {
+	if(addr < 0 || addr + 8 > openfl.Memory.len) throw "Bad address";
 	openfl.Memory._setPositionTemporarily(addr,function() {
 		openfl.Memory.gcRef.writeDouble(v);
 	});
 };
 openfl.Memory.setFloat = function(addr,v) {
+	if(addr < 0 || addr + 4 > openfl.Memory.len) throw "Bad address";
 	openfl.Memory._setPositionTemporarily(addr,function() {
 		openfl.Memory.gcRef.writeFloat(v);
 	});
 };
 openfl.Memory.setI16 = function(addr,v) {
+	if(addr < 0 || addr + 2 > openfl.Memory.len) throw "Bad address";
 	openfl.Memory._setPositionTemporarily(addr,function() {
 		openfl.Memory.gcRef.writeUnsignedShort(v);
 	});
 };
 openfl.Memory.setI32 = function(addr,v) {
+	if(addr < 0 || addr + 4 > openfl.Memory.len) throw "Bad address";
 	openfl.Memory._setPositionTemporarily(addr,function() {
 		openfl.Memory.gcRef.writeInt(v);
 	});
@@ -15964,9 +16383,7 @@ openfl.display.BitmapData.prototype = {
 				while(_g3 < _g2) {
 					var xx = _g3++;
 					position = (width_yy + xx) * 4;
-					pixelValue = openfl.Memory._setPositionTemporarily(position,function() {
-						return openfl.Memory.gcRef.readInt();
-					});
+					pixelValue = openfl.Memory.getI32(position);
 					pixelMask = pixelValue & mask;
 					i = openfl.display.BitmapData.__ucompare(pixelMask,thresholdMask);
 					test = false;
@@ -16026,9 +16443,7 @@ openfl.display.BitmapData.prototype = {
 				while(_g11 < dw) {
 					var xx1 = _g11++;
 					position1 = (xx1 + sx + (yy1 + sy) * sw) * 4;
-					pixelValue1 = openfl.Memory._setPositionTemporarily(position1,function() {
-						return openfl.Memory.gcRef.readInt();
-					});
+					pixelValue1 = openfl.Memory.getI32(position1);
 					pixelMask1 = pixelValue1 & mask;
 					i1 = openfl.display.BitmapData.__ucompare(pixelMask1,thresholdMask1);
 					test1 = false;
@@ -16036,9 +16451,7 @@ openfl.display.BitmapData.prototype = {
 					if(test1) {
 						openfl.Memory.setI32(position1,color);
 						hits1++;
-					} else if(copySource) openfl.Memory.setI32(position1,openfl.Memory._setPositionTemporarily(canvasMemory + position1,function() {
-						return openfl.Memory.gcRef.readInt();
-					}));
+					} else if(copySource) openfl.Memory.setI32(position1,openfl.Memory.getI32(canvasMemory + position1));
 				}
 			}
 			memory1.position = 0;
@@ -22308,6 +22721,31 @@ openfl.system.SecurityDomain.__name__ = ["openfl","system","SecurityDomain"];
 openfl.system.SecurityDomain.prototype = {
 	__class__: openfl.system.SecurityDomain
 };
+openfl.system.System = function() { };
+$hxClasses["openfl.system.System"] = openfl.system.System;
+openfl.system.System.__name__ = ["openfl","system","System"];
+openfl.system.System.totalMemory = null;
+openfl.system.System.vmVersion = null;
+openfl.system.System.exit = function(code) {
+	lime.system.System.exit(code);
+};
+openfl.system.System.gc = function() {
+};
+openfl.system.System.pause = function() {
+	throw "System.pause is currently not supported for HTML5";
+};
+openfl.system.System.resume = function() {
+	throw "System.resume is currently not supported for HTML5";
+};
+openfl.system.System.setClipboard = function(string) {
+	throw "System.setClipboard is currently not supported for HTML5";
+};
+openfl.system.System.get_totalMemory = function() {
+	return 0;
+};
+openfl.system.System.get_vmVersion = function() {
+	return "1.0.0";
+};
 openfl.text = {};
 openfl.text.AntiAliasType = $hxClasses["openfl.text.AntiAliasType"] = { __ename__ : true, __constructs__ : ["ADVANCED","NORMAL"] };
 openfl.text.AntiAliasType.ADVANCED = ["ADVANCED",0];
@@ -24514,6 +24952,16 @@ lime.utils.ByteArray.lime_byte_array_overwrite_file = lime.system.System.load("l
 lime.utils.ByteArray.lime_byte_array_read_file = lime.system.System.load("lime","lime_byte_array_read_file",1);
 lime.utils.ByteArray.lime_lzma_decode = lime.system.System.load("lime","lime_lzma_decode",1);
 lime.utils.ByteArray.lime_lzma_encode = lime.system.System.load("lime","lime_lzma_encode",1);
+openfl.Assets.cache = new openfl.AssetCache();
+openfl.Assets.dispatcher = new openfl.events.EventDispatcher();
+openfl._Assets.AssetType_Impl_.BINARY = "BINARY";
+openfl._Assets.AssetType_Impl_.FONT = "FONT";
+openfl._Assets.AssetType_Impl_.IMAGE = "IMAGE";
+openfl._Assets.AssetType_Impl_.MOVIE_CLIP = "MOVIE_CLIP";
+openfl._Assets.AssetType_Impl_.MUSIC = "MUSIC";
+openfl._Assets.AssetType_Impl_.SOUND = "SOUND";
+openfl._Assets.AssetType_Impl_.TEMPLATE = "TEMPLATE";
+openfl._Assets.AssetType_Impl_.TEXT = "TEXT";
 openfl.display.LoaderInfo.__rootURL = window.document.URL;
 openfl.system.ApplicationDomain.currentDomain = new openfl.system.ApplicationDomain(null);
 openfl.geom.Matrix.__identity = new openfl.geom.Matrix();
@@ -24714,6 +25162,7 @@ openfl.net.URLRequestMethod.OPTIONS = "OPTIONS";
 openfl.net.URLRequestMethod.POST = "POST";
 openfl.net.URLRequestMethod.PUT = "PUT";
 openfl.system.SecurityDomain.currentDomain = new openfl.system.SecurityDomain();
+openfl.system.System.useCodePage = false;
 openfl.text.Font.__registeredFonts = new Array();
 openfl.text.TextField.__utf8_endline_code = 10;
 openfl.text.TextField.ASCENDER = 0;
@@ -24827,3 +25276,5 @@ openfl.ui.Keyboard.RIGHTBRACKET = 221;
 openfl.ui.Keyboard.QUOTE = 222;
 ApplicationMain.main();
 })(typeof window != "undefined" ? window : exports);
+
+//# sourceMappingURL=ThomasenSanneTitosAvontuur.js.map
