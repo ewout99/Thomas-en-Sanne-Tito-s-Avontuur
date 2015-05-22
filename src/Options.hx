@@ -1,15 +1,18 @@
 package ;
+import openfl.display.Sprite;
 
 /**
  * Options screen
  * Change volums etc.
  * @author Ezzz
  */
-class Options
+class Options extends Sprite
 {
 
 	public function new() 
 	{
+		super();
+		
 		
 	}
 	

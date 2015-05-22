@@ -47,10 +47,10 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		className.set ("img/Background.png", __ASSET__img_background_png);
 		type.set ("img/Background.png", AssetType.IMAGE);
-		className.set ("img/MenuButtonStart.png", __ASSET__img_menubuttonstart_png);
-		type.set ("img/MenuButtonStart.png", AssetType.IMAGE);
-		className.set ("img/MenuButtonStartHover.png", __ASSET__img_menubuttonstarthover_png);
-		type.set ("img/MenuButtonStartHover.png", AssetType.IMAGE);
+		className.set ("img/Button.png", __ASSET__img_button_png);
+		type.set ("img/Button.png", AssetType.IMAGE);
+		className.set ("img/ButtonHover.png", __ASSET__img_buttonhover_png);
+		type.set ("img/ButtonHover.png", AssetType.IMAGE);
 		
 		
 		#elseif html5
@@ -60,11 +60,11 @@ class DefaultAssetLibrary extends AssetLibrary {
 		path.set (id, id);
 		
 		type.set (id, AssetType.IMAGE);
-		id = "img/MenuButtonStart.png";
+		id = "img/Button.png";
 		path.set (id, id);
 		
 		type.set (id, AssetType.IMAGE);
-		id = "img/MenuButtonStartHover.png";
+		id = "img/ButtonHover.png";
 		path.set (id, id);
 		
 		type.set (id, AssetType.IMAGE);
@@ -94,11 +94,11 @@ class DefaultAssetLibrary extends AssetLibrary {
 		className.set ("img/Background.png", __ASSET__img_background_png);
 		type.set ("img/Background.png", AssetType.IMAGE);
 		
-		className.set ("img/MenuButtonStart.png", __ASSET__img_menubuttonstart_png);
-		type.set ("img/MenuButtonStart.png", AssetType.IMAGE);
+		className.set ("img/Button.png", __ASSET__img_button_png);
+		type.set ("img/Button.png", AssetType.IMAGE);
 		
-		className.set ("img/MenuButtonStartHover.png", __ASSET__img_menubuttonstarthover_png);
-		type.set ("img/MenuButtonStartHover.png", AssetType.IMAGE);
+		className.set ("img/ButtonHover.png", __ASSET__img_buttonhover_png);
+		type.set ("img/ButtonHover.png", AssetType.IMAGE);
 		
 		
 		if (useManifest) {
@@ -701,8 +701,8 @@ class DefaultAssetLibrary extends AssetLibrary {
 #if flash
 
 @:keep @:bind #if display private #end class __ASSET__img_background_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
-@:keep @:bind #if display private #end class __ASSET__img_menubuttonstart_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
-@:keep @:bind #if display private #end class __ASSET__img_menubuttonstarthover_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_button_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_buttonhover_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 
 
 #elseif html5
@@ -720,8 +720,8 @@ class DefaultAssetLibrary extends AssetLibrary {
 
 
 @:image("assets/img/Background.png") #if display private #end class __ASSET__img_background_png extends lime.graphics.Image {}
-@:image("assets/img/MenuButtonStart.png") #if display private #end class __ASSET__img_menubuttonstart_png extends lime.graphics.Image {}
-@:image("assets/img/MenuButtonStartHover.png") #if display private #end class __ASSET__img_menubuttonstarthover_png extends lime.graphics.Image {}
+@:image("assets/img/Button.png") #if display private #end class __ASSET__img_button_png extends lime.graphics.Image {}
+@:image("assets/img/ButtonHover.png") #if display private #end class __ASSET__img_buttonhover_png extends lime.graphics.Image {}
 
 
 

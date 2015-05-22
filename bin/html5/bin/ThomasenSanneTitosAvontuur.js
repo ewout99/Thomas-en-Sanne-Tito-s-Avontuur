@@ -28,9 +28,9 @@ ApplicationMain.create = function() {
 	var types = [];
 	urls.push("img/Background.png");
 	types.push("IMAGE");
-	urls.push("img/MenuButtonStart.png");
+	urls.push("img/Button.png");
 	types.push("IMAGE");
-	urls.push("img/MenuButtonStartHover.png");
+	urls.push("img/ButtonHover.png");
 	types.push("IMAGE");
 	if(ApplicationMain.config.assetsPrefix != null) {
 		var _g1 = 0;
@@ -54,7 +54,7 @@ ApplicationMain.init = function() {
 	if(loaded == total) ApplicationMain.start();
 };
 ApplicationMain.main = function() {
-	ApplicationMain.config = { antialiasing : 0, background : 0, borderless : false, company : "Ezzz", depthBuffer : false, file : "ThomasenSanneTitosAvontuur", fps : 60, fullscreen : false, height : 480, orientation : "", packageName : "ThomasenSanneTitosAvontuur", resizable : true, stencilBuffer : true, title : "Thomas-en-Sanne-Tito-s-Avontuur", version : "1.0.0", vsync : false, width : 800};
+	ApplicationMain.config = { antialiasing : 0, background : 0, borderless : false, company : "Ezzz", depthBuffer : false, file : "ThomasenSanneTitosAvontuur", fps : 60, fullscreen : false, height : 720, orientation : "", packageName : "ThomasenSanneTitosAvontuur", resizable : true, stencilBuffer : true, title : "Thomas-en-Sanne-Tito-s-Avontuur", version : "1.0.0", vsync : false, width : 1280};
 };
 ApplicationMain.start = function() {
 	var hasMain = false;
@@ -979,12 +979,19 @@ openfl.display.Sprite.prototype = $extend(openfl.display.DisplayObjectContainer.
 	,__class__: openfl.display.Sprite
 });
 var Main = function() {
-	this.menu = new MainMenu();
+	this.sound = new Sound();
+	this.music = new Music();
+	this.musicvolume = 1;
+	this.soundvolume = 1;
 	openfl.display.Sprite.call(this);
 	this.addEventListener(openfl.events.Event.ADDED_TO_STAGE,$bind(this,this.added));
 };
 $hxClasses["Main"] = Main;
 Main.__name__ = ["Main"];
+Main.instance = null;
+Main.getInstance = function() {
+	return Main.instance;
+};
 Main.main = function() {
 	openfl.Lib.current.stage.align = openfl.display.StageAlign.TOP_LEFT;
 	openfl.Lib.current.stage.scaleMode = openfl.display.StageScaleMode.NO_SCALE;
@@ -998,12 +1005,28 @@ Main.prototype = $extend(openfl.display.Sprite.prototype,{
 	,init: function() {
 		if(this.inited) return;
 		this.inited = true;
-		haxe.Log.trace("2",{ fileName : "Main.hx", lineNumber : 33, className : "Main", methodName : "init"});
-		this.createmenu();
+		Main.instance = this;
+		this.switchScreen("main menu screen");
+		this.addChild(this.sound);
+		this.addChild(this.music);
 	}
-	,createmenu: function() {
-		this.addChild(this.menu);
-		haxe.Log.trace("1",{ fileName : "Main.hx", lineNumber : 49, className : "Main", methodName : "createmenu"});
+	,switchScreen: function(toScreen) {
+		if(this.currentScreen != null) this.removeChild(this.currentScreen);
+		switch(toScreen) {
+		case "main menu screen":
+			this.currentScreen = new MainMenu();
+			break;
+		case "contact screen":
+			this.currentScreen = new Contact();
+			break;
+		case "char select screen":
+			this.currentScreen = new CharachterSelect();
+			break;
+		case "level select screen":
+			this.currentScreen = new LevelSelect();
+			break;
+		}
+		this.addChild(this.currentScreen);
 	}
 	,added: function(e) {
 		this.removeEventListener(openfl.events.Event.ADDED_TO_STAGE,$bind(this,this.added));
@@ -1023,10 +1046,17 @@ DocumentClass.__super__ = Main;
 DocumentClass.prototype = $extend(Main.prototype,{
 	__class__: DocumentClass
 });
-var Button = function(image,imageHover) {
+var Button = function(text,image,imageHover) {
+	this.buttonTextFormat = new openfl.text.TextFormat("Arial",24,16711935,true,false,false,null,null,openfl.text.TextFormatAlign.CENTER);
 	openfl.display.Sprite.call(this);
+	this.buttonText = new openfl.text.TextField();
+	this.buttonText.set_defaultTextFormat(this.buttonTextFormat);
+	this.buttonText.set_text(text);
+	this.buttonText.selectable = false;
 	this.mainiamge = new openfl.display.Bitmap(openfl.Assets.getBitmapData(image));
 	this.mainImageHover = new openfl.display.Bitmap(openfl.Assets.getBitmapData(imageHover));
+	this.buttonText.set_x(this.mainiamge.get_x() + (this.mainiamge.get_width() - this.buttonText.get_width()) / 2);
+	this.buttonText.set_y(this.mainiamge.get_y() + (this.mainiamge.get_width() - this.mainiamge.get_width()) / 2);
 	this.draw();
 	this.addEventListener(openfl.events.MouseEvent.MOUSE_OVER,$bind(this,this.OnMouseOver));
 	this.addEventListener(openfl.events.MouseEvent.MOUSE_OUT,$bind(this,this.OnMouseOut));
@@ -1037,16 +1067,37 @@ Button.__super__ = openfl.display.Sprite;
 Button.prototype = $extend(openfl.display.Sprite.prototype,{
 	draw: function() {
 		this.addChild(this.mainiamge);
+		this.addChild(this.buttonText);
 	}
 	,OnMouseOver: function(e) {
 		this.removeChildren();
 		this.addChild(this.mainImageHover);
+		this.addChild(this.buttonText);
 	}
 	,OnMouseOut: function(e) {
 		this.removeChildren();
 		this.addChild(this.mainiamge);
+		this.addChild(this.buttonText);
 	}
 	,__class__: Button
+});
+var CharachterSelect = function() {
+	openfl.display.Sprite.call(this);
+};
+$hxClasses["CharachterSelect"] = CharachterSelect;
+CharachterSelect.__name__ = ["CharachterSelect"];
+CharachterSelect.__super__ = openfl.display.Sprite;
+CharachterSelect.prototype = $extend(openfl.display.Sprite.prototype,{
+	__class__: CharachterSelect
+});
+var Contact = function() {
+	openfl.display.Sprite.call(this);
+};
+$hxClasses["Contact"] = Contact;
+Contact.__name__ = ["Contact"];
+Contact.__super__ = openfl.display.Sprite;
+Contact.prototype = $extend(openfl.display.Sprite.prototype,{
+	__class__: Contact
 });
 var lime = {};
 lime.AssetLibrary = function() {
@@ -1114,10 +1165,10 @@ var DefaultAssetLibrary = function() {
 	id = "img/Background.png";
 	this.path.set(id,id);
 	this.type.set(id,"IMAGE");
-	id = "img/MenuButtonStart.png";
+	id = "img/Button.png";
 	this.path.set(id,id);
 	this.type.set(id,"IMAGE");
-	id = "img/MenuButtonStartHover.png";
+	id = "img/ButtonHover.png";
 	this.path.set(id,id);
 	this.type.set(id,"IMAGE");
 	var assetsPrefix = ApplicationMain.config.assetsPrefix;
@@ -1288,29 +1339,79 @@ HxOverrides.iter = function(a) {
 		return this.arr[this.cur++];
 	}};
 };
-var MainMenu = function() {
-	this.contact = new Button("img/MenuButtonStart.png","img/MenuButtonStartHover.png");
-	this.options = new Button("img/MenuButtonStart.png","img/MenuButtonStartHover.png");
-	this.levelSelect = new Button("img/MenuButtonStart.png","img/MenuButtonStartHover.png");
+var LevelSelect = function() {
 	openfl.display.Sprite.call(this);
-	this.drawbackground();
-	this.drawmenu();
+};
+$hxClasses["LevelSelect"] = LevelSelect;
+LevelSelect.__name__ = ["LevelSelect"];
+LevelSelect.__super__ = openfl.display.Sprite;
+LevelSelect.prototype = $extend(openfl.display.Sprite.prototype,{
+	__class__: LevelSelect
+});
+var MainMenu = function() {
+	this.Y = openfl.Lib.current.stage.stageHeight;
+	this.X = openfl.Lib.current.stage.stageWidth;
+	this.start = new Button("Start game","img/Button.png","img/ButtonHover.png");
+	this.exit = new Button("Exit game","img/Button.png","img/ButtonHover.png");
+	this.contact = new Button("Contact","img/Button.png","img/ButtonHover.png");
+	this.options = new Button("Options","img/Button.png","img/ButtonHover.png");
+	this.levelSelect = new Button("Level Select","img/Button.png","img/ButtonHover.png");
+	openfl.display.Sprite.call(this);
+	this.addEventListener(openfl.events.Event.ADDED_TO_STAGE,$bind(this,this.init));
 };
 $hxClasses["MainMenu"] = MainMenu;
 MainMenu.__name__ = ["MainMenu"];
 MainMenu.__super__ = openfl.display.Sprite;
 MainMenu.prototype = $extend(openfl.display.Sprite.prototype,{
-	drawbackground: function() {
+	init: function(event) {
+		this.removeEventListener(openfl.events.Event.ADDED_TO_STAGE,$bind(this,this.init));
+		this.drawbackground();
+		this.drawmenu();
+	}
+	,drawbackground: function() {
 		var background = new openfl.display.Bitmap(openfl.Assets.getBitmapData("img/Background.png"));
 		this.addChildAt(background,0);
 	}
 	,drawmenu: function() {
-		this.levelSelect.set_x((this.stage.stageWidth - this.levelSelect.get_width()) / 2);
-		this.levelSelect.set_y((this.stage.stageHeight - this.levelSelect.get_height()) / 2 - 25);
-		this.options.set_x((this.stage.stageWidth - this.options.get_width()) / 2);
-		this.options.set_y((this.stage.stageHeight - this.options.get_height()) / 2 + 25);
+		this.addChild(this.start);
 		this.addChild(this.levelSelect);
 		this.addChild(this.options);
+		this.addChild(this.contact);
+		this.addChild(this.exit);
+		this.start.set_x(this.X / 2 - this.start.get_width() / 2);
+		this.start.set_y(150);
+		this.levelSelect.set_x(this.X / 2 - this.levelSelect.get_width() / 2);
+		this.levelSelect.set_y(250);
+		this.options.set_x(this.X / 2 - this.options.get_width() / 2);
+		this.options.set_y(350);
+		this.contact.set_x(this.X / 2 - this.contact.get_width() / 2);
+		this.contact.set_y(450);
+		this.exit.set_x(this.X / 2 - this.exit.get_width() / 2);
+		this.exit.set_y(550);
+		this.start.addEventListener(openfl.events.MouseEvent.CLICK,$bind(this,this.click));
+		this.levelSelect.addEventListener(openfl.events.MouseEvent.CLICK,$bind(this,this.click));
+		this.options.addEventListener(openfl.events.MouseEvent.CLICK,$bind(this,this.click));
+		this.contact.addEventListener(openfl.events.MouseEvent.CLICK,$bind(this,this.click));
+		this.exit.addEventListener(openfl.events.MouseEvent.CLICK,$bind(this,this.click));
+	}
+	,click: function(event) {
+		if(event.currentTarget == this.start) {
+			haxe.Log.trace("Starting game",{ fileName : "MainMenu.hx", lineNumber : 77, className : "MainMenu", methodName : "click"});
+			Main.getInstance().switchScreen("char select screen");
+		}
+		if(event.currentTarget == this.levelSelect) {
+			Main.getInstance().switchScreen("level select screen");
+			haxe.Log.trace("working",{ fileName : "MainMenu.hx", lineNumber : 85, className : "MainMenu", methodName : "click"});
+		}
+		if(event.currentTarget == this.options) {
+			Main.getInstance().switchScreen("options screen");
+			haxe.Log.trace("Mabye working",{ fileName : "MainMenu.hx", lineNumber : 92, className : "MainMenu", methodName : "click"});
+		}
+		if(event.currentTarget == this.contact) {
+			Main.getInstance().switchScreen("contact screen");
+			haxe.Log.trace("Contact",{ fileName : "MainMenu.hx", lineNumber : 98, className : "MainMenu", methodName : "click"});
+		}
+		if(event.currentTarget == this.exit) haxe.Log.trace("Exit",{ fileName : "MainMenu.hx", lineNumber : 103, className : "MainMenu", methodName : "click"});
 	}
 	,__class__: MainMenu
 });
@@ -1321,6 +1422,15 @@ IMap.prototype = {
 	__class__: IMap
 };
 Math.__name__ = ["Math"];
+var Music = function() {
+	openfl.display.Sprite.call(this);
+};
+$hxClasses["Music"] = Music;
+Music.__name__ = ["Music"];
+Music.__super__ = openfl.display.Sprite;
+Music.prototype = $extend(openfl.display.Sprite.prototype,{
+	__class__: Music
+});
 var NMEPreloader = function() {
 	openfl.display.Sprite.call(this);
 	var backgroundColor = this.getBackgroundColor();
@@ -1357,11 +1467,11 @@ NMEPreloader.prototype = $extend(openfl.display.Sprite.prototype,{
 		return 0;
 	}
 	,getHeight: function() {
-		var height = 480;
+		var height = 720;
 		if(height > 0) return height; else return openfl.Lib.current.stage.stageHeight;
 	}
 	,getWidth: function() {
-		var width = 800;
+		var width = 1280;
 		if(width > 0) return width; else return openfl.Lib.current.stage.stageWidth;
 	}
 	,onInit: function() {
@@ -1430,6 +1540,15 @@ Reflect.makeVarArgs = function(f) {
 		return f(a);
 	};
 };
+var Sound = function() {
+	openfl.display.Sprite.call(this);
+};
+$hxClasses["Sound"] = Sound;
+Sound.__name__ = ["Sound"];
+Sound.__super__ = openfl.display.Sprite;
+Sound.prototype = $extend(openfl.display.Sprite.prototype,{
+	__class__: Sound
+});
 var Std = function() { };
 $hxClasses["Std"] = Std;
 Std.__name__ = ["Std"];
@@ -3021,7 +3140,6 @@ lime._backend.html5.HTML5Renderer.prototype = {
 		if(this.parent.window.backend.div != null) this.parent.context = lime.graphics.RenderContext.DOM(this.parent.window.backend.div); else if(this.parent.window.backend.canvas != null) {
 			var webgl = null;
 			if(webgl == null) this.parent.context = lime.graphics.RenderContext.CANVAS(this.parent.window.backend.canvas.getContext("2d")); else {
-				webgl = WebGLDebugUtils.makeDebugContext(webgl);
 				lime.graphics.opengl.GL.context = webgl;
 				this.parent.context = lime.graphics.RenderContext.OPENGL(lime.graphics.opengl.GL.context);
 			}
@@ -10416,29 +10534,24 @@ openfl.Memory._setPositionTemporarily = function(position,action) {
 	return value;
 };
 openfl.Memory.getByte = function(addr) {
-	if(addr < 0 || addr + 1 > openfl.Memory.len) throw "Bad address";
 	return openfl.Memory.gcRef.data.getInt8(addr);
 };
 openfl.Memory.getDouble = function(addr) {
-	if(addr < 0 || addr + 8 > openfl.Memory.len) throw "Bad address";
 	return openfl.Memory._setPositionTemporarily(addr,function() {
 		return openfl.Memory.gcRef.readDouble();
 	});
 };
 openfl.Memory.getFloat = function(addr) {
-	if(addr < 0 || addr + 4 > openfl.Memory.len) throw "Bad address";
 	return openfl.Memory._setPositionTemporarily(addr,function() {
 		return openfl.Memory.gcRef.readFloat();
 	});
 };
 openfl.Memory.getI32 = function(addr) {
-	if(addr < 0 || addr + 4 > openfl.Memory.len) throw "Bad address";
 	return openfl.Memory._setPositionTemporarily(addr,function() {
 		return openfl.Memory.gcRef.readInt();
 	});
 };
 openfl.Memory.getUI16 = function(addr) {
-	if(addr < 0 || addr + 2 > openfl.Memory.len) throw "Bad address";
 	return openfl.Memory._setPositionTemporarily(addr,function() {
 		return openfl.Memory.gcRef.readUnsignedShort();
 	});
@@ -10448,29 +10561,24 @@ openfl.Memory.select = function(inBytes) {
 	if(inBytes != null) openfl.Memory.len = inBytes.length; else openfl.Memory.len = 0;
 };
 openfl.Memory.setByte = function(addr,v) {
-	if(addr < 0 || addr + 1 > openfl.Memory.len) throw "Bad address";
 	openfl.Memory.gcRef.data.setUint8(addr,v);
 };
 openfl.Memory.setDouble = function(addr,v) {
-	if(addr < 0 || addr + 8 > openfl.Memory.len) throw "Bad address";
 	openfl.Memory._setPositionTemporarily(addr,function() {
 		openfl.Memory.gcRef.writeDouble(v);
 	});
 };
 openfl.Memory.setFloat = function(addr,v) {
-	if(addr < 0 || addr + 4 > openfl.Memory.len) throw "Bad address";
 	openfl.Memory._setPositionTemporarily(addr,function() {
 		openfl.Memory.gcRef.writeFloat(v);
 	});
 };
 openfl.Memory.setI16 = function(addr,v) {
-	if(addr < 0 || addr + 2 > openfl.Memory.len) throw "Bad address";
 	openfl.Memory._setPositionTemporarily(addr,function() {
 		openfl.Memory.gcRef.writeUnsignedShort(v);
 	});
 };
 openfl.Memory.setI32 = function(addr,v) {
-	if(addr < 0 || addr + 4 > openfl.Memory.len) throw "Bad address";
 	openfl.Memory._setPositionTemporarily(addr,function() {
 		openfl.Memory.gcRef.writeInt(v);
 	});
@@ -16383,7 +16491,9 @@ openfl.display.BitmapData.prototype = {
 				while(_g3 < _g2) {
 					var xx = _g3++;
 					position = (width_yy + xx) * 4;
-					pixelValue = openfl.Memory.getI32(position);
+					pixelValue = openfl.Memory._setPositionTemporarily(position,function() {
+						return openfl.Memory.gcRef.readInt();
+					});
 					pixelMask = pixelValue & mask;
 					i = openfl.display.BitmapData.__ucompare(pixelMask,thresholdMask);
 					test = false;
@@ -16443,7 +16553,9 @@ openfl.display.BitmapData.prototype = {
 				while(_g11 < dw) {
 					var xx1 = _g11++;
 					position1 = (xx1 + sx + (yy1 + sy) * sw) * 4;
-					pixelValue1 = openfl.Memory.getI32(position1);
+					pixelValue1 = openfl.Memory._setPositionTemporarily(position1,function() {
+						return openfl.Memory.gcRef.readInt();
+					});
 					pixelMask1 = pixelValue1 & mask;
 					i1 = openfl.display.BitmapData.__ucompare(pixelMask1,thresholdMask1);
 					test1 = false;
@@ -16451,7 +16563,9 @@ openfl.display.BitmapData.prototype = {
 					if(test1) {
 						openfl.Memory.setI32(position1,color);
 						hits1++;
-					} else if(copySource) openfl.Memory.setI32(position1,openfl.Memory.getI32(canvasMemory + position1));
+					} else if(copySource) openfl.Memory.setI32(position1,openfl.Memory._setPositionTemporarily(canvasMemory + position1,function() {
+						return openfl.Memory.gcRef.readInt();
+					}));
 				}
 			}
 			memory1.position = 0;
@@ -22721,31 +22835,6 @@ openfl.system.SecurityDomain.__name__ = ["openfl","system","SecurityDomain"];
 openfl.system.SecurityDomain.prototype = {
 	__class__: openfl.system.SecurityDomain
 };
-openfl.system.System = function() { };
-$hxClasses["openfl.system.System"] = openfl.system.System;
-openfl.system.System.__name__ = ["openfl","system","System"];
-openfl.system.System.totalMemory = null;
-openfl.system.System.vmVersion = null;
-openfl.system.System.exit = function(code) {
-	lime.system.System.exit(code);
-};
-openfl.system.System.gc = function() {
-};
-openfl.system.System.pause = function() {
-	throw "System.pause is currently not supported for HTML5";
-};
-openfl.system.System.resume = function() {
-	throw "System.resume is currently not supported for HTML5";
-};
-openfl.system.System.setClipboard = function(string) {
-	throw "System.setClipboard is currently not supported for HTML5";
-};
-openfl.system.System.get_totalMemory = function() {
-	return 0;
-};
-openfl.system.System.get_vmVersion = function() {
-	return "1.0.0";
-};
 openfl.text = {};
 openfl.text.AntiAliasType = $hxClasses["openfl.text.AntiAliasType"] = { __ename__ : true, __constructs__ : ["ADVANCED","NORMAL"] };
 openfl.text.AntiAliasType.ADVANCED = ["ADVANCED",0];
@@ -24133,6 +24222,11 @@ if(window.createjs != null) createjs.Sound.alternateExtensions = ["ogg","mp3","w
 openfl.display.DisplayObject.__instanceCount = 0;
 openfl.display.DisplayObject.__worldRenderDirty = 0;
 openfl.display.DisplayObject.__worldTransformDirty = 0;
+Main.MAIN_MENU_SCREEN = "main menu screen";
+Main.CHAR_SELECT_SCREEN = "char select screen";
+Main.CONTACT_SCREEN = "contact screen";
+Main.LEVEL_SELECT_SCREEN = "level select screen";
+Main.OPTIONS_SCREEN = "options screen";
 haxe.ds.ObjectMap.count = 0;
 js.Boot.__toStr = {}.toString;
 lime.Assets.cache = new lime.AssetCache();
@@ -25162,7 +25256,6 @@ openfl.net.URLRequestMethod.OPTIONS = "OPTIONS";
 openfl.net.URLRequestMethod.POST = "POST";
 openfl.net.URLRequestMethod.PUT = "PUT";
 openfl.system.SecurityDomain.currentDomain = new openfl.system.SecurityDomain();
-openfl.system.System.useCodePage = false;
 openfl.text.Font.__registeredFonts = new Array();
 openfl.text.TextField.__utf8_endline_code = 10;
 openfl.text.TextField.ASCENDER = 0;
@@ -25276,5 +25369,3 @@ openfl.ui.Keyboard.RIGHTBRACKET = 221;
 openfl.ui.Keyboard.QUOTE = 222;
 ApplicationMain.main();
 })(typeof window != "undefined" ? window : exports);
-
-//# sourceMappingURL=ThomasenSanneTitosAvontuur.js.map

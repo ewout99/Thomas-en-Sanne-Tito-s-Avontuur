@@ -12,10 +12,23 @@ import openfl.Lib;
 class Main extends Sprite 
 {
 	var inited:Bool;
-	var menu:MainMenu = new MainMenu ();
-	/* ENTRY POINT */
-	// testing github
-	// still testing github
+	public var soundvolume:Float = 1;
+	public var musicvolume:Float = 1;
+	// var menu:MainMenu = new MainMenu ();
+	// var levelselect:LevelSelect = new LevelSelect ();
+	// var contact:Contact = new Contact ();
+	var music:Music = new Music();
+	var sound:Sound = new Sound();
+	// var charSelect:CharachterSelect = new CharachterSelect();
+	// var options:Options = new Options();
+	public static inline var MAIN_MENU_SCREEN:String = "main menu screen";
+	public static inline var CHAR_SELECT_SCREEN:String = "char select screen";
+	public static inline var CONTACT_SCREEN:String = "contact screen";
+	public static inline var LEVEL_SELECT_SCREEN:String = "level select screen";
+	public static inline var OPTIONS_SCREEN:String = "options screen";
+	
+	var currentScreen:Sprite;
+	public static var instance:Main;
 	
 	
 	function resize(e) 
@@ -28,30 +41,57 @@ class Main extends Sprite
 	{
 		if (inited) return;
 		inited = true;
-		trace ("2");
 		// (your code here)
-		createmenu ();
-		
-		// Stage
-		// stage.stageWidth x stage.stageHeight @ stage.dpiScale;
-		
-		// Assets:
-		// nme.Assets.getBitmapData("img/assetname.jpg");
+		instance = this;
+		switchScreen (Main.MAIN_MENU_SCREEN);
+		// createmenu ();
+		addChild (sound);
+		addChild (music);
 	}
-
-	/* SETUP */
-
-	function createmenu()
+	
+	/**
+	 * 
+	 * Singleton design pattern.
+	 */
+	public static function getInstance():Main
 	{
-		addChild(menu);
-		trace ("1");
+		return instance;
 	}
+	/**
+	 * Remove current screen
+	 * Switch to requested screen
+	 */
+	public function switchScreen (toScreen:String)
+	{
+		if ( currentScreen != null )
+		{
+			removeChild (currentScreen);
+			
+		}
+		switch ( toScreen)
+		{
+			case Main.MAIN_MENU_SCREEN:
+				currentScreen = new MainMenu();
+			case Main.CONTACT_SCREEN:
+				currentScreen = new Contact();
+			case Main.CHAR_SELECT_SCREEN:
+				currentScreen = new CharachterSelect();
+			case Main.LEVEL_SELECT_SCREEN:
+				currentScreen = new LevelSelect();
+		}
+		
+		addChild (currentScreen);
+	}
+	
+	
+	
 	public function new() 
 	{
 		super();	
 		addEventListener(Event.ADDED_TO_STAGE, added);
 	}
 
+	
 	function added(e) 
 	{
 		removeEventListener(Event.ADDED_TO_STAGE, added);
