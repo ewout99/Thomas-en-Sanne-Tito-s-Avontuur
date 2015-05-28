@@ -14,11 +14,11 @@ import openfl.display.StageDisplayState;
  */
 class MainMenu extends Sprite
 {
-	private var levelSelect:Button = new Button("Level Select", "img/Button.png", "img/ButtonHover.png");
-	private var options:Button= new Button("Options", "img/Button.png", "img/ButtonHover.png");
-	private var contact:Button = new Button("Contact", "img/Button.png", "img/ButtonHover.png");
-	private var exit:Button = new Button ("Exit game", "img/Button.png", "img/ButtonHover.png");
-	private var start:Button = new Button ("Start game", "img/Button.png", "img/ButtonHover.png");
+	private var levelSelect:Button = new Button("Level Select", "img/middlebutton.png", "img/middlebuttonhover.png");
+	private var options:Button= new Button("Options", "img/middlebutton.png", "img/middlebuttonhover.png");
+	private var contact:Button = new Button("Contact", "img/middlebutton.png", "img/middlebuttonhover.png");
+	private var exit:Button = new Button ("Exit game", "img/bottombutton.png", "img/bottombuttonhover.png");
+	private var start:Button = new Button ("Start game", "img/topbutton.png", "img/topbuttonhover.png");
 	var X:Int = Lib.current.stage.stageWidth;
 	var Y:Int = Lib.current.stage.stageHeight;
 	var instance:Main;
