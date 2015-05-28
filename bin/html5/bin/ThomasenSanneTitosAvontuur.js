@@ -28,9 +28,21 @@ ApplicationMain.create = function() {
 	var types = [];
 	urls.push("img/Background.png");
 	types.push("IMAGE");
+	urls.push("img/bottombutton.png");
+	types.push("IMAGE");
+	urls.push("img/bottombuttonhover.png");
+	types.push("IMAGE");
 	urls.push("img/Button.png");
 	types.push("IMAGE");
 	urls.push("img/ButtonHover.png");
+	types.push("IMAGE");
+	urls.push("img/middlebutton.png");
+	types.push("IMAGE");
+	urls.push("img/middlebuttonhover.png");
+	types.push("IMAGE");
+	urls.push("img/topbutton.png");
+	types.push("IMAGE");
+	urls.push("img/topbuttonhover.png");
 	types.push("IMAGE");
 	if(ApplicationMain.config.assetsPrefix != null) {
 		var _g1 = 0;
@@ -979,6 +991,8 @@ openfl.display.Sprite.prototype = $extend(openfl.display.DisplayObjectContainer.
 	,__class__: openfl.display.Sprite
 });
 var Main = function() {
+	this.currentLevel = 0;
+	this.currentChar = 0;
 	this.sound = new Sound();
 	this.music = new Music();
 	this.musicvolume = 1;
@@ -1024,6 +1038,12 @@ Main.prototype = $extend(openfl.display.Sprite.prototype,{
 			break;
 		case "level select screen":
 			this.currentScreen = new LevelSelect();
+			break;
+		case "options screen":
+			this.currentScreen = new Options();
+			break;
+		case "game screen":
+			this.currentScreen = new Game();
 			break;
 		}
 		this.addChild(this.currentScreen);
@@ -1082,22 +1102,62 @@ Button.prototype = $extend(openfl.display.Sprite.prototype,{
 	,__class__: Button
 });
 var CharachterSelect = function() {
+	this.Y = openfl.Lib.current.stage.stageHeight;
+	this.X = openfl.Lib.current.stage.stageWidth;
+	this.charSanne = new Button("Sanne","img/middlebutton.png","img/middlebuttonhover.png");
+	this.charThomas = new Button("Thomas","img/middlebutton.png","img/middlebuttonhover.png");
 	openfl.display.Sprite.call(this);
+	this.drawButtons();
 };
 $hxClasses["CharachterSelect"] = CharachterSelect;
 CharachterSelect.__name__ = ["CharachterSelect"];
 CharachterSelect.__super__ = openfl.display.Sprite;
 CharachterSelect.prototype = $extend(openfl.display.Sprite.prototype,{
-	__class__: CharachterSelect
+	drawButtons: function() {
+		this.charThomas.set_x(200);
+		this.charThomas.set_y(600);
+		this.charSanne.set_x(700);
+		this.charSanne.set_y(600);
+		this.addChild(this.charSanne);
+		this.addChild(this.charThomas);
+		this.charSanne.addEventListener(openfl.events.MouseEvent.CLICK,$bind(this,this.charSelect));
+		this.charThomas.addEventListener(openfl.events.MouseEvent.CLICK,$bind(this,this.charSelect));
+	}
+	,charSelect: function(e) {
+		if(e.currentTarget == this.charThomas) {
+			Main.getInstance().currentChar = 1;
+			haxe.Log.trace(Main.getInstance().currentChar,{ fileName : "CharachterSelect.hx", lineNumber : 49, className : "CharachterSelect", methodName : "charSelect"});
+			Main.getInstance().switchScreen("game screen");
+		}
+		if(e.currentTarget == this.charSanne) {
+			Main.getInstance().currentChar = 2;
+			haxe.Log.trace(Main.getInstance().currentChar,{ fileName : "CharachterSelect.hx", lineNumber : 57, className : "CharachterSelect", methodName : "charSelect"});
+			Main.getInstance().switchScreen("game screen");
+		}
+	}
+	,__class__: CharachterSelect
 });
 var Contact = function() {
+	this.Y = openfl.Lib.current.stage.stageHeight;
+	this.X = openfl.Lib.current.stage.stageWidth;
+	this.returnButton = new Button("Main Menu","img/middlebutton.png","img/middlebuttonhover.png");
 	openfl.display.Sprite.call(this);
+	this.drawButton();
 };
 $hxClasses["Contact"] = Contact;
 Contact.__name__ = ["Contact"];
 Contact.__super__ = openfl.display.Sprite;
 Contact.prototype = $extend(openfl.display.Sprite.prototype,{
-	__class__: Contact
+	drawButton: function() {
+		this.returnButton.set_x(this.X / 2 - this.returnButton.get_width() / 2);
+		this.returnButton.set_y(this.Y * 3 / 4 - this.returnButton.get_height() / 2);
+		this.addChild(this.returnButton);
+		this.returnButton.addEventListener(openfl.events.MouseEvent.CLICK,$bind(this,this.back));
+	}
+	,back: function(e) {
+		Main.getInstance().switchScreen("main menu screen");
+	}
+	,__class__: Contact
 });
 var lime = {};
 lime.AssetLibrary = function() {
@@ -1165,10 +1225,28 @@ var DefaultAssetLibrary = function() {
 	id = "img/Background.png";
 	this.path.set(id,id);
 	this.type.set(id,"IMAGE");
+	id = "img/bottombutton.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
+	id = "img/bottombuttonhover.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
 	id = "img/Button.png";
 	this.path.set(id,id);
 	this.type.set(id,"IMAGE");
 	id = "img/ButtonHover.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
+	id = "img/middlebutton.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
+	id = "img/middlebuttonhover.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
+	id = "img/topbutton.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
+	id = "img/topbuttonhover.png";
 	this.path.set(id,id);
 	this.type.set(id,"IMAGE");
 	var assetsPrefix = ApplicationMain.config.assetsPrefix;
@@ -1297,6 +1375,16 @@ EReg.prototype = {
 	}
 	,__class__: EReg
 };
+var Game = function() {
+	openfl.display.Sprite.call(this);
+	haxe.Log.trace("loading Game",{ fileName : "Game.hx", lineNumber : 15, className : "Game", methodName : "new"});
+};
+$hxClasses["Game"] = Game;
+Game.__name__ = ["Game"];
+Game.__super__ = openfl.display.Sprite;
+Game.prototype = $extend(openfl.display.Sprite.prototype,{
+	__class__: Game
+});
 var HxOverrides = function() { };
 $hxClasses["HxOverrides"] = HxOverrides;
 HxOverrides.__name__ = ["HxOverrides"];
@@ -1340,22 +1428,55 @@ HxOverrides.iter = function(a) {
 	}};
 };
 var LevelSelect = function() {
+	this.Y = openfl.Lib.current.stage.stageHeight;
+	this.X = openfl.Lib.current.stage.stageWidth;
+	this.levelTwo = new Button("Level 2 ","img/middlebutton.png","img/middlebuttonhover.png");
+	this.levelOne = new Button("Level 1","img/middlebutton.png","img/middlebuttonhover.png");
+	this.returnButton = new Button("Main Menu","img/middlebutton.png","img/middlebuttonhover.png");
 	openfl.display.Sprite.call(this);
+	this.drawButton();
 };
 $hxClasses["LevelSelect"] = LevelSelect;
 LevelSelect.__name__ = ["LevelSelect"];
 LevelSelect.__super__ = openfl.display.Sprite;
 LevelSelect.prototype = $extend(openfl.display.Sprite.prototype,{
-	__class__: LevelSelect
+	drawButton: function() {
+		this.levelOne.set_x(this.X / 2 - this.levelOne.get_width() / 2);
+		this.levelOne.set_y(this.Y / 4 - this.levelOne.get_height() / 2);
+		this.addChild(this.levelOne);
+		this.levelOne.addEventListener(openfl.events.MouseEvent.CLICK,$bind(this,this.back));
+		this.levelTwo.set_x(this.X / 2 - this.levelTwo.get_width() / 2);
+		this.levelTwo.set_y(this.Y * 2 / 4 - this.levelTwo.get_height() / 2);
+		this.addChild(this.levelTwo);
+		this.levelTwo.addEventListener(openfl.events.MouseEvent.CLICK,$bind(this,this.back));
+		this.returnButton.set_x(this.X / 2 - this.returnButton.get_width() / 2);
+		this.returnButton.set_y(this.Y * 3 / 4 - this.returnButton.get_height() / 2);
+		this.addChild(this.returnButton);
+		this.returnButton.addEventListener(openfl.events.MouseEvent.CLICK,$bind(this,this.back));
+	}
+	,back: function(e) {
+		if(e.currentTarget == this.levelOne) {
+			Main.getInstance().currentLevel = 1;
+			haxe.Log.trace(Main.getInstance().currentLevel,{ fileName : "LevelSelect.hx", lineNumber : 49, className : "LevelSelect", methodName : "back"});
+			Main.getInstance().switchScreen("main menu screen");
+		}
+		if(e.currentTarget == this.levelTwo) {
+			Main.getInstance().currentLevel = 2;
+			haxe.Log.trace(Main.getInstance().currentLevel,{ fileName : "LevelSelect.hx", lineNumber : 56, className : "LevelSelect", methodName : "back"});
+			Main.getInstance().switchScreen("main menu screen");
+		}
+		if(e.currentTarget == this.returnButton) Main.getInstance().switchScreen("main menu screen");
+	}
+	,__class__: LevelSelect
 });
 var MainMenu = function() {
 	this.Y = openfl.Lib.current.stage.stageHeight;
 	this.X = openfl.Lib.current.stage.stageWidth;
-	this.start = new Button("Start game","img/Button.png","img/ButtonHover.png");
-	this.exit = new Button("Exit game","img/Button.png","img/ButtonHover.png");
-	this.contact = new Button("Contact","img/Button.png","img/ButtonHover.png");
-	this.options = new Button("Options","img/Button.png","img/ButtonHover.png");
-	this.levelSelect = new Button("Level Select","img/Button.png","img/ButtonHover.png");
+	this.start = new Button("Start game","img/topbutton.png","img/topbuttonhover.png");
+	this.exit = new Button("Exit game","img/bottombutton.png","img/bottombuttonhover.png");
+	this.contact = new Button("Contact","img/middlebutton.png","img/middlebuttonhover.png");
+	this.options = new Button("Options","img/middlebutton.png","img/middlebuttonhover.png");
+	this.levelSelect = new Button("Level Select","img/middlebutton.png","img/middlebuttonhover.png");
 	openfl.display.Sprite.call(this);
 	this.addEventListener(openfl.events.Event.ADDED_TO_STAGE,$bind(this,this.init));
 };
@@ -1395,23 +1516,11 @@ MainMenu.prototype = $extend(openfl.display.Sprite.prototype,{
 		this.exit.addEventListener(openfl.events.MouseEvent.CLICK,$bind(this,this.click));
 	}
 	,click: function(event) {
-		if(event.currentTarget == this.start) {
-			haxe.Log.trace("Starting game",{ fileName : "MainMenu.hx", lineNumber : 77, className : "MainMenu", methodName : "click"});
-			Main.getInstance().switchScreen("char select screen");
-		}
-		if(event.currentTarget == this.levelSelect) {
-			Main.getInstance().switchScreen("level select screen");
-			haxe.Log.trace("working",{ fileName : "MainMenu.hx", lineNumber : 85, className : "MainMenu", methodName : "click"});
-		}
-		if(event.currentTarget == this.options) {
-			Main.getInstance().switchScreen("options screen");
-			haxe.Log.trace("Mabye working",{ fileName : "MainMenu.hx", lineNumber : 92, className : "MainMenu", methodName : "click"});
-		}
-		if(event.currentTarget == this.contact) {
-			Main.getInstance().switchScreen("contact screen");
-			haxe.Log.trace("Contact",{ fileName : "MainMenu.hx", lineNumber : 98, className : "MainMenu", methodName : "click"});
-		}
-		if(event.currentTarget == this.exit) haxe.Log.trace("Exit",{ fileName : "MainMenu.hx", lineNumber : 103, className : "MainMenu", methodName : "click"});
+		if(event.currentTarget == this.start) Main.getInstance().switchScreen("char select screen");
+		if(event.currentTarget == this.levelSelect) Main.getInstance().switchScreen("level select screen");
+		if(event.currentTarget == this.options) Main.getInstance().switchScreen("options screen");
+		if(event.currentTarget == this.contact) Main.getInstance().switchScreen("contact screen");
+		if(event.currentTarget == this.exit) haxe.Log.trace("Exit",{ fileName : "MainMenu.hx", lineNumber : 104, className : "MainMenu", methodName : "click"});
 	}
 	,__class__: MainMenu
 });
@@ -1485,6 +1594,54 @@ NMEPreloader.prototype = $extend(openfl.display.Sprite.prototype,{
 		this.progress.set_scaleX(percentLoaded);
 	}
 	,__class__: NMEPreloader
+});
+var Options = function() {
+	this.Y = openfl.Lib.current.stage.stageHeight;
+	this.X = openfl.Lib.current.stage.stageWidth;
+	this.decreaseMusic = new Button("- Music","img/middlebutton.png","img/middlebuttonhover.png");
+	this.increaseMusic = new Button("+ Music","img/middlebutton.png","img/middlebuttonhover.png");
+	this.decreaseSound = new Button("- Sound","img/middlebutton.png","img/middlebuttonhover.png");
+	this.increaseSound = new Button("+ Sound","img/middlebutton.png","img/middlebuttonhover.png");
+	this.returnButton = new Button("Main Menu","img/middlebutton.png","img/middlebuttonhover.png");
+	openfl.display.Sprite.call(this);
+	this.drawButton();
+};
+$hxClasses["Options"] = Options;
+Options.__name__ = ["Options"];
+Options.__super__ = openfl.display.Sprite;
+Options.prototype = $extend(openfl.display.Sprite.prototype,{
+	drawButton: function() {
+		this.increaseSound.set_x(600);
+		this.increaseSound.set_y(50);
+		this.increaseSound.addEventListener(openfl.events.MouseEvent.CLICK,$bind(this,this.editSound));
+		this.addChild(this.increaseSound);
+		this.decreaseSound.set_x(100);
+		this.decreaseSound.set_y(50);
+		this.decreaseSound.addEventListener(openfl.events.MouseEvent.CLICK,$bind(this,this.editSound));
+		this.addChild(this.decreaseSound);
+		this.increaseMusic.set_x(600);
+		this.increaseMusic.set_y(300);
+		this.increaseMusic.addEventListener(openfl.events.MouseEvent.CLICK,$bind(this,this.editSound));
+		this.addChild(this.increaseMusic);
+		this.decreaseMusic.set_x(100);
+		this.decreaseMusic.set_y(300);
+		this.decreaseMusic.addEventListener(openfl.events.MouseEvent.CLICK,$bind(this,this.editSound));
+		this.addChild(this.decreaseMusic);
+		this.returnButton.set_x(this.X / 2 - this.returnButton.get_width() / 2);
+		this.returnButton.set_y(this.Y * 3 / 4 - this.returnButton.get_height() / 2);
+		this.addChild(this.returnButton);
+		this.returnButton.addEventListener(openfl.events.MouseEvent.CLICK,$bind(this,this.back));
+	}
+	,editSound: function(e) {
+		if(e.currentTarget == this.increaseMusic) Main.getInstance().musicvolume += 0.1;
+		if(e.currentTarget == this.decreaseMusic) Main.getInstance().musicvolume -= 0.1;
+		if(e.currentTarget == this.increaseSound) Main.getInstance().soundvolume += 0.1;
+		if(e.currentTarget == this.decreaseSound) Main.getInstance().soundvolume -= 0.1;
+	}
+	,back: function(e) {
+		Main.getInstance().switchScreen("main menu screen");
+	}
+	,__class__: Options
 });
 var Reflect = function() { };
 $hxClasses["Reflect"] = Reflect;
@@ -24227,6 +24384,7 @@ Main.CHAR_SELECT_SCREEN = "char select screen";
 Main.CONTACT_SCREEN = "contact screen";
 Main.LEVEL_SELECT_SCREEN = "level select screen";
 Main.OPTIONS_SCREEN = "options screen";
+Main.GAME_SCREEN = "game screen";
 haxe.ds.ObjectMap.count = 0;
 js.Boot.__toStr = {}.toString;
 lime.Assets.cache = new lime.AssetCache();

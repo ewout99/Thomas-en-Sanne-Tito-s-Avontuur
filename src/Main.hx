@@ -26,6 +26,10 @@ class Main extends Sprite
 	public static inline var CONTACT_SCREEN:String = "contact screen";
 	public static inline var LEVEL_SELECT_SCREEN:String = "level select screen";
 	public static inline var OPTIONS_SCREEN:String = "options screen";
+	public static inline var GAME_SCREEN:String = "game screen";
+	
+	public var currentChar:Int = 0;
+	public var currentLevel:Int = 0;
 	
 	var currentScreen:Sprite;
 	public static var instance:Main;
@@ -78,6 +82,10 @@ class Main extends Sprite
 				currentScreen = new CharachterSelect();
 			case Main.LEVEL_SELECT_SCREEN:
 				currentScreen = new LevelSelect();
+			case Main.OPTIONS_SCREEN:
+				currentScreen = new Options();
+			case Main.GAME_SCREEN:
+				currentScreen = new Game();
 		}
 		
 		addChild (currentScreen);

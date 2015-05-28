@@ -14,19 +14,27 @@ import openfl.display.StageDisplayState;
  */
 class MainMenu extends Sprite
 {
+	// Button variables
 	private var levelSelect:Button = new Button("Level Select", "img/middlebutton.png", "img/middlebuttonhover.png");
 	private var options:Button= new Button("Options", "img/middlebutton.png", "img/middlebuttonhover.png");
 	private var contact:Button = new Button("Contact", "img/middlebutton.png", "img/middlebuttonhover.png");
 	private var exit:Button = new Button ("Exit game", "img/bottombutton.png", "img/bottombuttonhover.png");
 	private var start:Button = new Button ("Start game", "img/topbutton.png", "img/topbuttonhover.png");
+	// For some reason stage.*** won't work this was the solution
 	var X:Int = Lib.current.stage.stageWidth;
 	var Y:Int = Lib.current.stage.stageHeight;
-	var instance:Main;
 	
 	public function new()  
 	{
 		super ();
 		addEventListener ( Event.ADDED_TO_STAGE, init);
+	 // Testing Traces for the option screen
+	/*		
+		trace ( Main.getInstance().soundvolume);
+		trace ( Main.getInstance().musicvolume);
+		trace ( Main.getInstance().currentChar);
+		trace ( Main.getInstance().currentLevel);
+	*/
 	}
 	
 	function init (event:Event)
@@ -35,11 +43,14 @@ class MainMenu extends Sprite
 		drawbackground();
 		drawmenu ();
 	}
+	// Draws the Background img
 	function drawbackground()
 	{
 		var background = new Bitmap(Assets.getBitmapData("img/Background.png"));
 		addChildAt (background, 0);
 	}
+	
+	// Draws the menu to show buttons
 	function drawmenu() 
 	{
 		addChild(start);
@@ -68,35 +79,25 @@ class MainMenu extends Sprite
 		exit.addEventListener(MouseEvent.CLICK, click);
 		
 	}
-	// Ask Manno for help
-	// How to get this to check for which button it's on.
+	
+	// Fuction that checks for mouse events and asks main to load the correspoding screen
 	public function click (event:MouseEvent)
 	{
 		if (event.currentTarget == start)
 			{
-				trace ("Starting game");
 				Main.getInstance ().switchScreen (Main.CHAR_SELECT_SCREEN);
-				// removeChildren();
 			}
-			
 		if (event.currentTarget == levelSelect)
 			{
 				Main.getInstance().switchScreen (Main.LEVEL_SELECT_SCREEN);
-				trace ("working");
-				// removeChildren();
-				
 			}		
 		if (event.currentTarget == options)
 			{
 				Main.getInstance().switchScreen (Main.OPTIONS_SCREEN);
-				trace ("Mabye working");
-				//removeChildren();				
 			}
 		if (event.currentTarget == contact)
 			{
 				Main.getInstance().switchScreen (Main.CONTACT_SCREEN);
-				trace ("Contact");
-				// removeChilderen();
 			}
 		if (event.currentTarget == exit)
 			{
