@@ -35,6 +35,7 @@ class Button extends Sprite
 		buttonText.selectable = false;
 		mainiamge = new Bitmap(Assets.getBitmapData(image));
 		mainImageHover = new Bitmap(Assets.getBitmapData(imageHover));
+		buttonText.width = 300;
 		buttonText.x = ( mainiamge.x + ( mainiamge.width - buttonText.width) / 2);
 		buttonText.y = (mainiamge.y + ( mainiamge.width - mainiamge.width) / 2 );
 		draw();

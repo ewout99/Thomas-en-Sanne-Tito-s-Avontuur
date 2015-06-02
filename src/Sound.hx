@@ -53,10 +53,10 @@ class Sound extends Sprite
 	// When there is only one sound it will play directly form this function.
 	
 
-	public function testingSound ()
-	{
-		channel = beep.play( 0, 0, new SoundTransform(soundVolume ) );
-	}
+	//public function testingSound ()
+	//{
+		//channel = beep.play( 0, 0, new SoundTransform(soundVolume ) );
+	//}
 	
 	// function to adjust the volume in this class, gets the soundvolume float as a input.
 	

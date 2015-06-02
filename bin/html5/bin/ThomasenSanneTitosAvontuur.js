@@ -1075,6 +1075,7 @@ var Button = function(text,image,imageHover) {
 	this.buttonText.selectable = false;
 	this.mainiamge = new openfl.display.Bitmap(openfl.Assets.getBitmapData(image));
 	this.mainImageHover = new openfl.display.Bitmap(openfl.Assets.getBitmapData(imageHover));
+	this.buttonText.set_width(300);
 	this.buttonText.set_x(this.mainiamge.get_x() + (this.mainiamge.get_width() - this.buttonText.get_width()) / 2);
 	this.buttonText.set_y(this.mainiamge.get_y() + (this.mainiamge.get_width() - this.mainiamge.get_width()) / 2);
 	this.draw();
@@ -1698,13 +1699,31 @@ Reflect.makeVarArgs = function(f) {
 	};
 };
 var Sound = function() {
+	this.papers = openfl.Assets.getSound("audio/Papers.mp3");
+	this.opendrawer = openfl.Assets.getSound("audio/Opendrawer.mp3");
+	this.opendoor = openfl.Assets.getSound("audio/Opendoor.mp3");
+	this.objectfound2 = openfl.Assets.getSound("audio/Objectfound.mp3");
+	this.objectfound = openfl.Assets.getSound("audio/Objectfound.mp3");
+	this.objectivecomplete = openfl.Assets.getSound("audio/Objectivecomplete.mp3");
+	this.huh = openfl.Assets.getSound("audio/Huh.mp3");
+	this.hintpopup = openfl.Assets.getSound("audio/Hintpopup.mp3");
+	this.click = openfl.Assets.getSound("audio/Click3.wav");
+	this.coin = openfl.Assets.getSound("audio/Coin.mp3");
+	this.closedrawer = openfl.Assets.getSound("audio/Closedrawer.mp3");
+	this.closedoor = openfl.Assets.getSound("audio/Closedoor.mp3");
+	this.clock = openfl.Assets.getSound("audio/Clock.mp3");
+	this.buttonclick = openfl.Assets.getSound("audio/Buttonclick.mp3");
 	openfl.display.Sprite.call(this);
+	this.soundVolume = 1;
 };
 $hxClasses["Sound"] = Sound;
 Sound.__name__ = ["Sound"];
 Sound.__super__ = openfl.display.Sprite;
 Sound.prototype = $extend(openfl.display.Sprite.prototype,{
-	__class__: Sound
+	updateSoundVolume: function(input) {
+		this.soundVolume = input;
+	}
+	,__class__: Sound
 });
 var Std = function() { };
 $hxClasses["Std"] = Std;
