@@ -9,12 +9,11 @@ import flash.media.SoundTransform;
 import openfl.display.Sprite;
 import openfl.Assets;
 import openfl.Assets.loadSound;
-import openfl.Assets.loadSound
-import openfl.media.
+import openfl.Assets.loadSound;
 
 /**
  * ...
- * @author Andor Reineking
+ * @author Linnea
  * 
  * music class for the game
  * will repeat a song until public function ends it

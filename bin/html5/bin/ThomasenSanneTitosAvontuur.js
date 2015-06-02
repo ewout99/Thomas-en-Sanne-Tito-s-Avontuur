@@ -66,7 +66,7 @@ ApplicationMain.init = function() {
 	if(loaded == total) ApplicationMain.start();
 };
 ApplicationMain.main = function() {
-	ApplicationMain.config = { antialiasing : 0, background : 0, borderless : false, company : "Ezzz", depthBuffer : false, file : "ThomasenSanneTitosAvontuur", fps : 60, fullscreen : false, height : 720, orientation : "", packageName : "ThomasenSanneTitosAvontuur", resizable : true, stencilBuffer : true, title : "Thomas-en-Sanne-Tito-s-Avontuur", version : "1.0.0", vsync : false, width : 1280};
+	ApplicationMain.config = { antialiasing : 0, background : 0, borderless : false, company : "Ezzz", depthBuffer : false, file : "ThomasenSanneTitosAvontuur", fps : 60, fullscreen : false, hardware : true, height : 720, orientation : "", packageName : "ThomasenSanneTitosAvontuur", resizable : true, stencilBuffer : true, title : "Thomas-en-Sanne-Tito-s-Avontuur", version : "1.0.0", vsync : false, width : 1280};
 };
 ApplicationMain.start = function() {
 	var hasMain = false;
@@ -186,6 +186,7 @@ openfl.display.IBitmapDrawable.prototype = {
 	__class__: openfl.display.IBitmapDrawable
 };
 openfl.display.DisplayObject = function() {
+	this.__cacheAsBitmap = false;
 	this.__maskCached = false;
 	openfl.events.EventDispatcher.call(this);
 	this.__alpha = 1;
@@ -245,7 +246,7 @@ openfl.display.DisplayObject.prototype = $extend(openfl.events.EventDispatcher.p
 		if(shapeFlag == null) shapeFlag = false;
 		if(this.parent != null) {
 			var bounds = new openfl.geom.Rectangle();
-			this.__getBounds(bounds,null);
+			this.__getBounds(bounds,this.__getTransform());
 			return bounds.containsPoint(new openfl.geom.Point(x,y));
 		}
 		return false;
@@ -262,7 +263,7 @@ openfl.display.DisplayObject.prototype = $extend(openfl.events.EventDispatcher.p
 		return false;
 	}
 	,__getBounds: function(rect,matrix) {
-		if(this.__graphics != null) this.__graphics.__getBounds(rect,matrix != null?matrix:this.__worldTransform);
+		if(this.__graphics != null) this.__graphics.__getBounds(rect,matrix);
 	}
 	,__getCursor: function() {
 		return null;
@@ -302,8 +303,17 @@ openfl.display.DisplayObject.prototype = $extend(openfl.events.EventDispatcher.p
 		}
 		return false;
 	}
+	,__renderCairo: function(renderSession) {
+		if(this.__graphics != null) openfl._internal.renderer.cairo.CairoShape.render(this,renderSession);
+	}
+	,__renderCairoMask: function(renderSession) {
+		if(this.__graphics != null) openfl._internal.renderer.cairo.CairoGraphics.renderMask(this.__graphics,renderSession);
+	}
 	,__renderCanvas: function(renderSession) {
 		if(this.__graphics != null) openfl._internal.renderer.canvas.CanvasShape.render(this,renderSession);
+	}
+	,__renderCanvasMask: function(renderSession) {
+		if(this.__graphics != null) openfl._internal.renderer.canvas.CanvasGraphics.renderMask(this.__graphics,renderSession);
 	}
 	,__renderDOM: function(renderSession) {
 		if(this.__graphics != null) openfl._internal.renderer.dom.DOMShape.render(this,renderSession);
@@ -311,9 +321,6 @@ openfl.display.DisplayObject.prototype = $extend(openfl.events.EventDispatcher.p
 	,__renderGL: function(renderSession) {
 		if(!this.__renderable || this.__worldAlpha <= 0) return;
 		if(this.__graphics != null) openfl._internal.renderer.opengl.utils.GraphicsRenderer.render(this,renderSession);
-	}
-	,__renderMask: function(renderSession) {
-		if(this.__graphics != null) openfl._internal.renderer.canvas.CanvasGraphics.renderMask(this.__graphics,renderSession);
 	}
 	,__setStageReference: function(stage) {
 		if(this.stage != stage) {
@@ -802,7 +809,7 @@ openfl.display.DisplayObjectContainer.prototype = $extend(openfl.display.Interac
 			var child = _g1[_g];
 			++_g;
 			if(!child.__renderable) continue;
-			child.__getBounds(rect,null);
+			child.__getBounds(rect,child.__worldTransform);
 		}
 		if(matrix != null) {
 			this.__worldTransform = matrixCache;
@@ -839,11 +846,31 @@ openfl.display.DisplayObjectContainer.prototype = $extend(openfl.display.Interac
 		} else while(--i >= 0) this.__children[i].__hitTest(x,y,shapeFlag,stack,false);
 		return false;
 	}
+	,__renderCairo: function(renderSession) {
+		if(!this.__renderable || this.__worldAlpha <= 0) return;
+		openfl.display.InteractiveObject.prototype.__renderCairo.call(this,renderSession);
+		if(this.__mask != null) renderSession.maskManager.pushMask(this.__mask);
+		var _g = 0;
+		var _g1 = this.__children;
+		while(_g < _g1.length) {
+			var child = _g1[_g];
+			++_g;
+			child.__renderCairo(renderSession);
+		}
+		this.__removedChildren = [];
+		if(this.__mask != null) renderSession.maskManager.popMask();
+	}
+	,__renderCairoMask: function(renderSession) {
+		if(this.__graphics != null) openfl._internal.renderer.cairo.CairoGraphics.renderMask(this.__graphics,renderSession);
+		var bounds = new openfl.geom.Rectangle();
+		this.__getTransform();
+		this.__getBounds(bounds,new openfl.geom.Matrix());
+		renderSession.cairo.rectangle(0,0,bounds.width,bounds.height);
+	}
 	,__renderCanvas: function(renderSession) {
 		if(!this.__renderable || this.__worldAlpha <= 0) return;
 		openfl.display.InteractiveObject.prototype.__renderCanvas.call(this,renderSession);
-		if(this.get_scrollRect() != null) {
-		}
+		if(this.get_scrollRect() != null) renderSession.maskManager.pushRect(this.get_scrollRect(),this.__worldTransform);
 		if(this.__mask != null) renderSession.maskManager.pushMask(this.__mask);
 		var _g = 0;
 		var _g1 = this.__children;
@@ -854,8 +881,14 @@ openfl.display.DisplayObjectContainer.prototype = $extend(openfl.display.Interac
 		}
 		this.__removedChildren = [];
 		if(this.__mask != null) renderSession.maskManager.popMask();
-		if(this.get_scrollRect() != null) {
-		}
+		if(this.get_scrollRect() != null) renderSession.maskManager.popMask();
+	}
+	,__renderCanvasMask: function(renderSession) {
+		if(this.__graphics != null) openfl._internal.renderer.canvas.CanvasGraphics.renderMask(this.__graphics,renderSession);
+		var bounds = new openfl.geom.Rectangle();
+		this.__getTransform();
+		this.__getBounds(bounds,new openfl.geom.Matrix());
+		renderSession.context.rect(0,0,bounds.width,bounds.height);
 	}
 	,__renderDOM: function(renderSession) {
 		openfl.display.InteractiveObject.prototype.__renderDOM.call(this,renderSession);
@@ -882,7 +915,7 @@ openfl.display.DisplayObjectContainer.prototype = $extend(openfl.display.Interac
 		var masked = this.__mask != null && this.__maskGraphics != null && this.__maskGraphics.__commands.length > 0;
 		if(masked) {
 			renderSession.spriteBatch.stop();
-			renderSession.maskManager.pushMask(this,renderSession);
+			renderSession.maskManager.pushMask(this);
 			renderSession.spriteBatch.start();
 		}
 		openfl.display.InteractiveObject.prototype.__renderGL.call(this,renderSession);
@@ -895,17 +928,10 @@ openfl.display.DisplayObjectContainer.prototype = $extend(openfl.display.Interac
 		}
 		if(masked) {
 			renderSession.spriteBatch.stop();
-			renderSession.maskManager.popMask(this,renderSession);
+			renderSession.maskManager.popMask();
 			renderSession.spriteBatch.start();
 		}
 		this.__removedChildren = [];
-	}
-	,__renderMask: function(renderSession) {
-		if(this.__graphics != null) openfl._internal.renderer.canvas.CanvasGraphics.renderMask(this.__graphics,renderSession);
-		var bounds = new openfl.geom.Rectangle();
-		this.__getTransform();
-		this.__getBounds(bounds,new openfl.geom.Matrix());
-		renderSession.context.rect(0,0,bounds.width,bounds.height);
 	}
 	,__setStageReference: function(stage) {
 		if(this.stage != stage) {
@@ -1072,7 +1098,7 @@ var Button = function(text,image,imageHover) {
 	this.buttonText = new openfl.text.TextField();
 	this.buttonText.set_defaultTextFormat(this.buttonTextFormat);
 	this.buttonText.set_text(text);
-	this.buttonText.selectable = false;
+	this.buttonText.set_selectable(false);
 	this.mainiamge = new openfl.display.Bitmap(openfl.Assets.getBitmapData(image));
 	this.mainImageHover = new openfl.display.Bitmap(openfl.Assets.getBitmapData(imageHover));
 	this.buttonText.set_x(this.mainiamge.get_x() + (this.mainiamge.get_width() - this.buttonText.get_width()) / 2);
@@ -1532,13 +1558,43 @@ IMap.prototype = {
 };
 Math.__name__ = ["Math"];
 var Music = function() {
+	this.Winning = openfl.Assets.getSound("audio/music/Winning.mp3");
+	this.Menu = openfl.Assets.getSound("audio/music/Menu.mp3");
+	this.GameMusic = openfl.Assets.getSound("audio/music/GameMusic.mp3");
 	openfl.display.Sprite.call(this);
+	this.musicVolume = 1;
 };
 $hxClasses["Music"] = Music;
 Music.__name__ = ["Music"];
 Music.__super__ = openfl.display.Sprite;
 Music.prototype = $extend(openfl.display.Sprite.prototype,{
-	__class__: Music
+	updateMusicVolume: function(input) {
+		this.musicVolume = input;
+	}
+	,stopMusic: function() {
+		this.soundChannel.stop();
+	}
+	,gameMusic: function() {
+		this.soundChannel = this.GameMusic.play();
+		this.soundChannel.set_soundTransform(new openfl.media.SoundTransform(this.musicVolume));
+		this.soundChannel.addEventListener(openfl.events.Event.SOUND_COMPLETE,$bind(this,this.gameMusicRepeat));
+	}
+	,gameMusicRepeat: function(event) {
+		this.soundChannel = this.GameMusic.play();
+		this.soundChannel.set_soundTransform(new openfl.media.SoundTransform(this.musicVolume));
+		this.soundChannel.addEventListener(openfl.events.Event.SOUND_COMPLETE,$bind(this,this.gameMusicRepeat));
+	}
+	,mainMenuMusic: function() {
+		this.soundChannel = this.Menu.play();
+		this.soundChannel.set_soundTransform(new openfl.media.SoundTransform(this.musicVolume));
+		this.soundChannel.addEventListener(openfl.events.Event.SOUND_COMPLETE,$bind(this,this.mainMenuMusicRepeat));
+	}
+	,mainMenuMusicRepeat: function(event) {
+		this.soundChannel = this.Menu.play();
+		this.soundChannel.set_soundTransform(new openfl.media.SoundTransform(this.musicVolume));
+		this.soundChannel.addEventListener(openfl.events.Event.SOUND_COMPLETE,$bind(this,this.gameMusicRepeat));
+	}
+	,__class__: Music
 });
 var NMEPreloader = function() {
 	openfl.display.Sprite.call(this);
@@ -1698,13 +1754,31 @@ Reflect.makeVarArgs = function(f) {
 	};
 };
 var Sound = function() {
+	this.papers = openfl.Assets.getSound("audio/Papers.mp3");
+	this.opendrawer = openfl.Assets.getSound("audio/Opendrawer.mp3");
+	this.opendoor = openfl.Assets.getSound("audio/Opendoor.mp3");
+	this.objectfound2 = openfl.Assets.getSound("audio/Objectfound.mp3");
+	this.objectfound = openfl.Assets.getSound("audio/Objectfound.mp3");
+	this.objectivecomplete = openfl.Assets.getSound("audio/Objectivecomplete.mp3");
+	this.huh = openfl.Assets.getSound("audio/Huh.mp3");
+	this.hintpopup = openfl.Assets.getSound("audio/Hintpopup.mp3");
+	this.click = openfl.Assets.getSound("audio/Click3.wav");
+	this.coin = openfl.Assets.getSound("audio/Coin.mp3");
+	this.closedrawer = openfl.Assets.getSound("audio/Closedrawer.mp3");
+	this.closedoor = openfl.Assets.getSound("audio/Closedoor.mp3");
+	this.clock = openfl.Assets.getSound("audio/Clock.mp3");
+	this.buttonclick = openfl.Assets.getSound("audio/Buttonclick.mp3");
 	openfl.display.Sprite.call(this);
+	this.soundVolume = 1;
 };
 $hxClasses["Sound"] = Sound;
 Sound.__name__ = ["Sound"];
 Sound.__super__ = openfl.display.Sprite;
 Sound.prototype = $extend(openfl.display.Sprite.prototype,{
-	__class__: Sound
+	updateSoundVolume: function(input) {
+		this.soundVolume = input;
+	}
+	,__class__: Sound
 });
 var Std = function() { };
 $hxClasses["Std"] = Std;
@@ -1740,6 +1814,25 @@ StringTools.urlDecode = function(s) {
 };
 StringTools.startsWith = function(s,start) {
 	return s.length >= start.length && HxOverrides.substr(s,0,start.length) == start;
+};
+StringTools.isSpace = function(s,pos) {
+	var c = HxOverrides.cca(s,pos);
+	return c > 8 && c < 14 || c == 32;
+};
+StringTools.ltrim = function(s) {
+	var l = s.length;
+	var r = 0;
+	while(r < l && StringTools.isSpace(s,r)) r++;
+	if(r > 0) return HxOverrides.substr(s,r,l - r); else return s;
+};
+StringTools.rtrim = function(s) {
+	var l = s.length;
+	var r = 0;
+	while(r < l && StringTools.isSpace(s,l - r - 1)) r++;
+	if(r > 0) return HxOverrides.substr(s,0,l - r); else return s;
+};
+StringTools.trim = function(s) {
+	return StringTools.ltrim(StringTools.rtrim(s));
 };
 StringTools.replace = function(s,sub,by) {
 	return s.split(sub).join(by);
@@ -1842,7 +1935,9 @@ haxe.StackItem.LocalFunction = function(v) { var $x = ["LocalFunction",4,v]; $x.
 haxe.CallStack = function() { };
 $hxClasses["haxe.CallStack"] = haxe.CallStack;
 haxe.CallStack.__name__ = ["haxe","CallStack"];
-haxe.CallStack.callStack = function() {
+haxe.CallStack.lastException = null;
+haxe.CallStack.getStack = function(e) {
+	if(e == null) return [];
 	var oldValue = Error.prepareStackTrace;
 	Error.prepareStackTrace = function(error,callsites) {
 		var stack = [];
@@ -1850,6 +1945,7 @@ haxe.CallStack.callStack = function() {
 		while(_g < callsites.length) {
 			var site = callsites[_g];
 			++_g;
+			if(haxe.CallStack.wrapCallSite != null) site = haxe.CallStack.wrapCallSite(site);
 			var method = null;
 			var fullName = site.getFunctionName();
 			if(fullName != null) {
@@ -1864,17 +1960,22 @@ haxe.CallStack.callStack = function() {
 		}
 		return stack;
 	};
+	var a = haxe.CallStack.makeStack(e.stack);
+	Error.prepareStackTrace = oldValue;
+	return a;
+};
+haxe.CallStack.wrapCallSite = null;
+haxe.CallStack.callStack = function() {
 	try {
 		throw new Error();
 	} catch( e ) {
-		var a = haxe.CallStack.makeStack(e.stack);
-		if(a != null) a.shift();
-		Error.prepareStackTrace = oldValue;
+		var a = haxe.CallStack.getStack(e);
+		a.shift();
 		return a;
 	}
 };
 haxe.CallStack.exceptionStack = function() {
-	return [];
+	return haxe.CallStack.getStack(haxe.CallStack.lastException);
 };
 haxe.CallStack.toString = function(stack) {
 	var b = new StringBuf();
@@ -1925,7 +2026,7 @@ haxe.CallStack.itemToString = function(b,s) {
 	}
 };
 haxe.CallStack.makeStack = function(s) {
-	if(typeof(s) == "string") {
+	if(s == null) return []; else if(typeof(s) == "string") {
 		var stack = s.split("\n");
 		if(stack[0] == "Error") stack.shift();
 		var m = [];
@@ -1940,7 +2041,7 @@ haxe.CallStack.makeStack = function(s) {
 				var file = rie10.matched(2);
 				var line1 = Std.parseInt(rie10.matched(3));
 				m.push(haxe.StackItem.FilePos(meth == "Anonymous function"?haxe.StackItem.LocalFunction():meth == "Global code"?null:haxe.StackItem.Method(path.join("."),meth),file,line1));
-			} else m.push(haxe.StackItem.Module(line));
+			} else m.push(haxe.StackItem.Module(StringTools.trim(line)));
 		}
 		return m;
 	} else return s;
@@ -2420,6 +2521,7 @@ js._Boot = {};
 js._Boot.HaxeError = function(val) {
 	Error.call(this);
 	this.val = val;
+	this.message = String(val);
 	if(Error.captureStackTrace) Error.captureStackTrace(this,js._Boot.HaxeError);
 };
 $hxClasses["js._Boot.HaxeError"] = js._Boot.HaxeError;
@@ -2592,7 +2694,7 @@ js.Boot.__isNativeObj = function(o) {
 	return js.Boot.__nativeClassName(o) != null;
 };
 js.Boot.__resolveNativeClass = function(name) {
-	if(typeof window != "undefined") return window[name]; else return global[name];
+	return (Function("return typeof " + name + " != \"undefined\" ? " + name + " : null"))();
 };
 lime.AssetCache = function() {
 	this.enabled = true;
@@ -3031,12 +3133,6 @@ lime._backend.html5.HTML5Application.prototype = {
 	}
 	,handleKeyEvent: function(event) {
 		if(this.parent.windows[0] != null) {
-			var _g = event.keyCode;
-			switch(_g) {
-			case 32:case 37:case 38:case 39:case 40:
-				event.preventDefault();
-				break;
-			}
 			var keyCode = this.convertKeyCode(event.keyCode != null?event.keyCode:event.which);
 			var modifier;
 			modifier = (event.shiftKey?3:0) | (event.ctrlKey?192:0) | (event.altKey?768:0) | (event.metaKey?3072:0);
@@ -3052,17 +3148,30 @@ lime._backend.html5.HTML5Application.prototype = {
 						length--;
 					} else i++;
 				}
+				if(this.parent.windows[0].backend.getEnableTextEvents()) {
+					var listeners1 = this.parent.windows[0].onTextInput.listeners;
+					var repeat1 = this.parent.windows[0].onTextInput.repeat;
+					var length1 = listeners1.length;
+					var i1 = 0;
+					while(i1 < length1) {
+						listeners1[i1](String.fromCharCode(event.keyCode));
+						if(!repeat1[i1]) {
+							this.parent.windows[0].onTextInput.remove(listeners1[i1]);
+							length1--;
+						} else i1++;
+					}
+				}
 			} else {
-				var listeners1 = this.parent.windows[0].onKeyUp.listeners;
-				var repeat1 = this.parent.windows[0].onKeyUp.repeat;
-				var length1 = listeners1.length;
-				var i1 = 0;
-				while(i1 < length1) {
-					listeners1[i1](keyCode,modifier);
-					if(!repeat1[i1]) {
-						this.parent.windows[0].onKeyUp.remove(listeners1[i1]);
-						length1--;
-					} else i1++;
+				var listeners2 = this.parent.windows[0].onKeyUp.listeners;
+				var repeat2 = this.parent.windows[0].onKeyUp.repeat;
+				var length2 = listeners2.length;
+				var i2 = 0;
+				while(i2 < length2) {
+					listeners2[i2](keyCode,modifier);
+					if(!repeat2[i2]) {
+						this.parent.windows[0].onKeyUp.remove(listeners2[i2]);
+						length2--;
+					} else i2++;
 				}
 			}
 		}
@@ -3393,7 +3502,7 @@ lime._backend.html5.HTML5Window.prototype = {
 			if(this.canvas != null) {
 				if(this.element != this.canvas) this.element.appendChild(this.canvas);
 			} else this.element.appendChild(this.div);
-			var events = ["mousedown","mousemove","mouseup","wheel"];
+			var events = ["mousedown","mouseenter","mouseleave","mousemove","mouseup","wheel"];
 			var _g = 0;
 			while(_g < events.length) {
 				var event = events[_g];
@@ -3411,6 +3520,9 @@ lime._backend.html5.HTML5Window.prototype = {
 			this.element.addEventListener("touchmove",$bind(this,this.handleTouchEvent),true);
 			this.element.addEventListener("touchend",$bind(this,this.handleTouchEvent),true);
 		}
+	}
+	,getEnableTextEvents: function() {
+		return this.enableTextEvents;
 	}
 	,handleMouseEvent: function(event) {
 		var x = 0.0;
@@ -3449,45 +3561,71 @@ lime._backend.html5.HTML5Window.prototype = {
 					} else i++;
 				}
 				break;
-			case "mouseup":
-				var listeners1 = this.parent.onMouseUp.listeners;
-				var repeat1 = this.parent.onMouseUp.repeat;
+			case "mouseenter":
+				var listeners1 = this.parent.onWindowEnter.listeners;
+				var repeat1 = this.parent.onWindowEnter.repeat;
 				var length1 = listeners1.length;
 				var i1 = 0;
 				while(i1 < length1) {
-					listeners1[i1](x,y,event.button);
+					listeners1[i1]();
 					if(!repeat1[i1]) {
-						this.parent.onMouseUp.remove(listeners1[i1]);
+						this.parent.onWindowEnter.remove(listeners1[i1]);
 						length1--;
 					} else i1++;
 				}
 				break;
-			case "mousemove":
-				var listeners2 = this.parent.onMouseMove.listeners;
-				var repeat2 = this.parent.onMouseMove.repeat;
+			case "mouseleave":
+				var listeners2 = this.parent.onWindowLeave.listeners;
+				var repeat2 = this.parent.onWindowLeave.repeat;
 				var length2 = listeners2.length;
 				var i2 = 0;
 				while(i2 < length2) {
-					listeners2[i2](x,y);
+					listeners2[i2]();
 					if(!repeat2[i2]) {
-						this.parent.onMouseMove.remove(listeners2[i2]);
+						this.parent.onWindowLeave.remove(listeners2[i2]);
 						length2--;
 					} else i2++;
+				}
+				break;
+			case "mouseup":
+				var listeners3 = this.parent.onMouseUp.listeners;
+				var repeat3 = this.parent.onMouseUp.repeat;
+				var length3 = listeners3.length;
+				var i3 = 0;
+				while(i3 < length3) {
+					listeners3[i3](x,y,event.button);
+					if(!repeat3[i3]) {
+						this.parent.onMouseUp.remove(listeners3[i3]);
+						length3--;
+					} else i3++;
+				}
+				break;
+			case "mousemove":
+				var listeners4 = this.parent.onMouseMove.listeners;
+				var repeat4 = this.parent.onMouseMove.repeat;
+				var length4 = listeners4.length;
+				var i4 = 0;
+				while(i4 < length4) {
+					listeners4[i4](x,y);
+					if(!repeat4[i4]) {
+						this.parent.onMouseMove.remove(listeners4[i4]);
+						length4--;
+					} else i4++;
 				}
 				break;
 			default:
 			}
 		} else {
-			var listeners3 = this.parent.onMouseWheel.listeners;
-			var repeat3 = this.parent.onMouseWheel.repeat;
-			var length3 = listeners3.length;
-			var i3 = 0;
-			while(i3 < length3) {
-				listeners3[i3](event.deltaX,-event.deltaY);
-				if(!repeat3[i3]) {
-					this.parent.onMouseWheel.remove(listeners3[i3]);
-					length3--;
-				} else i3++;
+			var listeners5 = this.parent.onMouseWheel.listeners;
+			var repeat5 = this.parent.onMouseWheel.repeat;
+			var length5 = listeners5.length;
+			var i5 = 0;
+			while(i5 < length5) {
+				listeners5[i5](event.deltaX,-event.deltaY);
+				if(!repeat5[i5]) {
+					this.parent.onMouseWheel.remove(listeners5[i5]);
+					length5--;
+				} else i5++;
 			}
 		}
 	}
@@ -3601,6 +3739,9 @@ lime._backend.html5.HTML5Window.prototype = {
 	}
 	,resize: function(width,height) {
 	}
+	,setEnableTextEvents: function(value) {
+		return this.enableTextEvents = value;
+	}
 	,setFullscreen: function(value) {
 		return false;
 	}
@@ -3654,6 +3795,10 @@ lime.app.Module.prototype = {
 	}
 	,onRenderContextRestored: function(context) {
 	}
+	,onTextEdit: function(text,start,length) {
+	}
+	,onTextInput: function(text) {
+	}
 	,onTouchEnd: function(x,y,id) {
 	}
 	,onTouchMove: function(x,y,id) {
@@ -3666,11 +3811,15 @@ lime.app.Module.prototype = {
 	}
 	,onWindowDeactivate: function() {
 	}
+	,onWindowEnter: function() {
+	}
 	,onWindowFocusIn: function() {
 	}
 	,onWindowFocusOut: function() {
 	}
 	,onWindowFullscreen: function() {
+	}
+	,onWindowLeave: function() {
 	}
 	,onWindowMinimize: function() {
 	}
@@ -3725,15 +3874,19 @@ lime.app.Application.prototype = $extend(lime.app.Module.prototype,{
 		window.onMouseMoveRelative.add($bind(this,this.onMouseMoveRelative));
 		window.onMouseUp.add($bind(this,this.onMouseUp));
 		window.onMouseWheel.add($bind(this,this.onMouseWheel));
+		window.onTextEdit.add($bind(this,this.onTextEdit));
+		window.onTextInput.add($bind(this,this.onTextInput));
 		window.onTouchStart.add($bind(this,this.onTouchStart));
 		window.onTouchMove.add($bind(this,this.onTouchMove));
 		window.onTouchEnd.add($bind(this,this.onTouchEnd));
 		window.onWindowActivate.add($bind(this,this.onWindowActivate));
 		window.onWindowClose.add($bind(this,this.onWindowClose));
 		window.onWindowDeactivate.add($bind(this,this.onWindowDeactivate));
+		window.onWindowEnter.add($bind(this,this.onWindowEnter));
 		window.onWindowFocusIn.add($bind(this,this.onWindowFocusIn));
 		window.onWindowFocusOut.add($bind(this,this.onWindowFocusOut));
 		window.onWindowFullscreen.add($bind(this,this.onWindowFullscreen));
+		window.onWindowLeave.add($bind(this,this.onWindowLeave));
 		window.onWindowMinimize.add($bind(this,this.onWindowMinimize));
 		window.onWindowMove.add($bind(this,this.onWindowMove));
 		window.onWindowResize.add($bind(this,this.onWindowResize));
@@ -3883,6 +4036,24 @@ lime.app.Application.prototype = $extend(lime.app.Module.prototype,{
 			module.onRenderContextRestored(context);
 		}
 	}
+	,onTextEdit: function(text,start,length) {
+		var _g = 0;
+		var _g1 = this.modules;
+		while(_g < _g1.length) {
+			var module = _g1[_g];
+			++_g;
+			module.onTextEdit(text,start,length);
+		}
+	}
+	,onTextInput: function(text) {
+		var _g = 0;
+		var _g1 = this.modules;
+		while(_g < _g1.length) {
+			var module = _g1[_g];
+			++_g;
+			module.onTextInput(text);
+		}
+	}
 	,onTouchEnd: function(x,y,id) {
 		var _g = 0;
 		var _g1 = this.modules;
@@ -3937,6 +4108,15 @@ lime.app.Application.prototype = $extend(lime.app.Module.prototype,{
 			module.onWindowDeactivate();
 		}
 	}
+	,onWindowEnter: function() {
+		var _g = 0;
+		var _g1 = this.modules;
+		while(_g < _g1.length) {
+			var module = _g1[_g];
+			++_g;
+			module.onWindowEnter();
+		}
+	}
 	,onWindowFocusIn: function() {
 		var _g = 0;
 		var _g1 = this.modules;
@@ -3962,6 +4142,15 @@ lime.app.Application.prototype = $extend(lime.app.Module.prototype,{
 			var module = _g1[_g];
 			++_g;
 			module.onWindowFullscreen();
+		}
+	}
+	,onWindowLeave: function() {
+		var _g = 0;
+		var _g1 = this.modules;
+		while(_g < _g1.length) {
+			var module = _g1[_g];
+			++_g;
+			module.onWindowLeave();
 		}
 	}
 	,onWindowMinimize: function() {
@@ -4670,7 +4859,25 @@ lime.audio.AudioSource = function(buffer,offset,length,loops) {
 $hxClasses["lime.audio.AudioSource"] = lime.audio.AudioSource;
 lime.audio.AudioSource.__name__ = ["lime","audio","AudioSource"];
 lime.audio.AudioSource.prototype = {
-	init: function() {
+	dispose: function() {
+		{
+			var _g = lime.audio.AudioManager.context;
+			switch(_g[1]) {
+			case 0:
+				var al = _g[3];
+				var alc = _g[2];
+				if((function($this) {
+					var $r;
+					var $int = $this.id;
+					$r = $int < 0?4294967296.0 + $int:$int + 0.0;
+					return $r;
+				}(this)) != 0) al.deleteSource(this.id);
+				break;
+			default:
+			}
+		}
+	}
+	,init: function() {
 		{
 			var _g = lime.audio.AudioManager.context;
 			switch(_g[1]) {
@@ -5412,21 +5619,25 @@ $hxClasses["lime.graphics.Image"] = lime.graphics.Image;
 lime.graphics.Image.__name__ = ["lime","graphics","Image"];
 lime.graphics.Image.__base64Encoder = null;
 lime.graphics.Image.fromBase64 = function(base64,type,onload) {
+	if(base64 == null) return null;
 	var image = new lime.graphics.Image();
 	image.__fromBase64(base64,type,onload);
 	return image;
 };
 lime.graphics.Image.fromBitmapData = function(bitmapData) {
+	if(bitmapData == null) return null;
 	var buffer = new lime.graphics.ImageBuffer(null,bitmapData.width,bitmapData.height);
 	buffer.__srcBitmapData = bitmapData;
 	return new lime.graphics.Image(buffer);
 };
 lime.graphics.Image.fromBytes = function(bytes,onload) {
+	if(bytes == null) return null;
 	var image = new lime.graphics.Image();
 	image.__fromBytes(bytes,onload);
 	return image;
 };
 lime.graphics.Image.fromCanvas = function(canvas) {
+	if(canvas == null) return null;
 	var buffer = new lime.graphics.ImageBuffer(null,canvas.width,canvas.height);
 	buffer.set_src(canvas);
 	return new lime.graphics.Image(buffer);
@@ -5437,6 +5648,7 @@ lime.graphics.Image.fromFile = function(path,onload,onerror) {
 	return image;
 };
 lime.graphics.Image.fromImageElement = function(image) {
+	if(image == null) return null;
 	var buffer = new lime.graphics.ImageBuffer(null,image.width,image.height);
 	buffer.set_src(image);
 	return new lime.graphics.Image(buffer);
@@ -5554,11 +5766,30 @@ lime.graphics.Image.prototype = {
 	,copyPixels: function(sourceImage,sourceRect,destPoint,alphaImage,alphaPoint,mergeAlpha) {
 		if(mergeAlpha == null) mergeAlpha = false;
 		if(this.buffer == null || sourceImage == null) return;
+		if(sourceRect.width <= 0 || sourceRect.height <= 0) return;
+		if(this.width <= 0 || this.height <= 0) return;
 		if(sourceRect.x + sourceRect.width > sourceImage.width) sourceRect.width = sourceImage.width - sourceRect.x;
 		if(sourceRect.y + sourceRect.height > sourceImage.height) sourceRect.height = sourceImage.height - sourceRect.y;
-		if(sourceRect.width <= 0 || sourceRect.height <= 0) return;
+		if(sourceRect.x < 0) {
+			sourceRect.width += sourceRect.x;
+			sourceRect.x = 0;
+		}
+		if(sourceRect.y < 0) {
+			sourceRect.height += sourceRect.y;
+			sourceRect.y = 0;
+		}
 		if(destPoint.x + sourceRect.width > this.width) sourceRect.width = this.width - destPoint.x;
 		if(destPoint.y + sourceRect.height > this.height) sourceRect.height = this.height - destPoint.y;
+		if(destPoint.x < 0) {
+			sourceRect.width += destPoint.x;
+			sourceRect.x = -destPoint.x;
+			destPoint.x = 0;
+		}
+		if(destPoint.y < 0) {
+			sourceRect.height += destPoint.y;
+			sourceRect.y = -destPoint.y;
+			destPoint.y = 0;
+		}
 		var _g = this.type;
 		switch(_g[1]) {
 		case 0:
@@ -5598,7 +5829,7 @@ lime.graphics.Image.prototype = {
 			break;
 		case 2:
 			rect.offset(this.offsetX,this.offsetY);
-			if(format == null || format == lime.graphics.PixelFormat.RGBA) color = (color & 255) << 24 | color >> 8;
+			if(format == null || format == 0) color = (color & 255) << 24 | color >> 8;
 			this.buffer.__srcBitmapData.fillRect(rect.__toFlashRectangle(),color);
 			break;
 		default:
@@ -5616,10 +5847,27 @@ lime.graphics.Image.prototype = {
 			lime.graphics.utils.ImageDataUtil.floodFill(this,x,y,color,format);
 			break;
 		case 2:
-			if(format == null || format == lime.graphics.PixelFormat.RGBA) color = (color & 255) << 24 | color >> 8;
+			if(format == null || format == 0) color = (color & 255) << 24 | color >> 8;
 			this.buffer.__srcBitmapData.floodFill(x + this.offsetX,y + this.offsetY,color);
 			break;
 		default:
+		}
+	}
+	,getColorBoundsRect: function(mask,color,findColor,format) {
+		if(findColor == null) findColor = true;
+		if(this.buffer == null) return null;
+		var _g = this.type;
+		switch(_g[1]) {
+		case 0:
+			lime.graphics.utils.ImageCanvasUtil.convertToData(this);
+			return lime.graphics.utils.ImageDataUtil.getColorBoundsRect(this,mask,color,findColor,format);
+		case 1:
+			return lime.graphics.utils.ImageDataUtil.getColorBoundsRect(this,mask,color,findColor,format);
+		case 2:
+			var rect = this.buffer.__srcBitmapData.getColorBoundsRect(mask,color,findColor);
+			return new lime.math.Rectangle(rect.x,rect.y,rect.width,rect.height);
+		default:
+			return null;
 		}
 	}
 	,getPixel: function(x,y,format) {
@@ -5633,7 +5881,7 @@ lime.graphics.Image.prototype = {
 			return lime.graphics.utils.ImageDataUtil.getPixel(this,x,y,format);
 		case 2:
 			var color = this.buffer.__srcBitmapData.getPixel(x + this.offsetX,y + this.offsetY);
-			if(format == null || format == lime.graphics.PixelFormat.RGBA) return (color & 255) << 24 | color >> 8; else return color;
+			if(format == null || format == 0) return (color & 255) << 24 | color >> 8; else return color;
 			break;
 		default:
 			return 0;
@@ -5650,7 +5898,7 @@ lime.graphics.Image.prototype = {
 			return lime.graphics.utils.ImageDataUtil.getPixel32(this,x,y,format);
 		case 2:
 			var color = this.buffer.__srcBitmapData.getPixel32(x + this.offsetX,y + this.offsetY);
-			if(format == null || format == lime.graphics.PixelFormat.RGBA) return (color & 255) << 24 | color >> 8; else return color;
+			if(format == null || format == 0) return (color & 255) << 24 | color >> 8; else return color;
 			break;
 		default:
 			return 0;
@@ -5668,7 +5916,7 @@ lime.graphics.Image.prototype = {
 		case 2:
 			rect.offset(this.offsetX,this.offsetY);
 			var byteArray = this.buffer.__srcBitmapData.getPixels(rect.__toFlashRectangle());
-			if(format == null || format == lime.graphics.PixelFormat.RGBA) {
+			if(format == null || format == 0) {
 				var color;
 				var length = byteArray.length / 4 | 0;
 				var _g1 = 0;
@@ -5738,7 +5986,7 @@ lime.graphics.Image.prototype = {
 			lime.graphics.utils.ImageDataUtil.setPixel(this,x,y,color,format);
 			break;
 		case 2:
-			if(format == null || format == lime.graphics.PixelFormat.RGBA) color = (color & 255) << 24 | color >> 8;
+			if(format == null || format == 0) color = (color & 255) << 24 | color >> 8;
 			this.buffer.__srcBitmapData.setPixel(x + this.offsetX,y + this.offsetX,color);
 			break;
 		default:
@@ -5756,7 +6004,7 @@ lime.graphics.Image.prototype = {
 			lime.graphics.utils.ImageDataUtil.setPixel32(this,x,y,color,format);
 			break;
 		case 2:
-			if(format == null || format == lime.graphics.PixelFormat.RGBA) color = (color & 255) << 24 | color >> 8;
+			if(format == null || format == 0) color = (color & 255) << 24 | color >> 8;
 			this.buffer.__srcBitmapData.setPixel32(x + this.offsetX,y + this.offsetY,color);
 			break;
 		default:
@@ -5776,7 +6024,7 @@ lime.graphics.Image.prototype = {
 			break;
 		case 2:
 			rect.offset(this.offsetX,this.offsetY);
-			if(format == null || format == lime.graphics.PixelFormat.RGBA) {
+			if(format == null || format == 0) {
 				var srcData = byteArray;
 				byteArray = new lime.utils.ByteArray();
 				var color;
@@ -5872,6 +6120,21 @@ lime.graphics.Image.prototype = {
 	,set_data: function(value) {
 		return this.buffer.data = value;
 	}
+	,get_format: function() {
+		return this.buffer.format;
+	}
+	,set_format: function(value) {
+		if(this.buffer.format != value) {
+			var _g = this.type;
+			switch(_g[1]) {
+			case 1:
+				lime.graphics.utils.ImageDataUtil.setFormat(this,value);
+				break;
+			default:
+			}
+		}
+		return this.buffer.format = value;
+	}
 	,get_powerOfTwo: function() {
 		return this.buffer.width != 0 && (this.buffer.width & ~this.buffer.width + 1) == this.buffer.width && (this.buffer.height != 0 && (this.buffer.height & ~this.buffer.height + 1) == this.buffer.height);
 	}
@@ -5930,14 +6193,16 @@ lime.graphics.Image.prototype = {
 		return this.buffer.set_src(value);
 	}
 	,get_transparent: function() {
+		if(this.buffer == null) return false;
 		return this.buffer.transparent;
 	}
 	,set_transparent: function(value) {
+		if(this.buffer == null) return false;
 		return this.buffer.transparent = value;
 	}
 	,__class__: lime.graphics.Image
 };
-lime.graphics.ImageBuffer = function(data,width,height,bitsPerPixel) {
+lime.graphics.ImageBuffer = function(data,width,height,bitsPerPixel,format) {
 	if(bitsPerPixel == null) bitsPerPixel = 4;
 	if(height == null) height = 0;
 	if(width == null) width = 0;
@@ -5945,6 +6210,7 @@ lime.graphics.ImageBuffer = function(data,width,height,bitsPerPixel) {
 	this.width = width;
 	this.height = height;
 	this.bitsPerPixel = bitsPerPixel;
+	if(format == null) this.format = 0; else this.format = format;
 	this.transparent = true;
 };
 $hxClasses["lime.graphics.ImageBuffer"] = lime.graphics.ImageBuffer;
@@ -5986,6 +6252,9 @@ lime.graphics.ImageBuffer.prototype = {
 		}
 		return value;
 	}
+	,get_stride: function() {
+		return this.width * 4;
+	}
 	,__class__: lime.graphics.ImageBuffer
 };
 lime.graphics.ImageChannel = $hxClasses["lime.graphics.ImageChannel"] = { __ename__ : true, __constructs__ : ["RED","GREEN","BLUE","ALPHA"] };
@@ -6014,20 +6283,21 @@ lime.graphics.ImageType.FLASH.__enum__ = lime.graphics.ImageType;
 lime.graphics.ImageType.CUSTOM = ["CUSTOM",3];
 lime.graphics.ImageType.CUSTOM.toString = $estr;
 lime.graphics.ImageType.CUSTOM.__enum__ = lime.graphics.ImageType;
-lime.graphics.PixelFormat = $hxClasses["lime.graphics.PixelFormat"] = { __ename__ : true, __constructs__ : ["RGBA","ARGB"] };
-lime.graphics.PixelFormat.RGBA = ["RGBA",0];
-lime.graphics.PixelFormat.RGBA.toString = $estr;
-lime.graphics.PixelFormat.RGBA.__enum__ = lime.graphics.PixelFormat;
-lime.graphics.PixelFormat.ARGB = ["ARGB",1];
-lime.graphics.PixelFormat.ARGB.toString = $estr;
-lime.graphics.PixelFormat.ARGB.__enum__ = lime.graphics.PixelFormat;
-lime.graphics.RenderContext = $hxClasses["lime.graphics.RenderContext"] = { __ename__ : true, __constructs__ : ["OPENGL","CANVAS","DOM","FLASH","CONSOLE","CUSTOM"] };
+lime.graphics._PixelFormat = {};
+lime.graphics._PixelFormat.PixelFormat_Impl_ = function() { };
+$hxClasses["lime.graphics._PixelFormat.PixelFormat_Impl_"] = lime.graphics._PixelFormat.PixelFormat_Impl_;
+lime.graphics._PixelFormat.PixelFormat_Impl_.__name__ = ["lime","graphics","_PixelFormat","PixelFormat_Impl_"];
+lime.graphics.RenderContext = $hxClasses["lime.graphics.RenderContext"] = { __ename__ : true, __constructs__ : ["OPENGL","CANVAS","DOM","FLASH","CAIRO","CONSOLE","CUSTOM","NONE"] };
 lime.graphics.RenderContext.OPENGL = function(gl) { var $x = ["OPENGL",0,gl]; $x.__enum__ = lime.graphics.RenderContext; $x.toString = $estr; return $x; };
 lime.graphics.RenderContext.CANVAS = function(context) { var $x = ["CANVAS",1,context]; $x.__enum__ = lime.graphics.RenderContext; $x.toString = $estr; return $x; };
 lime.graphics.RenderContext.DOM = function(element) { var $x = ["DOM",2,element]; $x.__enum__ = lime.graphics.RenderContext; $x.toString = $estr; return $x; };
 lime.graphics.RenderContext.FLASH = function(stage) { var $x = ["FLASH",3,stage]; $x.__enum__ = lime.graphics.RenderContext; $x.toString = $estr; return $x; };
-lime.graphics.RenderContext.CONSOLE = function(context) { var $x = ["CONSOLE",4,context]; $x.__enum__ = lime.graphics.RenderContext; $x.toString = $estr; return $x; };
-lime.graphics.RenderContext.CUSTOM = function(data) { var $x = ["CUSTOM",5,data]; $x.__enum__ = lime.graphics.RenderContext; $x.toString = $estr; return $x; };
+lime.graphics.RenderContext.CAIRO = function(cairo) { var $x = ["CAIRO",4,cairo]; $x.__enum__ = lime.graphics.RenderContext; $x.toString = $estr; return $x; };
+lime.graphics.RenderContext.CONSOLE = function(context) { var $x = ["CONSOLE",5,context]; $x.__enum__ = lime.graphics.RenderContext; $x.toString = $estr; return $x; };
+lime.graphics.RenderContext.CUSTOM = function(data) { var $x = ["CUSTOM",6,data]; $x.__enum__ = lime.graphics.RenderContext; $x.toString = $estr; return $x; };
+lime.graphics.RenderContext.NONE = ["NONE",7];
+lime.graphics.RenderContext.NONE.toString = $estr;
+lime.graphics.RenderContext.NONE.__enum__ = lime.graphics.RenderContext;
 lime.graphics.Renderer = function(window) {
 	this.onRender = new lime.app.Event();
 	this.onRenderContextRestored = new lime.app.Event();
@@ -6049,6 +6319,315 @@ lime.graphics.Renderer.prototype = {
 		this.backend.render();
 	}
 	,__class__: lime.graphics.Renderer
+};
+lime.graphics.cairo = {};
+lime.graphics.cairo.Cairo = function(surface) {
+	if(surface != null) {
+	}
+};
+$hxClasses["lime.graphics.cairo.Cairo"] = lime.graphics.cairo.Cairo;
+lime.graphics.cairo.Cairo.__name__ = ["lime","graphics","cairo","Cairo"];
+lime.graphics.cairo.Cairo.version = null;
+lime.graphics.cairo.Cairo.versionString = null;
+lime.graphics.cairo.Cairo.get_version = function() {
+	return 0;
+};
+lime.graphics.cairo.Cairo.get_versionString = function() {
+	return "";
+};
+lime.graphics.cairo.Cairo.prototype = {
+	arc: function(xc,yc,radius,angle1,angle2) {
+	}
+	,arcNegative: function(xc,yc,radius,angle1,angle2) {
+	}
+	,clip: function() {
+	}
+	,clipExtents: function(x1,y1,x2,y2) {
+	}
+	,clipPreserve: function() {
+	}
+	,closePath: function() {
+	}
+	,copyPage: function() {
+	}
+	,curveTo: function(x1,y1,x2,y2,x3,y3) {
+	}
+	,destroy: function() {
+	}
+	,fill: function() {
+	}
+	,fillExtents: function(x1,y1,x2,y2) {
+	}
+	,fillPreserve: function() {
+	}
+	,identityMatrix: function() {
+	}
+	,inClip: function(x,y) {
+		return false;
+	}
+	,inFill: function(x,y) {
+		return false;
+	}
+	,inStroke: function(x,y) {
+		return false;
+	}
+	,lineTo: function(x,y) {
+	}
+	,moveTo: function(x,y) {
+	}
+	,mask: function(pattern) {
+	}
+	,maskSurface: function(surface,x,y) {
+	}
+	,newPath: function() {
+	}
+	,paint: function() {
+	}
+	,paintWithAlpha: function(alpha) {
+	}
+	,popGroup: function() {
+		return null;
+	}
+	,popGroupToSource: function() {
+	}
+	,pushGroup: function() {
+	}
+	,pushGroupWithContent: function(content) {
+	}
+	,rectangle: function(x,y,width,height) {
+	}
+	,reference: function() {
+	}
+	,relCurveTo: function(dx1,dy1,dx2,dy2,dx3,dy3) {
+	}
+	,relLineTo: function(dx,dy) {
+	}
+	,relMoveTo: function(dx,dy) {
+	}
+	,resetClip: function() {
+	}
+	,restore: function() {
+	}
+	,save: function() {
+	}
+	,setSourceRGB: function(r,g,b) {
+	}
+	,setSourceRGBA: function(r,g,b,a) {
+	}
+	,setSourceSurface: function(surface,x,y) {
+	}
+	,showPage: function() {
+	}
+	,status: function() {
+		return 0;
+	}
+	,stroke: function() {
+	}
+	,strokeExtents: function(x1,y1,x2,y2) {
+	}
+	,strokePreserve: function() {
+	}
+	,transform: function(matrix) {
+	}
+	,translate: function(x,y) {
+	}
+	,get_antialias: function() {
+		return 0;
+	}
+	,set_antialias: function(value) {
+		return value;
+	}
+	,get_currentPoint: function() {
+		return null;
+	}
+	,get_dash: function() {
+		return [];
+	}
+	,set_dash: function(value) {
+		return value;
+	}
+	,get_dashCount: function() {
+		return 0;
+	}
+	,get_fillRule: function() {
+		return 0;
+	}
+	,set_fillRule: function(value) {
+		return value;
+	}
+	,get_groupTarget: function() {
+		return 0;
+	}
+	,get_hasCurrentPoint: function() {
+		return false;
+	}
+	,get_lineCap: function() {
+		return 0;
+	}
+	,set_lineCap: function(value) {
+		return value;
+	}
+	,get_lineJoin: function() {
+		return 0;
+	}
+	,set_lineJoin: function(value) {
+		return value;
+	}
+	,get_lineWidth: function() {
+		return 0;
+	}
+	,set_lineWidth: function(value) {
+		return value;
+	}
+	,get_matrix: function() {
+		return null;
+	}
+	,set_matrix: function(value) {
+		return value;
+	}
+	,get_miterLimit: function() {
+		return 0;
+	}
+	,set_miterLimit: function(value) {
+		return value;
+	}
+	,get_operator: function() {
+		return 0;
+	}
+	,set_operator: function(value) {
+		return value;
+	}
+	,get_referenceCount: function() {
+		return 0;
+	}
+	,get_source: function() {
+		return 0;
+	}
+	,set_source: function(value) {
+		return value;
+	}
+	,get_target: function() {
+		return 0;
+	}
+	,get_tolerance: function() {
+		return 0;
+	}
+	,set_tolerance: function(value) {
+		return value;
+	}
+	,__class__: lime.graphics.cairo.Cairo
+};
+lime.graphics.cairo._CairoAntialias = {};
+lime.graphics.cairo._CairoAntialias.CairoAntialias_Impl_ = function() { };
+$hxClasses["lime.graphics.cairo._CairoAntialias.CairoAntialias_Impl_"] = lime.graphics.cairo._CairoAntialias.CairoAntialias_Impl_;
+lime.graphics.cairo._CairoAntialias.CairoAntialias_Impl_.__name__ = ["lime","graphics","cairo","_CairoAntialias","CairoAntialias_Impl_"];
+lime.graphics.cairo._CairoContent = {};
+lime.graphics.cairo._CairoContent.CairoContent_Impl_ = function() { };
+$hxClasses["lime.graphics.cairo._CairoContent.CairoContent_Impl_"] = lime.graphics.cairo._CairoContent.CairoContent_Impl_;
+lime.graphics.cairo._CairoContent.CairoContent_Impl_.__name__ = ["lime","graphics","cairo","_CairoContent","CairoContent_Impl_"];
+lime.graphics.cairo._CairoExtend = {};
+lime.graphics.cairo._CairoExtend.CairoExtend_Impl_ = function() { };
+$hxClasses["lime.graphics.cairo._CairoExtend.CairoExtend_Impl_"] = lime.graphics.cairo._CairoExtend.CairoExtend_Impl_;
+lime.graphics.cairo._CairoExtend.CairoExtend_Impl_.__name__ = ["lime","graphics","cairo","_CairoExtend","CairoExtend_Impl_"];
+lime.graphics.cairo._CairoFillRule = {};
+lime.graphics.cairo._CairoFillRule.CairoFillRule_Impl_ = function() { };
+$hxClasses["lime.graphics.cairo._CairoFillRule.CairoFillRule_Impl_"] = lime.graphics.cairo._CairoFillRule.CairoFillRule_Impl_;
+lime.graphics.cairo._CairoFillRule.CairoFillRule_Impl_.__name__ = ["lime","graphics","cairo","_CairoFillRule","CairoFillRule_Impl_"];
+lime.graphics.cairo._CairoFilter = {};
+lime.graphics.cairo._CairoFilter.CairoFilter_Impl_ = function() { };
+$hxClasses["lime.graphics.cairo._CairoFilter.CairoFilter_Impl_"] = lime.graphics.cairo._CairoFilter.CairoFilter_Impl_;
+lime.graphics.cairo._CairoFilter.CairoFilter_Impl_.__name__ = ["lime","graphics","cairo","_CairoFilter","CairoFilter_Impl_"];
+lime.graphics.cairo._CairoFormat = {};
+lime.graphics.cairo._CairoFormat.CairoFormat_Impl_ = function() { };
+$hxClasses["lime.graphics.cairo._CairoFormat.CairoFormat_Impl_"] = lime.graphics.cairo._CairoFormat.CairoFormat_Impl_;
+lime.graphics.cairo._CairoFormat.CairoFormat_Impl_.__name__ = ["lime","graphics","cairo","_CairoFormat","CairoFormat_Impl_"];
+lime.graphics.cairo._CairoLineCap = {};
+lime.graphics.cairo._CairoLineCap.CairoLineCap_Impl_ = function() { };
+$hxClasses["lime.graphics.cairo._CairoLineCap.CairoLineCap_Impl_"] = lime.graphics.cairo._CairoLineCap.CairoLineCap_Impl_;
+lime.graphics.cairo._CairoLineCap.CairoLineCap_Impl_.__name__ = ["lime","graphics","cairo","_CairoLineCap","CairoLineCap_Impl_"];
+lime.graphics.cairo._CairoLineJoin = {};
+lime.graphics.cairo._CairoLineJoin.CairoLineJoin_Impl_ = function() { };
+$hxClasses["lime.graphics.cairo._CairoLineJoin.CairoLineJoin_Impl_"] = lime.graphics.cairo._CairoLineJoin.CairoLineJoin_Impl_;
+lime.graphics.cairo._CairoLineJoin.CairoLineJoin_Impl_.__name__ = ["lime","graphics","cairo","_CairoLineJoin","CairoLineJoin_Impl_"];
+lime.graphics.cairo._CairoOperator = {};
+lime.graphics.cairo._CairoOperator.CairoOperator_Impl_ = function() { };
+$hxClasses["lime.graphics.cairo._CairoOperator.CairoOperator_Impl_"] = lime.graphics.cairo._CairoOperator.CairoOperator_Impl_;
+lime.graphics.cairo._CairoOperator.CairoOperator_Impl_.__name__ = ["lime","graphics","cairo","_CairoOperator","CairoOperator_Impl_"];
+lime.graphics.cairo._CairoPattern = {};
+lime.graphics.cairo._CairoPattern.CairoPattern_Impl_ = function() { };
+$hxClasses["lime.graphics.cairo._CairoPattern.CairoPattern_Impl_"] = lime.graphics.cairo._CairoPattern.CairoPattern_Impl_;
+lime.graphics.cairo._CairoPattern.CairoPattern_Impl_.__name__ = ["lime","graphics","cairo","_CairoPattern","CairoPattern_Impl_"];
+lime.graphics.cairo._CairoPattern.CairoPattern_Impl_._new = function(handle) {
+	return handle;
+};
+lime.graphics.cairo._CairoPattern.CairoPattern_Impl_.addColorStopRGB = function(this1,offset,r,g,b) {
+};
+lime.graphics.cairo._CairoPattern.CairoPattern_Impl_.addColorStopRGBA = function(this1,offset,r,g,b,a) {
+};
+lime.graphics.cairo._CairoPattern.CairoPattern_Impl_.createForSurface = function(surface) {
+	return 0;
+};
+lime.graphics.cairo._CairoPattern.CairoPattern_Impl_.createLinear = function(x0,y0,x1,y1) {
+	return 0;
+};
+lime.graphics.cairo._CairoPattern.CairoPattern_Impl_.createRadial = function(cx0,cy0,radius0,cx1,cy1,radius1) {
+	return 0;
+};
+lime.graphics.cairo._CairoPattern.CairoPattern_Impl_.createRGB = function(r,g,b) {
+	return 0;
+};
+lime.graphics.cairo._CairoPattern.CairoPattern_Impl_.createRGBA = function(r,g,b,a) {
+	return 0;
+};
+lime.graphics.cairo._CairoPattern.CairoPattern_Impl_.destroy = function(this1) {
+};
+lime.graphics.cairo._CairoPattern.CairoPattern_Impl_.get_colorStopCount = function(this1) {
+	return 0;
+};
+lime.graphics.cairo._CairoPattern.CairoPattern_Impl_.get_extend = function(this1) {
+	return 0;
+};
+lime.graphics.cairo._CairoPattern.CairoPattern_Impl_.set_extend = function(this1,value) {
+	return value;
+};
+lime.graphics.cairo._CairoPattern.CairoPattern_Impl_.get_filter = function(this1) {
+	return 0;
+};
+lime.graphics.cairo._CairoPattern.CairoPattern_Impl_.set_filter = function(this1,value) {
+	return value;
+};
+lime.graphics.cairo._CairoPattern.CairoPattern_Impl_.get_matrix = function(this1) {
+	return null;
+};
+lime.graphics.cairo._CairoPattern.CairoPattern_Impl_.set_matrix = function(this1,value) {
+	return value;
+};
+lime.graphics.cairo._CairoStatus = {};
+lime.graphics.cairo._CairoStatus.CairoStatus_Impl_ = function() { };
+$hxClasses["lime.graphics.cairo._CairoStatus.CairoStatus_Impl_"] = lime.graphics.cairo._CairoStatus.CairoStatus_Impl_;
+lime.graphics.cairo._CairoStatus.CairoStatus_Impl_.__name__ = ["lime","graphics","cairo","_CairoStatus","CairoStatus_Impl_"];
+lime.graphics.cairo._CairoSurface = {};
+lime.graphics.cairo._CairoSurface.CairoSurface_Impl_ = function() { };
+$hxClasses["lime.graphics.cairo._CairoSurface.CairoSurface_Impl_"] = lime.graphics.cairo._CairoSurface.CairoSurface_Impl_;
+lime.graphics.cairo._CairoSurface.CairoSurface_Impl_.__name__ = ["lime","graphics","cairo","_CairoSurface","CairoSurface_Impl_"];
+lime.graphics.cairo._CairoSurface.CairoSurface_Impl_._new = function(format,width,height) {
+	return 0;
+};
+lime.graphics.cairo._CairoSurface.CairoSurface_Impl_.createForData = function(data,format,width,height,stride) {
+	return 0;
+};
+lime.graphics.cairo._CairoSurface.CairoSurface_Impl_.destroy = function(this1) {
+};
+lime.graphics.cairo._CairoSurface.CairoSurface_Impl_.flush = function(this1) {
+};
+lime.graphics.cairo._CairoSurface.CairoSurface_Impl_.fromImage = function(image) {
+	return null;
+};
+lime.graphics.cairo._CairoSurface.CairoSurface_Impl_.get_height = function(this1) {
+	return 0;
+};
+lime.graphics.cairo._CairoSurface.CairoSurface_Impl_.get_width = function(this1) {
+	return 0;
 };
 lime.graphics.format = {};
 lime.graphics.format.BMP = function() { };
@@ -6106,7 +6685,7 @@ lime.graphics.format.BMP.encode = function(image,type) {
 			data.writeByte(0);
 		}
 	}
-	var pixels = image.getPixels(new lime.math.Rectangle(0,0,image.width,image.height),lime.graphics.PixelFormat.ARGB);
+	var pixels = image.getPixels(new lime.math.Rectangle(0,0,image.width,image.height),1);
 	var a;
 	var r;
 	var g;
@@ -6710,7 +7289,7 @@ lime.graphics.utils.ImageCanvasUtil.fillRect = function(image,rect,color,format)
 	var g;
 	var b;
 	var a;
-	if(format == lime.graphics.PixelFormat.ARGB) {
+	if(format == 1) {
 		r = color >> 16 & 255;
 		g = color >> 8 & 255;
 		b = color & 255;
@@ -6918,6 +7497,8 @@ lime.graphics.utils.ImageDataUtil.copyPixels = function(image,sourceImage,source
 		}
 	} else {
 		var sourceAlpha;
+		var destAlpha;
+		var outA;
 		var oneMinusSourceAlpha;
 		var _g11 = Std["int"](sourceRect.get_top() + sourceImage.offsetY);
 		var _g4 = Std["int"](sourceRect.get_bottom() + sourceImage.offsetY);
@@ -6929,12 +7510,18 @@ lime.graphics.utils.ImageDataUtil.copyPixels = function(image,sourceImage,source
 				var column1 = _g31++;
 				sourceOffset = row1 * sourceStride + column1 * 4;
 				offset = (row1 + rowOffset) * stride + (column1 + columnOffset) * 4;
-				sourceAlpha = sourceData[sourceOffset + 3] / 255;
+				sourceAlpha = sourceData[sourceOffset + 3] / 255.0;
+				destAlpha = data[offset + 3] / 255.0;
 				oneMinusSourceAlpha = 1 - sourceAlpha;
-				data[offset] = lime.graphics.utils.ImageDataUtil.__clamp[sourceData[sourceOffset] + data[offset] * oneMinusSourceAlpha | 0];
-				data[offset + 1] = lime.graphics.utils.ImageDataUtil.__clamp[sourceData[sourceOffset + 1] + data[offset + 1] * oneMinusSourceAlpha | 0];
-				data[offset + 2] = lime.graphics.utils.ImageDataUtil.__clamp[sourceData[sourceOffset + 2] + data[offset + 2] * oneMinusSourceAlpha | 0];
-				data[offset + 3] = lime.graphics.utils.ImageDataUtil.__clamp[sourceData[sourceOffset + 3] + data[offset + 3] * oneMinusSourceAlpha | 0];
+				outA = sourceAlpha + destAlpha * oneMinusSourceAlpha;
+				var index = Math.round((sourceData[sourceOffset] * sourceAlpha + data[offset] * destAlpha * oneMinusSourceAlpha) / outA);
+				data[offset] = lime.graphics.utils.ImageDataUtil.__clamp[index];
+				var index1 = Math.round((sourceData[sourceOffset + 1] * sourceAlpha + data[offset + 1] * destAlpha * oneMinusSourceAlpha) / outA);
+				data[offset + 1] = lime.graphics.utils.ImageDataUtil.__clamp[index1];
+				var index2 = Math.round((sourceData[sourceOffset + 2] * sourceAlpha + data[offset + 2] * destAlpha * oneMinusSourceAlpha) / outA);
+				data[offset + 2] = lime.graphics.utils.ImageDataUtil.__clamp[index2];
+				var index3 = Math.round(outA * 255.0);
+				data[offset + 3] = lime.graphics.utils.ImageDataUtil.__clamp[index3];
 			}
 		}
 	}
@@ -6945,7 +7532,7 @@ lime.graphics.utils.ImageDataUtil.fillRect = function(image,rect,color,format) {
 	var g;
 	var b;
 	var a;
-	if(format == lime.graphics.PixelFormat.ARGB) {
+	if(format == 1) {
 		if(image.get_transparent()) a = color >> 24 & 255; else a = 255;
 		r = color >> 16 & 255;
 		g = color >> 8 & 255;
@@ -6997,7 +7584,7 @@ lime.graphics.utils.ImageDataUtil.fillRect = function(image,rect,color,format) {
 lime.graphics.utils.ImageDataUtil.floodFill = function(image,x,y,color,format) {
 	var data = image.buffer.data;
 	if(data == null) return;
-	if(format == lime.graphics.PixelFormat.ARGB) color = (color & 16777215) << 8 | color >> 24 & 255;
+	if(format == 1) color = (color & 16777215) << 8 | color >> 24 & 255;
 	var offset = (y + image.offsetY) * (image.buffer.width * 4) + (x + image.offsetX) * 4;
 	var hitColorR = data[offset];
 	var hitColorG = data[offset + 1];
@@ -7041,6 +7628,128 @@ lime.graphics.utils.ImageDataUtil.floodFill = function(image,x,y,color,format) {
 	}
 	image.dirty = true;
 };
+lime.graphics.utils.ImageDataUtil.getColorBoundsRect = function(image,mask,color,findColor,format) {
+	if(findColor == null) findColor = true;
+	var left = image.width + 1;
+	var right = 0;
+	var top = image.height + 1;
+	var bottom = 0;
+	var r;
+	var g;
+	var b;
+	var a;
+	var mr;
+	var mg;
+	var mb;
+	var ma;
+	if(format == 1) {
+		if(image.get_transparent()) a = color >> 24 & 255; else a = 255;
+		r = color >> 16 & 255;
+		g = color >> 8 & 255;
+		b = color & 255;
+		if(image.get_transparent()) ma = mask >> 24 & 255; else ma = 255;
+		mr = mask >> 16 & 255;
+		mg = mask >> 8 & 255;
+		mb = mask & 255;
+	} else {
+		r = color >> 24 & 255;
+		g = color >> 16 & 255;
+		b = color >> 8 & 255;
+		if(image.get_transparent()) a = color & 255; else a = 255;
+		mr = mask >> 24 & 255;
+		mg = mask >> 16 & 255;
+		mb = mask >> 8 & 255;
+		if(image.get_transparent()) ma = mask & 255; else ma = 255;
+	}
+	color = r | g << 8 | b << 16 | a << 24;
+	mask = mr | mg << 8 | mb << 16 | mask << 24;
+	var pix;
+	var _g1 = 0;
+	var _g = image.width;
+	while(_g1 < _g) {
+		var ix = _g1++;
+		var hit = false;
+		var _g3 = 0;
+		var _g2 = image.height;
+		while(_g3 < _g2) {
+			var iy = _g3++;
+			pix = image.getPixel32(ix,iy);
+			if(findColor) hit = (pix & mask) == color; else hit = (pix & mask) != color;
+			if(hit) {
+				if(ix < left) left = ix;
+				break;
+			}
+		}
+		if(hit) break;
+	}
+	var _g11 = 0;
+	var _g4 = image.width;
+	while(_g11 < _g4) {
+		var _ix = _g11++;
+		var ix1 = image.width - 1 - _ix;
+		var hit1 = false;
+		var _g31 = 0;
+		var _g21 = image.height;
+		while(_g31 < _g21) {
+			var iy1 = _g31++;
+			pix = image.getPixel32(ix1,iy1);
+			if(findColor) hit1 = (pix & mask) == color; else hit1 = (pix & mask) != color;
+			if(hit1) {
+				if(ix1 > right) right = ix1;
+				break;
+			}
+		}
+		if(hit1) break;
+	}
+	var _g12 = 0;
+	var _g5 = image.height;
+	while(_g12 < _g5) {
+		var iy2 = _g12++;
+		var hit2 = false;
+		var _g32 = 0;
+		var _g22 = image.width;
+		while(_g32 < _g22) {
+			var ix2 = _g32++;
+			pix = image.getPixel32(ix2,iy2);
+			if(findColor) hit2 = (pix & mask) == color; else hit2 = (pix & mask) != color;
+			if(hit2) {
+				if(iy2 < top) top = iy2;
+				break;
+			}
+		}
+		if(hit2) break;
+	}
+	var _g13 = 0;
+	var _g6 = image.height;
+	while(_g13 < _g6) {
+		var _iy = _g13++;
+		var iy3 = image.height - 1 - _iy;
+		var hit3 = false;
+		var _g33 = 0;
+		var _g23 = image.width;
+		while(_g33 < _g23) {
+			var ix3 = _g33++;
+			pix = image.getPixel32(ix3,iy3);
+			if(findColor) hit3 = (pix & mask) == color; else hit3 = (pix & mask) != color;
+			if(hit3) {
+				if(iy3 > bottom) bottom = iy3;
+				break;
+			}
+		}
+		if(hit3) break;
+	}
+	var w = right - left;
+	var h = bottom - top;
+	if(w > 0) w++;
+	if(h > 0) h++;
+	if(w < 0) w = 0;
+	if(h < 0) h = 0;
+	if(left == right) w = 1;
+	if(top == bottom) h = 1;
+	if(left > image.width) left = 0;
+	if(top > image.height) top = 0;
+	return new lime.math.Rectangle(left,top,w,h);
+};
 lime.graphics.utils.ImageDataUtil.getPixel = function(image,x,y,format) {
 	var data = image.buffer.data;
 	var offset = 4 * (y + image.offsetY) * image.buffer.width + (x + image.offsetX) * 4;
@@ -7049,7 +7758,7 @@ lime.graphics.utils.ImageDataUtil.getPixel = function(image,x,y,format) {
 		var unmultiply = 255.0 / data[offset + 3];
 		pixel = lime.graphics.utils.ImageDataUtil.__clamp[data[offset] * unmultiply | 0] << 24 | lime.graphics.utils.ImageDataUtil.__clamp[data[offset + 1] * unmultiply | 0] << 16 | lime.graphics.utils.ImageDataUtil.__clamp[data[offset + 2] * unmultiply | 0] << 8;
 	} else pixel = data[offset] << 24 | data[offset + 1] << 16 | data[offset + 2] << 8;
-	if(format == lime.graphics.PixelFormat.ARGB) return pixel >> 8 & 16777215; else return pixel;
+	if(format == 1) return pixel >> 8 & 16777215; else return pixel;
 };
 lime.graphics.utils.ImageDataUtil.getPixel32 = function(image,x,y,format) {
 	var data = image.buffer.data;
@@ -7072,7 +7781,7 @@ lime.graphics.utils.ImageDataUtil.getPixel32 = function(image,x,y,format) {
 		g = data[offset + 1];
 		b = data[offset + 2];
 	}
-	if(format == lime.graphics.PixelFormat.ARGB) return a << 24 | r << 16 | g << 8 | b; else return r << 24 | g << 16 | b << 8 | a;
+	if(format == 1) return a << 24 | r << 16 | g << 8 | b; else return r << 24 | g << 16 | b << 8 | a;
 };
 lime.graphics.utils.ImageDataUtil.getPixels = function(image,rect,format) {
 	if(image.buffer.data == null) return null;
@@ -7085,7 +7794,7 @@ lime.graphics.utils.ImageDataUtil.getPixels = function(image,rect,format) {
 	var srcRowOffset = srcStride - (4 * rect.width | 0);
 	var srcRowEnd = 4 * (rect.x + rect.width) | 0;
 	byteArray.set_length(length * 4);
-	if(format == lime.graphics.PixelFormat.ARGB) {
+	if(format == 1) {
 		var _g = 0;
 		while(_g < length) {
 			var i = _g++;
@@ -7231,10 +7940,85 @@ lime.graphics.utils.ImageDataUtil.resizeBuffer = function(image,newWidth,newHeig
 	buffer.width = newWidth;
 	buffer.height = newHeight;
 };
+lime.graphics.utils.ImageDataUtil.setFormat = function(image,format) {
+	var data = image.buffer.data;
+	if(data == null) return;
+	var index;
+	var a16;
+	var length = data.length / 4 | 0;
+	var r1;
+	var g1;
+	var b1;
+	var a1;
+	var r2;
+	var g2;
+	var b2;
+	var a2;
+	var r;
+	var g;
+	var b;
+	var a;
+	var _g = image.get_format();
+	switch(_g) {
+	case 0:
+		r1 = 0;
+		g1 = 1;
+		b1 = 2;
+		a1 = 3;
+		break;
+	case 1:
+		r1 = 1;
+		g1 = 2;
+		b1 = 3;
+		a1 = 0;
+		break;
+	case 2:
+		r1 = 2;
+		g1 = 1;
+		b1 = 0;
+		a1 = 3;
+		break;
+	}
+	switch(format) {
+	case 0:
+		r2 = 0;
+		g2 = 1;
+		b2 = 2;
+		a2 = 3;
+		break;
+	case 1:
+		r2 = 1;
+		g2 = 2;
+		b2 = 3;
+		a2 = 0;
+		break;
+	case 2:
+		r2 = 2;
+		g2 = 1;
+		b2 = 0;
+		a2 = 3;
+		break;
+	}
+	var _g1 = 0;
+	while(_g1 < length) {
+		var i = _g1++;
+		index = i * 4;
+		r = data[index + r1];
+		g = data[index + g1];
+		b = data[index + b1];
+		a = data[index + a1];
+		data[index + r2] = r;
+		data[index + g2] = g;
+		data[index + b2] = b;
+		data[index + a2] = a;
+	}
+	image.buffer.format = format;
+	image.dirty = true;
+};
 lime.graphics.utils.ImageDataUtil.setPixel = function(image,x,y,color,format) {
 	var data = image.buffer.data;
 	var offset = 4 * (y + image.offsetY) * image.buffer.width + (x + image.offsetX) * 4;
-	if(format == null || format == lime.graphics.PixelFormat.RGBA) color = color >> 8;
+	if(format == 0) color = color >> 8;
 	data[offset] = (color & 16711680) >>> 16;
 	data[offset + 1] = (color & 65280) >>> 8;
 	data[offset + 2] = color & 255;
@@ -7248,7 +8032,7 @@ lime.graphics.utils.ImageDataUtil.setPixel32 = function(image,x,y,color,format) 
 	var r;
 	var g;
 	var b;
-	if(format == lime.graphics.PixelFormat.ARGB) {
+	if(format == 1) {
 		if(image.get_transparent()) a = color >> 24 & 255; else a = 255;
 		r = color >> 16 & 255;
 		g = color >> 8 & 255;
@@ -7282,7 +8066,7 @@ lime.graphics.utils.ImageDataUtil.setPixels = function(image,rect,byteArray,form
 	var boundR = Math.round(rect.x + rect.width + image.offsetX);
 	var width = image.buffer.width;
 	var color;
-	if(format == lime.graphics.PixelFormat.ARGB) {
+	if(format == 1) {
 		var _g = 0;
 		while(_g < len) {
 			var i = _g++;
@@ -7683,10 +8467,8 @@ lime.math.Matrix3.prototype = {
 		return new lime.math.Vector2(pos.x * this.a + pos.y * this.c + this.tx,pos.x * this.b + pos.y * this.d + this.ty);
 	}
 	,translate: function(dx,dy) {
-		var m = new lime.math.Matrix3();
-		m.tx = dx;
-		m.ty = dy;
-		this.concat(m);
+		this.tx += dx;
+		this.ty += dy;
 	}
 	,__cleanValues: function() {
 		this.a = Math.round(this.a * 1000) / 1000;
@@ -9404,15 +10186,19 @@ lime.ui.Window = function(config) {
 	this.onWindowResize = new lime.app.Event();
 	this.onWindowMove = new lime.app.Event();
 	this.onWindowMinimize = new lime.app.Event();
+	this.onWindowLeave = new lime.app.Event();
 	this.onWindowFullscreen = new lime.app.Event();
 	this.onWindowFocusOut = new lime.app.Event();
 	this.onWindowFocusIn = new lime.app.Event();
+	this.onWindowEnter = new lime.app.Event();
 	this.onWindowDeactivate = new lime.app.Event();
 	this.onWindowClose = new lime.app.Event();
 	this.onWindowActivate = new lime.app.Event();
 	this.onTouchStart = new lime.app.Event();
 	this.onTouchMove = new lime.app.Event();
 	this.onTouchEnd = new lime.app.Event();
+	this.onTextInput = new lime.app.Event();
+	this.onTextEdit = new lime.app.Event();
 	this.onMouseWheel = new lime.app.Event();
 	this.onMouseUp = new lime.app.Event();
 	this.onMouseMoveRelative = new lime.app.Event();
@@ -9461,6 +10247,12 @@ lime.ui.Window.prototype = {
 	,setIcon: function(image) {
 		if(image == null) return;
 		this.backend.setIcon(image);
+	}
+	,get_enableTextEvents: function() {
+		return this.backend.getEnableTextEvents();
+	}
+	,set_enableTextEvents: function(value) {
+		return this.backend.setEnableTextEvents(value);
 	}
 	,get_fullscreen: function() {
 		return this.__fullscreen;
@@ -10073,7 +10865,7 @@ openfl.Assets.isLocal = function(id,type,useCache) {
 	return false;
 };
 openfl.Assets.isValidBitmapData = function(bitmapData) {
-	return bitmapData != null;
+	return bitmapData != null && bitmapData.__image != null;
 	return true;
 };
 openfl.Assets.isValidSound = function(sound) {
@@ -10571,6 +11363,9 @@ openfl.geom.Matrix.prototype = {
 		this.tx = Math.round(this.tx * 10) / 10;
 		this.ty = Math.round(this.ty * 10) / 10;
 	}
+	,__toMatrix3: function() {
+		return new lime.math.Matrix3(this.a,this.b,this.c,this.d,this.tx,this.ty);
+	}
 	,__transformX: function(pos) {
 		return pos.x * this.a + pos.y * this.c + this.tx;
 	}
@@ -11060,6 +11855,20 @@ openfl.VectorDataIterator.prototype = {
 };
 openfl._internal = {};
 openfl._internal.renderer = {};
+openfl._internal.renderer.AbstractMaskManager = function(renderSession) {
+	this.renderSession = renderSession;
+};
+$hxClasses["openfl._internal.renderer.AbstractMaskManager"] = openfl._internal.renderer.AbstractMaskManager;
+openfl._internal.renderer.AbstractMaskManager.__name__ = ["openfl","_internal","renderer","AbstractMaskManager"];
+openfl._internal.renderer.AbstractMaskManager.prototype = {
+	pushMask: function(mask) {
+	}
+	,pushRect: function(rect,transform) {
+	}
+	,popMask: function() {
+	}
+	,__class__: openfl._internal.renderer.AbstractMaskManager
+};
 openfl._internal.renderer.AbstractRenderer = function(width,height) {
 	this.width = width;
 	this.height = height;
@@ -11071,6 +11880,8 @@ openfl._internal.renderer.AbstractRenderer.prototype = {
 	}
 	,renderShape: function(shape) {
 	}
+	,setViewport: function(x,y,width,height) {
+	}
 	,resize: function(width,height) {
 	}
 	,__class__: openfl._internal.renderer.AbstractRenderer
@@ -11081,6 +11892,1146 @@ $hxClasses["openfl._internal.renderer.RenderSession"] = openfl._internal.rendere
 openfl._internal.renderer.RenderSession.__name__ = ["openfl","_internal","renderer","RenderSession"];
 openfl._internal.renderer.RenderSession.prototype = {
 	__class__: openfl._internal.renderer.RenderSession
+};
+openfl._internal.renderer.TextFieldGraphics = function() { };
+$hxClasses["openfl._internal.renderer.TextFieldGraphics"] = openfl._internal.renderer.TextFieldGraphics;
+openfl._internal.renderer.TextFieldGraphics.__name__ = ["openfl","_internal","renderer","TextFieldGraphics"];
+openfl._internal.renderer.TextFieldGraphics.render = function(textField) {
+	openfl._internal.renderer.TextFieldGraphics.update(textField);
+	if(textField.__graphics == null) textField.__graphics = new openfl.display.Graphics();
+	var graphics = textField.__graphics;
+	graphics.clear();
+	if(textField.border || textField.background) {
+		if(textField.border) graphics.lineStyle(1,textField.borderColor);
+		if(textField.background) graphics.beginFill(textField.backgroundColor);
+		graphics.drawRect(0.5,0.5,textField.__width - 1,textField.__height - 1);
+	}
+	if(textField.__tileData != null) {
+		var $it0 = textField.__tilesheets.keys();
+		while( $it0.hasNext() ) {
+			var tilesheet = $it0.next();
+			graphics.drawTiles(tilesheet,textField.__tileData.h[tilesheet.__id__],true,4,textField.__tileDataLength.h[tilesheet.__id__]);
+		}
+	}
+};
+openfl._internal.renderer.TextFieldGraphics.renderText = function(textField,text,format,offsetX,textWidth) {
+	var font = textField.__getFontInstance(format);
+	if(font != null && format.size != null) {
+		if(!(openfl._internal.renderer.TextFieldGraphics.glyphs.h.__keys__[font.__id__] != null)) {
+			var value = new haxe.ds.IntMap();
+			openfl._internal.renderer.TextFieldGraphics.glyphs.set(font,value);
+		}
+		var size = format.size | 0;
+		var fontGlyphs = openfl._internal.renderer.TextFieldGraphics.glyphs.h[font.__id__];
+		if(!fontGlyphs.exists(size)) {
+			var value1 = font.renderGlyphs(font.getGlyphs(),size);
+			fontGlyphs.set(size,value1);
+		}
+		var images = fontGlyphs.get(size);
+		if(!(openfl._internal.renderer.TextFieldGraphics.bitmapData.h.__keys__[font.__id__] != null)) {
+			var value2 = new haxe.ds.IntMap();
+			openfl._internal.renderer.TextFieldGraphics.bitmapData.set(font,value2);
+		}
+		var fontBitmapData = openfl._internal.renderer.TextFieldGraphics.bitmapData.h[font.__id__];
+		if(!fontBitmapData.exists(size)) {
+			var width;
+			var height;
+			var data;
+			var $it0 = images.iterator();
+			while( $it0.hasNext() ) {
+				var image = $it0.next();
+				width = image.buffer.width;
+				height = image.buffer.height;
+				data = image.get_data();
+				break;
+			}
+			var bitmapData = new openfl.display.BitmapData(width,height);
+			var _g = 0;
+			while(_g < width) {
+				var x = _g++;
+				var _g1 = 0;
+				while(_g1 < height) {
+					var y = _g1++;
+					var alpha = data[y * width + x];
+					var color = alpha << 24 | 16711680 | 65280 | 255;
+					bitmapData.setPixel32(x,y,color);
+				}
+			}
+			fontBitmapData.set(size,bitmapData);
+		}
+		var bitmapData1 = fontBitmapData.get(size);
+		if(!(openfl._internal.renderer.TextFieldGraphics.tilesheets.h.__keys__[bitmapData1.__id__] != null)) {
+			var tilesheet = new openfl.display.Tilesheet(bitmapData1);
+			var tileID = new haxe.ds.IntMap();
+			var image1;
+			var index;
+			var $it1 = images.keys();
+			while( $it1.hasNext() ) {
+				var key = $it1.next();
+				image1 = images.get(key);
+				index = tilesheet.addTileRect(new openfl.geom.Rectangle(image1.offsetX,image1.offsetY,image1.width,image1.height));
+				tileID.set(key,index);
+			}
+			openfl._internal.renderer.TextFieldGraphics.tileIDs.set(bitmapData1,tileID);
+			openfl._internal.renderer.TextFieldGraphics.tilesheets.set(bitmapData1,tilesheet);
+		}
+		var tilesheet1 = openfl._internal.renderer.TextFieldGraphics.tilesheets.h[bitmapData1.__id__];
+		var tileID1 = openfl._internal.renderer.TextFieldGraphics.tileIDs.h[bitmapData1.__id__];
+		var r = (format.color >> 16 & 255) / 255;
+		var g = (format.color >> 8 & 255) / 255;
+		var b = (format.color & 255) / 255;
+		var tlm = textField.getLineMetrics(0);
+		var image2;
+		var x1 = offsetX;
+		var y1 = 2 + tlm.ascent;
+		var tileData;
+		textField.__tilesheets.set(tilesheet1,true);
+		if(!(textField.__tileData.h.__keys__[tilesheet1.__id__] != null)) {
+			tileData = new Array();
+			textField.__tileData.set(tilesheet1,tileData);
+			textField.__tileDataLength.set(tilesheet1,0);
+		}
+		tileData = textField.__tileData.h[tilesheet1.__id__];
+		var offsetY = 0;
+		var lines = text.split("\n");
+		if(textField.__textLayout == null) textField.__textLayout = new lime.text.TextLayout();
+		var textLayout = textField.__textLayout;
+		var length = 0;
+		var line_i = 0;
+		var oldX = x1;
+		var _g2 = 0;
+		while(_g2 < lines.length) {
+			var line = lines[_g2];
+			++_g2;
+			tlm = textField.getLineMetrics(line_i);
+			x1 = oldX;
+			var _g11 = format.align;
+			switch(_g11[1]) {
+			case 0:case 2:
+				x1 += 0;
+				break;
+			case 3:
+				x1 += (textField.__width - 4 - tlm.width) / 2;
+				break;
+			case 1:
+				x1 += textField.__width - 4 - tlm.width;
+				break;
+			}
+			textLayout.set_text(null);
+			textLayout.set_font(font);
+			textLayout.set_size(size);
+			textLayout.set_text(line);
+			var _g12 = 0;
+			var _g21 = textLayout.positions;
+			while(_g12 < _g21.length) {
+				var position = _g21[_g12];
+				++_g12;
+				image2 = images.get(position.glyph);
+				if(image2 != null) {
+					if(length >= tileData.length) {
+						tileData.push(x1 + position.offset.x + image2.x);
+						tileData.push(y1 + position.offset.y - image2.y);
+						tileData.push(tileID1.get(position.glyph));
+						tileData.push(r);
+						tileData.push(g);
+						tileData.push(b);
+					} else {
+						tileData[length] = x1 + position.offset.x + image2.x;
+						tileData[length + 1] = y1 + position.offset.y - image2.y;
+						tileData[length + 2] = tileID1.get(position.glyph);
+						tileData[length + 3] = r;
+						tileData[length + 4] = g;
+						tileData[length + 5] = b;
+					}
+					length += 6;
+				}
+				x1 += position.advance.x;
+				y1 -= position.advance.y;
+			}
+			y1 += tlm.height;
+			line_i++;
+		}
+		textField.__tileDataLength.set(tilesheet1,length);
+	}
+};
+openfl._internal.renderer.TextFieldGraphics.update = function(textField) {
+	if(textField.__dirty) {
+		if((textField.__text == null || textField.__text == "") && !textField.background && !textField.border || (textField.get_width() <= 0 || textField.get_height() <= 0) && textField.autoSize != openfl.text.TextFieldAutoSize.LEFT) {
+			textField.__tilesheets = null;
+			textField.__tileData = null;
+			textField.__tileDataLength = null;
+			textField.__dirty = false;
+		} else {
+			textField.__tilesheets = new haxe.ds.ObjectMap();
+			if(textField.__tileData == null) {
+				textField.__tileData = new haxe.ds.ObjectMap();
+				textField.__tileDataLength = new haxe.ds.ObjectMap();
+			}
+			if(textField.__text != null && textField.__text != "") {
+				var text = textField.get_text();
+				if(textField.displayAsPassword) {
+					var length = text.length;
+					var mask = "";
+					var _g = 0;
+					while(_g < length) {
+						var i = _g++;
+						mask += "*";
+					}
+					text = mask;
+				}
+				var measurements = textField.__measureText();
+				var textWidth = 0.0;
+				var _g1 = 0;
+				while(_g1 < measurements.length) {
+					var measurement = measurements[_g1];
+					++_g1;
+					textWidth += measurement;
+				}
+				if(textField.autoSize == openfl.text.TextFieldAutoSize.LEFT) {
+					textField.__width = textWidth + 4;
+					textField.__height = textField.get_textHeight() + 4;
+				}
+				if(textField.__ranges == null) openfl._internal.renderer.TextFieldGraphics.renderText(textField,text,textField.__textFormat,2,textWidth); else {
+					var currentIndex = 0;
+					var range;
+					var offsetX = 2.0;
+					var _g11 = 0;
+					var _g2 = textField.__ranges.length;
+					while(_g11 < _g2) {
+						var i1 = _g11++;
+						range = textField.__ranges[i1];
+						openfl._internal.renderer.TextFieldGraphics.renderText(textField,text.substring(range.start,range.end),range.format,offsetX,textWidth);
+						offsetX += measurements[i1];
+					}
+				}
+			} else if(textField.autoSize == openfl.text.TextFieldAutoSize.LEFT) {
+				textField.__width = 4;
+				textField.__height = 4;
+			}
+			var $it0 = textField.__tileData.keys();
+			while( $it0.hasNext() ) {
+				var key = $it0.next();
+				if(!(textField.__tilesheets.h.__keys__[key.__id__] != null)) {
+					textField.__tileData.remove(key);
+					textField.__tileDataLength.remove(key);
+				}
+			}
+			textField.__dirty = false;
+			return true;
+		}
+	}
+	return false;
+};
+openfl._internal.renderer.cairo = {};
+openfl._internal.renderer.cairo.CairoBitmap = function() { };
+$hxClasses["openfl._internal.renderer.cairo.CairoBitmap"] = openfl._internal.renderer.cairo.CairoBitmap;
+openfl._internal.renderer.cairo.CairoBitmap.__name__ = ["openfl","_internal","renderer","cairo","CairoBitmap"];
+openfl._internal.renderer.cairo.CairoBitmap.render = function(bitmap,renderSession) {
+	if(!bitmap.__renderable || bitmap.__worldAlpha <= 0) return;
+	var cairo = renderSession.cairo;
+	if(bitmap.bitmapData != null && bitmap.bitmapData.__isValid) {
+		if(bitmap.__mask != null) renderSession.maskManager.pushMask(bitmap.__mask);
+		var transform = bitmap.__worldTransform;
+		if(renderSession.roundPixels) {
+			var matrix = transform.__toMatrix3();
+			matrix.tx = Math.round(matrix.tx);
+			matrix.ty = Math.round(matrix.ty);
+			cairo.set_matrix(matrix);
+		} else cairo.set_matrix(transform.__toMatrix3());
+		var surface = bitmap.bitmapData.getSurface();
+		if(surface != null) {
+			cairo.setSourceSurface(surface,0,0);
+			if(bitmap.__worldAlpha == 1) cairo.paint(); else cairo.paintWithAlpha(bitmap.__worldAlpha);
+		}
+		if(bitmap.__mask != null) renderSession.maskManager.popMask();
+	}
+};
+openfl._internal.renderer.cairo.CairoGraphics = function() { };
+$hxClasses["openfl._internal.renderer.cairo.CairoGraphics"] = openfl._internal.renderer.cairo.CairoGraphics;
+openfl._internal.renderer.cairo.CairoGraphics.__name__ = ["openfl","_internal","renderer","cairo","CairoGraphics"];
+openfl._internal.renderer.cairo.CairoGraphics.bitmapFill = null;
+openfl._internal.renderer.cairo.CairoGraphics.bitmapRepeat = null;
+openfl._internal.renderer.cairo.CairoGraphics.bounds = null;
+openfl._internal.renderer.cairo.CairoGraphics.cairo = null;
+openfl._internal.renderer.cairo.CairoGraphics.fillCommands = null;
+openfl._internal.renderer.cairo.CairoGraphics.fillPattern = null;
+openfl._internal.renderer.cairo.CairoGraphics.graphics = null;
+openfl._internal.renderer.cairo.CairoGraphics.hasFill = null;
+openfl._internal.renderer.cairo.CairoGraphics.hasStroke = null;
+openfl._internal.renderer.cairo.CairoGraphics.inversePendingMatrix = null;
+openfl._internal.renderer.cairo.CairoGraphics.pendingMatrix = null;
+openfl._internal.renderer.cairo.CairoGraphics.strokeCommands = null;
+openfl._internal.renderer.cairo.CairoGraphics.strokePattern = null;
+openfl._internal.renderer.cairo.CairoGraphics.beginPatternFill = function(bitmapFill,bitmapRepeat) {
+	if(openfl._internal.renderer.cairo.CairoGraphics.hasFill || bitmapFill == null) return;
+	if(openfl._internal.renderer.cairo.CairoGraphics.fillPattern == null) {
+		openfl._internal.renderer.cairo.CairoGraphics.fillPattern = lime.graphics.cairo._CairoPattern.CairoPattern_Impl_.createForSurface(bitmapFill.getSurface());
+		if(bitmapRepeat) lime.graphics.cairo._CairoPattern.CairoPattern_Impl_.set_extend(openfl._internal.renderer.cairo.CairoGraphics.fillPattern,1);
+	}
+	openfl._internal.renderer.cairo.CairoGraphics.cairo.set_source(openfl._internal.renderer.cairo.CairoGraphics.fillPattern);
+	openfl._internal.renderer.cairo.CairoGraphics.hasFill = true;
+};
+openfl._internal.renderer.cairo.CairoGraphics.createTempPatternCanvas = function(bitmap,repeat,width,height) {
+	var surface = lime.graphics.cairo._CairoSurface.CairoSurface_Impl_._new(0,width,height);
+	var pattern = lime.graphics.cairo._CairoPattern.CairoPattern_Impl_.createForSurface(surface);
+	if(repeat) lime.graphics.cairo._CairoPattern.CairoPattern_Impl_.set_extend(pattern,1);
+	openfl._internal.renderer.cairo.CairoGraphics.cairo.set_source(pattern);
+	openfl._internal.renderer.cairo.CairoGraphics.cairo.newPath();
+	openfl._internal.renderer.cairo.CairoGraphics.cairo.moveTo(0,0);
+	openfl._internal.renderer.cairo.CairoGraphics.cairo.lineTo(0,height);
+	openfl._internal.renderer.cairo.CairoGraphics.cairo.lineTo(width,height);
+	openfl._internal.renderer.cairo.CairoGraphics.cairo.lineTo(width,0);
+	openfl._internal.renderer.cairo.CairoGraphics.cairo.lineTo(0,0);
+	openfl._internal.renderer.cairo.CairoGraphics.cairo.closePath();
+	openfl._internal.renderer.cairo.CairoGraphics.cairo.fill();
+	lime.graphics.cairo._CairoPattern.CairoPattern_Impl_.destroy(pattern);
+	return surface;
+};
+openfl._internal.renderer.cairo.CairoGraphics.endFill = function() {
+	openfl._internal.renderer.cairo.CairoGraphics.cairo.newPath();
+	openfl._internal.renderer.cairo.CairoGraphics.playCommands(openfl._internal.renderer.cairo.CairoGraphics.fillCommands,false);
+	openfl._internal.renderer.cairo.CairoGraphics.fillCommands = [];
+};
+openfl._internal.renderer.cairo.CairoGraphics.endStroke = function() {
+	openfl._internal.renderer.cairo.CairoGraphics.cairo.newPath();
+	openfl._internal.renderer.cairo.CairoGraphics.playCommands(openfl._internal.renderer.cairo.CairoGraphics.strokeCommands,true);
+	openfl._internal.renderer.cairo.CairoGraphics.cairo.closePath();
+	openfl._internal.renderer.cairo.CairoGraphics.strokeCommands = [];
+};
+openfl._internal.renderer.cairo.CairoGraphics.drawRoundRect = function(x,y,width,height,rx,ry) {
+	if(ry == -1) ry = rx;
+	rx *= 0.5;
+	ry *= 0.5;
+	if(rx > width / 2) rx = width / 2;
+	if(ry > height / 2) ry = height / 2;
+	var xe = x + width;
+	var ye = y + height;
+	var cx1 = -rx + rx * openfl._internal.renderer.cairo.CairoGraphics.SIN45;
+	var cx2 = -rx + rx * openfl._internal.renderer.cairo.CairoGraphics.TAN22;
+	var cy1 = -ry + ry * openfl._internal.renderer.cairo.CairoGraphics.SIN45;
+	var cy2 = -ry + ry * openfl._internal.renderer.cairo.CairoGraphics.TAN22;
+	openfl._internal.renderer.cairo.CairoGraphics.cairo.moveTo(xe,ye - ry);
+	openfl._internal.renderer.cairo.CairoGraphics.quadraticCurveTo(xe,ye + cy2,xe + cx1,ye + cy1);
+	openfl._internal.renderer.cairo.CairoGraphics.quadraticCurveTo(xe + cx2,ye,xe - rx,ye);
+	openfl._internal.renderer.cairo.CairoGraphics.cairo.lineTo(x + rx,ye);
+	openfl._internal.renderer.cairo.CairoGraphics.quadraticCurveTo(x - cx2,ye,x - cx1,ye + cy1);
+	openfl._internal.renderer.cairo.CairoGraphics.quadraticCurveTo(x,ye + cy2,x,ye - ry);
+	openfl._internal.renderer.cairo.CairoGraphics.cairo.lineTo(x,y + ry);
+	openfl._internal.renderer.cairo.CairoGraphics.quadraticCurveTo(x,y - cy2,x - cx1,y - cy1);
+	openfl._internal.renderer.cairo.CairoGraphics.quadraticCurveTo(x - cx2,y,x + rx,y);
+	openfl._internal.renderer.cairo.CairoGraphics.cairo.lineTo(xe - rx,y);
+	openfl._internal.renderer.cairo.CairoGraphics.quadraticCurveTo(xe + cx2,y,xe + cx1,y - cy1);
+	openfl._internal.renderer.cairo.CairoGraphics.quadraticCurveTo(xe,y - cy2,xe,y + ry);
+	openfl._internal.renderer.cairo.CairoGraphics.cairo.lineTo(xe,ye - ry);
+};
+openfl._internal.renderer.cairo.CairoGraphics.isCCW = function(x1,y1,x2,y2,x3,y3) {
+	return (x2 - x1) * (y3 - y1) - (y2 - y1) * (x3 - x1) < 0;
+};
+openfl._internal.renderer.cairo.CairoGraphics.normalizeUVT = function(uvt,skipT) {
+	if(skipT == null) skipT = false;
+	var max = Math.NEGATIVE_INFINITY;
+	var tmp = Math.NEGATIVE_INFINITY;
+	var len = uvt.length;
+	var _g1 = 1;
+	var _g = len + 1;
+	while(_g1 < _g) {
+		var t = _g1++;
+		if(skipT && t % 3 == 0) continue;
+		tmp = uvt.data[t - 1];
+		if(max < tmp) max = tmp;
+	}
+	var result;
+	var this1;
+	this1 = new openfl.VectorData();
+	var this2;
+	this2 = new Array(0);
+	this1.data = this2;
+	this1.length = 0;
+	this1.fixed = false;
+	result = this1;
+	var _g11 = 1;
+	var _g2 = len + 1;
+	while(_g11 < _g2) {
+		var t1 = _g11++;
+		if(skipT && t1 % 3 == 0) continue;
+		if(!result.fixed) {
+			result.length++;
+			if(result.data.length < result.length) {
+				var data;
+				var this3;
+				this3 = new Array(result.data.length + 10);
+				data = this3;
+				haxe.ds._Vector.Vector_Impl_.blit(result.data,0,data,0,result.data.length);
+				result.data = data;
+			}
+			result.data[result.length - 1] = uvt.data[t1 - 1] / max;
+		}
+		result.length;
+	}
+	return { max : max, uvt : result};
+};
+openfl._internal.renderer.cairo.CairoGraphics.playCommands = function(commands,stroke) {
+	if(stroke == null) stroke = false;
+	openfl._internal.renderer.cairo.CairoGraphics.bounds = openfl._internal.renderer.cairo.CairoGraphics.graphics.__bounds;
+	var offsetX = openfl._internal.renderer.cairo.CairoGraphics.bounds.x;
+	var offsetY = openfl._internal.renderer.cairo.CairoGraphics.bounds.y;
+	var positionX = 0.0;
+	var positionY = 0.0;
+	var closeGap = false;
+	var startX = 0.0;
+	var startY = 0.0;
+	var _g = 0;
+	while(_g < commands.length) {
+		var command = commands[_g];
+		++_g;
+		switch(command[1]) {
+		case 3:
+			var y = command[7];
+			var x = command[6];
+			var cy2 = command[5];
+			var cx2 = command[4];
+			var cy1 = command[3];
+			var cx1 = command[2];
+			openfl._internal.renderer.cairo.CairoGraphics.cairo.curveTo(cx1 - offsetX,cy1 - offsetY,cx2 - offsetX,cy2 - offsetY,x - offsetX,y - offsetY);
+			break;
+		case 4:
+			var y1 = command[5];
+			var x1 = command[4];
+			var cy = command[3];
+			var cx = command[2];
+			openfl._internal.renderer.cairo.CairoGraphics.quadraticCurveTo(cx - offsetX,cy - offsetY,x1 - offsetX,y1 - offsetY);
+			break;
+		case 5:
+			var radius = command[4];
+			var y2 = command[3];
+			var x2 = command[2];
+			openfl._internal.renderer.cairo.CairoGraphics.cairo.moveTo(x2 - offsetX + radius,y2 - offsetY);
+			openfl._internal.renderer.cairo.CairoGraphics.cairo.arc(x2 - offsetX,y2 - offsetY,radius,0,Math.PI * 2);
+			break;
+		case 6:
+			var height = command[5];
+			var width = command[4];
+			var y3 = command[3];
+			var x3 = command[2];
+			x3 -= offsetX;
+			y3 -= offsetY;
+			var kappa = .5522848;
+			var ox = width / 2 * kappa;
+			var oy = height / 2 * kappa;
+			var xe = x3 + width;
+			var ye = y3 + height;
+			var xm = x3 + width / 2;
+			var ym = y3 + height / 2;
+			openfl._internal.renderer.cairo.CairoGraphics.cairo.moveTo(x3,ym);
+			openfl._internal.renderer.cairo.CairoGraphics.cairo.curveTo(x3,ym - oy,xm - ox,y3,xm,y3);
+			openfl._internal.renderer.cairo.CairoGraphics.cairo.curveTo(xm + ox,y3,xe,ym - oy,xe,ym);
+			openfl._internal.renderer.cairo.CairoGraphics.cairo.curveTo(xe,ym + oy,xm + ox,ye,xm,ye);
+			openfl._internal.renderer.cairo.CairoGraphics.cairo.curveTo(xm - ox,ye,x3,ym + oy,x3,ym);
+			break;
+		case 8:
+			var ry = command[7];
+			var rx = command[6];
+			var height1 = command[5];
+			var width1 = command[4];
+			var y4 = command[3];
+			var x4 = command[2];
+			openfl._internal.renderer.cairo.CairoGraphics.drawRoundRect(x4 - offsetX,y4 - offsetY,width1,height1,rx,ry);
+			break;
+		case 13:
+			var y5 = command[3];
+			var x5 = command[2];
+			openfl._internal.renderer.cairo.CairoGraphics.cairo.lineTo(x5 - offsetX,y5 - offsetY);
+			positionX = x5;
+			positionY = y5;
+			break;
+		case 14:
+			var y6 = command[3];
+			var x6 = command[2];
+			openfl._internal.renderer.cairo.CairoGraphics.cairo.moveTo(x6 - offsetX,y6 - offsetY);
+			positionX = x6;
+			positionY = y6;
+			closeGap = true;
+			startX = x6;
+			startY = y6;
+			break;
+		case 12:
+			var miterLimit = command[9];
+			var joints = command[8];
+			var caps = command[7];
+			var scaleMode = command[6];
+			var pixelHinting = command[5];
+			var alpha = command[4];
+			var color = command[3];
+			var thickness = command[2];
+			if(stroke && openfl._internal.renderer.cairo.CairoGraphics.hasStroke) {
+				openfl._internal.renderer.cairo.CairoGraphics.cairo.closePath();
+				openfl._internal.renderer.cairo.CairoGraphics.cairo.set_source(openfl._internal.renderer.cairo.CairoGraphics.strokePattern);
+				openfl._internal.renderer.cairo.CairoGraphics.cairo.strokePreserve();
+				openfl._internal.renderer.cairo.CairoGraphics.cairo.newPath();
+			}
+			openfl._internal.renderer.cairo.CairoGraphics.cairo.moveTo(positionX - offsetX,positionY - offsetY);
+			if(thickness == null) openfl._internal.renderer.cairo.CairoGraphics.hasStroke = false; else {
+				openfl._internal.renderer.cairo.CairoGraphics.cairo.set_lineWidth(thickness);
+				if(joints == null) openfl._internal.renderer.cairo.CairoGraphics.cairo.set_lineJoin(1); else openfl._internal.renderer.cairo.CairoGraphics.cairo.set_lineJoin((function($this) {
+					var $r;
+					switch(joints[1]) {
+					case 0:
+						$r = 0;
+						break;
+					case 2:
+						$r = 2;
+						break;
+					default:
+						$r = 1;
+					}
+					return $r;
+				}(this)));
+				if(caps == null) openfl._internal.renderer.cairo.CairoGraphics.cairo.set_lineCap(1); else openfl._internal.renderer.cairo.CairoGraphics.cairo.set_lineCap((function($this) {
+					var $r;
+					switch(caps[1]) {
+					case 0:
+						$r = 0;
+						break;
+					case 2:
+						$r = 2;
+						break;
+					default:
+						$r = 1;
+					}
+					return $r;
+				}(this)));
+				openfl._internal.renderer.cairo.CairoGraphics.cairo.set_miterLimit(miterLimit == null?3:miterLimit);
+				if(openfl._internal.renderer.cairo.CairoGraphics.strokePattern != null) lime.graphics.cairo._CairoPattern.CairoPattern_Impl_.destroy(openfl._internal.renderer.cairo.CairoGraphics.strokePattern);
+				var r = ((color & 16711680) >>> 16) / 255;
+				var g = ((color & 65280) >>> 8) / 255;
+				var b = (color & 255) / 255;
+				if(alpha == 1 || alpha == null) openfl._internal.renderer.cairo.CairoGraphics.strokePattern = lime.graphics.cairo._CairoPattern.CairoPattern_Impl_.createRGB(r,g,b); else openfl._internal.renderer.cairo.CairoGraphics.strokePattern = lime.graphics.cairo._CairoPattern.CairoPattern_Impl_.createRGBA(r,g,b,alpha);
+				openfl._internal.renderer.cairo.CairoGraphics.hasStroke = true;
+			}
+			break;
+		case 0:
+			var smooth = command[5];
+			var repeat = command[4];
+			var matrix = command[3];
+			var bitmap = command[2];
+			if(bitmap != openfl._internal.renderer.cairo.CairoGraphics.bitmapFill || repeat != openfl._internal.renderer.cairo.CairoGraphics.bitmapRepeat) {
+				openfl._internal.renderer.cairo.CairoGraphics.bitmapFill = bitmap;
+				openfl._internal.renderer.cairo.CairoGraphics.bitmapRepeat = repeat;
+				if(openfl._internal.renderer.cairo.CairoGraphics.fillPattern != null) lime.graphics.cairo._CairoPattern.CairoPattern_Impl_.destroy(openfl._internal.renderer.cairo.CairoGraphics.fillPattern);
+				openfl._internal.renderer.cairo.CairoGraphics.fillPattern = null;
+				openfl._internal.renderer.cairo.CairoGraphics.hasFill = false;
+			}
+			if(matrix != null) {
+				openfl._internal.renderer.cairo.CairoGraphics.pendingMatrix = matrix;
+				openfl._internal.renderer.cairo.CairoGraphics.inversePendingMatrix = new openfl.geom.Matrix(matrix.a,matrix.b,matrix.c,matrix.d,matrix.tx,matrix.ty);
+				openfl._internal.renderer.cairo.CairoGraphics.inversePendingMatrix.invert();
+			} else {
+				openfl._internal.renderer.cairo.CairoGraphics.pendingMatrix = null;
+				openfl._internal.renderer.cairo.CairoGraphics.inversePendingMatrix = null;
+			}
+			break;
+		case 1:
+			var alpha1 = command[3];
+			var rgb = command[2];
+			if(alpha1 < 0.005) openfl._internal.renderer.cairo.CairoGraphics.hasFill = false; else {
+				if(openfl._internal.renderer.cairo.CairoGraphics.fillPattern != null) lime.graphics.cairo._CairoPattern.CairoPattern_Impl_.destroy(openfl._internal.renderer.cairo.CairoGraphics.fillPattern);
+				openfl._internal.renderer.cairo.CairoGraphics.fillPattern = lime.graphics.cairo._CairoPattern.CairoPattern_Impl_.createRGBA(((rgb & 16711680) >>> 16) / 255,((rgb & 65280) >>> 8) / 255,(rgb & 255) / 255,alpha1);
+				openfl._internal.renderer.cairo.CairoGraphics.bitmapFill = null;
+				openfl._internal.renderer.cairo.CairoGraphics.hasFill = true;
+			}
+			break;
+		case 2:
+			var focalPointRatio = command[9];
+			var interpolationMethod = command[8];
+			var spreadMethod = command[7];
+			var matrix1 = command[6];
+			var ratios = command[5];
+			var alphas = command[4];
+			var colors = command[3];
+			var type = command[2];
+			var gradientFill = null;
+			switch(type[1]) {
+			case 0:
+				if(matrix1 == null) matrix1 = new openfl.geom.Matrix();
+				var point = matrix1.transformPoint(new openfl.geom.Point(1638.4,0));
+				if(openfl._internal.renderer.cairo.CairoGraphics.fillPattern != null) lime.graphics.cairo._CairoPattern.CairoPattern_Impl_.destroy(openfl._internal.renderer.cairo.CairoGraphics.fillPattern);
+				openfl._internal.renderer.cairo.CairoGraphics.fillPattern = lime.graphics.cairo._CairoPattern.CairoPattern_Impl_.createRadial(matrix1.tx,matrix1.ty,0,matrix1.tx,matrix1.ty,(point.x - matrix1.tx) / 2);
+				break;
+			case 1:
+				var matrix2;
+				if(matrix1 != null) matrix2 = new openfl.geom.Matrix(matrix1.a,matrix1.b,matrix1.c,matrix1.d,matrix1.tx,matrix1.ty); else matrix2 = new openfl.geom.Matrix();
+				var point1 = matrix2.transformPoint(new openfl.geom.Point(-819.2,0));
+				var point2 = matrix2.transformPoint(new openfl.geom.Point(819.2,0));
+				if(openfl._internal.renderer.cairo.CairoGraphics.fillPattern != null) lime.graphics.cairo._CairoPattern.CairoPattern_Impl_.destroy(openfl._internal.renderer.cairo.CairoGraphics.fillPattern);
+				openfl._internal.renderer.cairo.CairoGraphics.fillPattern = lime.graphics.cairo._CairoPattern.CairoPattern_Impl_.createLinear(point1.x,point1.y,point2.x,point2.y);
+				break;
+			}
+			var _g2 = 0;
+			var _g1 = colors.length;
+			while(_g2 < _g1) {
+				var i = _g2++;
+				var rgb1 = colors[i];
+				var alpha2 = alphas[i];
+				var r1 = ((rgb1 & 16711680) >>> 16) / 255;
+				var g1 = ((rgb1 & 65280) >>> 8) / 255;
+				var b1 = (rgb1 & 255) / 255;
+				var ratio = ratios[i] / 255;
+				if(ratio < 0) ratio = 0;
+				if(ratio > 1) ratio = 1;
+				lime.graphics.cairo._CairoPattern.CairoPattern_Impl_.addColorStopRGBA(openfl._internal.renderer.cairo.CairoGraphics.fillPattern,ratio,r1,g1,b1,alpha2);
+			}
+			openfl._internal.renderer.cairo.CairoGraphics.bitmapFill = null;
+			openfl._internal.renderer.cairo.CairoGraphics.hasFill = true;
+			break;
+		case 7:
+			var height2 = command[5];
+			var width2 = command[4];
+			var y7 = command[3];
+			var x7 = command[2];
+			if(openfl._internal.renderer.cairo.CairoGraphics.fillPattern != null) {
+				var matrix3 = lime.graphics.cairo._CairoPattern.CairoPattern_Impl_.get_matrix(openfl._internal.renderer.cairo.CairoGraphics.fillPattern);
+				matrix3.tx += x7;
+				matrix3.ty += y7;
+				lime.graphics.cairo._CairoPattern.CairoPattern_Impl_.set_matrix(openfl._internal.renderer.cairo.CairoGraphics.fillPattern,matrix3);
+			}
+			openfl._internal.renderer.cairo.CairoGraphics.cairo.rectangle(x7 - offsetX,y7 - offsetY,width2,height2);
+			break;
+		default:
+		}
+	}
+	if(stroke && openfl._internal.renderer.cairo.CairoGraphics.hasStroke) {
+		if(openfl._internal.renderer.cairo.CairoGraphics.hasFill && closeGap) openfl._internal.renderer.cairo.CairoGraphics.cairo.lineTo(startX - offsetX,startY - offsetY);
+		openfl._internal.renderer.cairo.CairoGraphics.cairo.set_source(openfl._internal.renderer.cairo.CairoGraphics.strokePattern);
+		openfl._internal.renderer.cairo.CairoGraphics.cairo.strokePreserve();
+	}
+	if(!stroke) {
+		if(openfl._internal.renderer.cairo.CairoGraphics.hasFill || openfl._internal.renderer.cairo.CairoGraphics.bitmapFill != null) {
+			if(openfl._internal.renderer.cairo.CairoGraphics.bitmapFill != null) openfl._internal.renderer.cairo.CairoGraphics.beginPatternFill(openfl._internal.renderer.cairo.CairoGraphics.bitmapFill,openfl._internal.renderer.cairo.CairoGraphics.bitmapRepeat); else openfl._internal.renderer.cairo.CairoGraphics.cairo.set_source(openfl._internal.renderer.cairo.CairoGraphics.fillPattern);
+			openfl._internal.renderer.cairo.CairoGraphics.cairo.translate(-openfl._internal.renderer.cairo.CairoGraphics.bounds.x,-openfl._internal.renderer.cairo.CairoGraphics.bounds.y);
+			if(openfl._internal.renderer.cairo.CairoGraphics.pendingMatrix != null) {
+				openfl._internal.renderer.cairo.CairoGraphics.cairo.transform(openfl._internal.renderer.cairo.CairoGraphics.pendingMatrix.__toMatrix3());
+				openfl._internal.renderer.cairo.CairoGraphics.cairo.fillPreserve();
+				openfl._internal.renderer.cairo.CairoGraphics.cairo.transform(openfl._internal.renderer.cairo.CairoGraphics.inversePendingMatrix.__toMatrix3());
+			} else openfl._internal.renderer.cairo.CairoGraphics.cairo.fillPreserve();
+			openfl._internal.renderer.cairo.CairoGraphics.cairo.translate(openfl._internal.renderer.cairo.CairoGraphics.bounds.x,openfl._internal.renderer.cairo.CairoGraphics.bounds.y);
+			openfl._internal.renderer.cairo.CairoGraphics.cairo.closePath();
+		}
+	}
+};
+openfl._internal.renderer.cairo.CairoGraphics.quadraticCurveTo = function(cx,cy,x,y) {
+	var current = null;
+	if(!openfl._internal.renderer.cairo.CairoGraphics.cairo.get_hasCurrentPoint()) {
+		openfl._internal.renderer.cairo.CairoGraphics.cairo.moveTo(cx,cy);
+		current = new lime.math.Vector2(cx,cy);
+	} else current = openfl._internal.renderer.cairo.CairoGraphics.cairo.get_currentPoint();
+	var cx1 = current.x + 0.66666666666666663 * (cx - current.x);
+	var cy1 = current.y + 0.66666666666666663 * (cy - current.y);
+	var cx2 = x + 0.66666666666666663 * (cx - x);
+	var cy2 = y + 0.66666666666666663 * (cy - y);
+	openfl._internal.renderer.cairo.CairoGraphics.cairo.curveTo(cx1,cy1,cx2,cy2,x,y);
+};
+openfl._internal.renderer.cairo.CairoGraphics.render = function(graphics,renderSession) {
+	if(graphics.__dirty) {
+		openfl._internal.renderer.cairo.CairoGraphics.graphics = graphics;
+		openfl._internal.renderer.cairo.CairoGraphics.bounds = graphics.__bounds;
+		if(!graphics.__visible || graphics.__commands.length == 0 || openfl._internal.renderer.cairo.CairoGraphics.bounds == null || openfl._internal.renderer.cairo.CairoGraphics.bounds.width == 0 || openfl._internal.renderer.cairo.CairoGraphics.bounds.height == 0) {
+			if(graphics.__cairo != null) {
+				graphics.__cairo.destroy();
+				graphics.__cairo = null;
+			}
+		} else {
+			if(graphics.__cairo != null) {
+				var surface = graphics.__cairo.get_target();
+				if(openfl._internal.renderer.cairo.CairoGraphics.bounds.width != lime.graphics.cairo._CairoSurface.CairoSurface_Impl_.get_width(surface) || openfl._internal.renderer.cairo.CairoGraphics.bounds.height != lime.graphics.cairo._CairoSurface.CairoSurface_Impl_.get_height(surface)) {
+					graphics.__cairo.destroy();
+					graphics.__cairo = null;
+				}
+			}
+			if(graphics.__cairo == null) {
+				var surface1 = lime.graphics.cairo._CairoSurface.CairoSurface_Impl_._new(0,Math.ceil(openfl._internal.renderer.cairo.CairoGraphics.bounds.width),Math.ceil(openfl._internal.renderer.cairo.CairoGraphics.bounds.height));
+				graphics.__cairo = new lime.graphics.cairo.Cairo(surface1);
+				lime.graphics.cairo._CairoSurface.CairoSurface_Impl_.destroy(surface1);
+			}
+			openfl._internal.renderer.cairo.CairoGraphics.cairo = graphics.__cairo;
+			var offsetX = openfl._internal.renderer.cairo.CairoGraphics.bounds.x;
+			var offsetY = openfl._internal.renderer.cairo.CairoGraphics.bounds.y;
+			openfl._internal.renderer.cairo.CairoGraphics.fillCommands = new Array();
+			openfl._internal.renderer.cairo.CairoGraphics.strokeCommands = new Array();
+			openfl._internal.renderer.cairo.CairoGraphics.hasFill = false;
+			openfl._internal.renderer.cairo.CairoGraphics.hasStroke = false;
+			openfl._internal.renderer.cairo.CairoGraphics.bitmapFill = null;
+			openfl._internal.renderer.cairo.CairoGraphics.bitmapRepeat = false;
+			var _g = 0;
+			var _g1 = graphics.__commands;
+			try {
+				while(_g < _g1.length) {
+					var command = _g1[_g];
+					++_g;
+					switch(command[1]) {
+					case 3:case 4:case 13:case 14:
+						openfl._internal.renderer.cairo.CairoGraphics.fillCommands.push(command);
+						openfl._internal.renderer.cairo.CairoGraphics.strokeCommands.push(command);
+						break;
+					case 11:
+						openfl._internal.renderer.cairo.CairoGraphics.endFill();
+						openfl._internal.renderer.cairo.CairoGraphics.endStroke();
+						openfl._internal.renderer.cairo.CairoGraphics.hasFill = false;
+						break;
+					case 12:
+						openfl._internal.renderer.cairo.CairoGraphics.strokeCommands.push(command);
+						break;
+					case 0:case 1:case 2:
+						openfl._internal.renderer.cairo.CairoGraphics.endFill();
+						openfl._internal.renderer.cairo.CairoGraphics.endStroke();
+						openfl._internal.renderer.cairo.CairoGraphics.fillCommands.push(command);
+						openfl._internal.renderer.cairo.CairoGraphics.strokeCommands.push(command);
+						break;
+					case 5:case 6:case 7:case 8:
+						openfl._internal.renderer.cairo.CairoGraphics.endFill();
+						openfl._internal.renderer.cairo.CairoGraphics.endStroke();
+						openfl._internal.renderer.cairo.CairoGraphics.fillCommands.push(command);
+						openfl._internal.renderer.cairo.CairoGraphics.strokeCommands.push(command);
+						break;
+					case 10:
+						var culling = command[5];
+						var uvtData = command[4];
+						var indices = command[3];
+						var vertices = command[2];
+						openfl._internal.renderer.cairo.CairoGraphics.endFill();
+						openfl._internal.renderer.cairo.CairoGraphics.endStroke();
+						var v = vertices;
+						var ind = indices;
+						var uvt = uvtData;
+						var pattern = null;
+						var colorFill = openfl._internal.renderer.cairo.CairoGraphics.bitmapFill == null;
+						if(colorFill && uvt != null) throw "__break__";
+						if(!colorFill) {
+							if(uvtData == null) {
+								var this1;
+								this1 = new openfl.VectorData();
+								var this2;
+								this2 = new Array(0);
+								this1.data = this2;
+								this1.length = 0;
+								this1.fixed = false;
+								uvtData = this1;
+								var _g3 = 0;
+								var _g2 = v.length / 2 | 0;
+								while(_g3 < _g2) {
+									var i = _g3++;
+									if(!uvtData.fixed) {
+										uvtData.length++;
+										if(uvtData.data.length < uvtData.length) {
+											var data;
+											var this3;
+											this3 = new Array(uvtData.data.length + 10);
+											data = this3;
+											haxe.ds._Vector.Vector_Impl_.blit(uvtData.data,0,data,0,uvtData.data.length);
+											uvtData.data = data;
+										}
+										uvtData.data[uvtData.length - 1] = v.data[i * 2] / openfl._internal.renderer.cairo.CairoGraphics.bitmapFill.width;
+									}
+									uvtData.length;
+									if(!uvtData.fixed) {
+										uvtData.length++;
+										if(uvtData.data.length < uvtData.length) {
+											var data1;
+											var this4;
+											this4 = new Array(uvtData.data.length + 10);
+											data1 = this4;
+											haxe.ds._Vector.Vector_Impl_.blit(uvtData.data,0,data1,0,uvtData.data.length);
+											uvtData.data = data1;
+										}
+										uvtData.data[uvtData.length - 1] = v.data[i * 2 + 1] / openfl._internal.renderer.cairo.CairoGraphics.bitmapFill.height;
+									}
+									uvtData.length;
+								}
+							}
+							var skipT = uvtData.length != v.length;
+							var normalizedUVT = openfl._internal.renderer.cairo.CairoGraphics.normalizeUVT(uvtData,skipT);
+							var maxUVT = normalizedUVT.max;
+							uvt = normalizedUVT.uvt;
+							if(maxUVT > 1) pattern = openfl._internal.renderer.cairo.CairoGraphics.createTempPatternCanvas(openfl._internal.renderer.cairo.CairoGraphics.bitmapFill,openfl._internal.renderer.cairo.CairoGraphics.bitmapRepeat,openfl._internal.renderer.cairo.CairoGraphics.bounds.width | 0,openfl._internal.renderer.cairo.CairoGraphics.bounds.height | 0); else pattern = openfl._internal.renderer.cairo.CairoGraphics.createTempPatternCanvas(openfl._internal.renderer.cairo.CairoGraphics.bitmapFill,openfl._internal.renderer.cairo.CairoGraphics.bitmapRepeat,openfl._internal.renderer.cairo.CairoGraphics.bitmapFill.width,openfl._internal.renderer.cairo.CairoGraphics.bitmapFill.height);
+						}
+						var i1 = 0;
+						var l = ind.length;
+						var a;
+						var b;
+						var c;
+						var iax;
+						var iay;
+						var ibx;
+						var iby;
+						var icx;
+						var icy;
+						var x1;
+						var y1;
+						var x2;
+						var y2;
+						var x3;
+						var y3;
+						var uvx1;
+						var uvy1;
+						var uvx2;
+						var uvy2;
+						var uvx3;
+						var uvy3;
+						var denom;
+						var t1;
+						var t2;
+						var t3;
+						var t4;
+						var dx;
+						var dy;
+						while(i1 < l) {
+							a = i1;
+							b = i1 + 1;
+							c = i1 + 2;
+							iax = ind.data[a] * 2;
+							iay = ind.data[a] * 2 + 1;
+							ibx = ind.data[b] * 2;
+							iby = ind.data[b] * 2 + 1;
+							icx = ind.data[c] * 2;
+							icy = ind.data[c] * 2 + 1;
+							x1 = v.data[iax];
+							y1 = v.data[iay];
+							x2 = v.data[ibx];
+							y2 = v.data[iby];
+							x3 = v.data[icx];
+							y3 = v.data[icy];
+							switch(culling[1]) {
+							case 2:
+								if(!((x2 - x1) * (y3 - y1) - (y2 - y1) * (x3 - x1) < 0)) {
+									i1 += 3;
+									continue;
+								}
+								break;
+							case 0:
+								if((x2 - x1) * (y3 - y1) - (y2 - y1) * (x3 - x1) < 0) {
+									i1 += 3;
+									continue;
+								}
+								break;
+							default:
+							}
+							if(colorFill) {
+								openfl._internal.renderer.cairo.CairoGraphics.cairo.newPath();
+								openfl._internal.renderer.cairo.CairoGraphics.cairo.moveTo(x1,y1);
+								openfl._internal.renderer.cairo.CairoGraphics.cairo.lineTo(x2,y2);
+								openfl._internal.renderer.cairo.CairoGraphics.cairo.lineTo(x3,y3);
+								openfl._internal.renderer.cairo.CairoGraphics.cairo.closePath();
+								openfl._internal.renderer.cairo.CairoGraphics.cairo.fillPreserve();
+								i1 += 3;
+								continue;
+							}
+							openfl._internal.renderer.cairo.CairoGraphics.cairo.save();
+							openfl._internal.renderer.cairo.CairoGraphics.cairo.newPath();
+							openfl._internal.renderer.cairo.CairoGraphics.cairo.moveTo(x1,y1);
+							openfl._internal.renderer.cairo.CairoGraphics.cairo.lineTo(x2,y2);
+							openfl._internal.renderer.cairo.CairoGraphics.cairo.lineTo(x3,y3);
+							openfl._internal.renderer.cairo.CairoGraphics.cairo.closePath();
+							openfl._internal.renderer.cairo.CairoGraphics.cairo.clip();
+							uvx1 = uvt.data[iax] * lime.graphics.cairo._CairoSurface.CairoSurface_Impl_.get_width(pattern);
+							uvx2 = uvt.data[ibx] * lime.graphics.cairo._CairoSurface.CairoSurface_Impl_.get_width(pattern);
+							uvx3 = uvt.data[icx] * lime.graphics.cairo._CairoSurface.CairoSurface_Impl_.get_width(pattern);
+							uvy1 = uvt.data[iay] * lime.graphics.cairo._CairoSurface.CairoSurface_Impl_.get_height(pattern);
+							uvy2 = uvt.data[iby] * lime.graphics.cairo._CairoSurface.CairoSurface_Impl_.get_height(pattern);
+							uvy3 = uvt.data[icy] * lime.graphics.cairo._CairoSurface.CairoSurface_Impl_.get_height(pattern);
+							denom = uvx1 * (uvy3 - uvy2) - uvx2 * uvy3 + uvx3 * uvy2 + (uvx2 - uvx3) * uvy1;
+							if(denom == 0) {
+								i1 += 3;
+								continue;
+							}
+							t1 = -(uvy1 * (x3 - x2) - uvy2 * x3 + uvy3 * x2 + (uvy2 - uvy3) * x1) / denom;
+							t2 = (uvy2 * y3 + uvy1 * (y2 - y3) - uvy3 * y2 + (uvy3 - uvy2) * y1) / denom;
+							t3 = (uvx1 * (x3 - x2) - uvx2 * x3 + uvx3 * x2 + (uvx2 - uvx3) * x1) / denom;
+							t4 = -(uvx2 * y3 + uvx1 * (y2 - y3) - uvx3 * y2 + (uvx3 - uvx2) * y1) / denom;
+							dx = (uvx1 * (uvy3 * x2 - uvy2 * x3) + uvy1 * (uvx2 * x3 - uvx3 * x2) + (uvx3 * uvy2 - uvx2 * uvy3) * x1) / denom;
+							dy = (uvx1 * (uvy3 * y2 - uvy2 * y3) + uvy1 * (uvx2 * y3 - uvx3 * y2) + (uvx3 * uvy2 - uvx2 * uvy3) * y1) / denom;
+							var matrix = new lime.math.Matrix3(t1,t2,t3,t4,dx,dy);
+							openfl._internal.renderer.cairo.CairoGraphics.cairo.transform(matrix);
+							openfl._internal.renderer.cairo.CairoGraphics.cairo.setSourceSurface(pattern,0,0);
+							openfl._internal.renderer.cairo.CairoGraphics.cairo.paint();
+							openfl._internal.renderer.cairo.CairoGraphics.cairo.restore();
+							i1 += 3;
+						}
+						break;
+					case 9:
+						var count = command[6];
+						var flags = command[5];
+						var smooth = command[4];
+						var tileData = command[3];
+						var sheet = command[2];
+						return;
+						var useScale = (flags & 1) > 0;
+						var useRotation = (flags & 2) > 0;
+						var useTransform = (flags & 16) > 0;
+						var useRGB = (flags & 4) > 0;
+						var useAlpha = (flags & 8) > 0;
+						var useRect = (flags & 32) > 0;
+						var useOrigin = (flags & 64) > 0;
+						var useBlendAdd = (flags & 65536) > 0;
+						if(useTransform) {
+							useScale = false;
+							useRotation = false;
+						}
+						var scaleIndex = 0;
+						var rotationIndex = 0;
+						var rgbIndex = 0;
+						var alphaIndex = 0;
+						var transformIndex = 0;
+						var numValues = 3;
+						if(useRect) if(useOrigin) numValues = 8; else numValues = 6;
+						if(useScale) {
+							scaleIndex = numValues;
+							numValues++;
+						}
+						if(useRotation) {
+							rotationIndex = numValues;
+							numValues++;
+						}
+						if(useTransform) {
+							transformIndex = numValues;
+							numValues += 4;
+						}
+						if(useRGB) {
+							rgbIndex = numValues;
+							numValues += 3;
+						}
+						if(useAlpha) {
+							alphaIndex = numValues;
+							numValues++;
+						}
+						var totalCount = tileData.length;
+						if(count >= 0 && totalCount > count) totalCount = count;
+						var itemCount = totalCount / numValues | 0;
+						var index = 0;
+						var rect = null;
+						var center = null;
+						var previousTileID = -1;
+						var surface2;
+						sheet.__bitmap.__sync();
+						surface2 = sheet.__bitmap.getSurface();
+						openfl._internal.renderer.cairo.CairoGraphics.cairo.setSourceSurface(surface2,0,0);
+						if(useBlendAdd) openfl._internal.renderer.cairo.CairoGraphics.cairo.set_operator(12);
+						while(index < totalCount) {
+							var tileID;
+							if(!useRect) tileID = tileData[index + 2] | 0; else tileID = -1;
+							if(!useRect && tileID != previousTileID) {
+								rect = sheet.__tileRects[tileID];
+								center = sheet.__centerPoints[tileID];
+								previousTileID = tileID;
+							} else if(useRect) {
+								rect = sheet.__rectTile;
+								rect.setTo(tileData[index + 2],tileData[index + 3],tileData[index + 4],tileData[index + 5]);
+								center = sheet.__point;
+								if(useOrigin) {
+									center.x = tileData[index + 6];
+									center.y = tileData[index + 7];
+								} else {
+									center.x = 0;
+									center.y = 0;
+								}
+							}
+							if(rect != null && rect.width > 0 && rect.height > 0 && center != null) {
+								openfl._internal.renderer.cairo.CairoGraphics.cairo.save();
+								openfl._internal.renderer.cairo.CairoGraphics.cairo.translate(tileData[index],tileData[index + 1]);
+								if(useRotation) {
+								}
+								var scale = 1.0;
+								if(useScale) scale = tileData[index + scaleIndex];
+								if(useTransform) {
+									var matrix1 = new lime.math.Matrix3(tileData[index + transformIndex],tileData[index + transformIndex + 1],tileData[index + transformIndex + 2],tileData[index + transformIndex + 3],0,0);
+									openfl._internal.renderer.cairo.CairoGraphics.cairo.transform(matrix1);
+								}
+								if(useAlpha) openfl._internal.renderer.cairo.CairoGraphics.cairo.paintWithAlpha(tileData[index + alphaIndex]); else openfl._internal.renderer.cairo.CairoGraphics.cairo.paint();
+								openfl._internal.renderer.cairo.CairoGraphics.cairo.restore();
+							}
+							index += numValues;
+						}
+						if(useBlendAdd) openfl._internal.renderer.cairo.CairoGraphics.cairo.set_operator(2);
+						break;
+					default:
+						openfl.Lib.notImplemented("CairoGraphics");
+					}
+				}
+			} catch( e ) { if( e != "__break__" ) throw e; }
+		}
+		graphics.set___dirty(false);
+		if(openfl._internal.renderer.cairo.CairoGraphics.fillCommands.length > 0) openfl._internal.renderer.cairo.CairoGraphics.endFill();
+		if(openfl._internal.renderer.cairo.CairoGraphics.strokeCommands.length > 0) openfl._internal.renderer.cairo.CairoGraphics.endStroke();
+	}
+};
+openfl._internal.renderer.cairo.CairoGraphics.renderMask = function(graphics,renderSession) {
+	if(graphics.__commands.length != 0) {
+		var cairo = renderSession.cairo;
+		var positionX = 0.0;
+		var positionY = 0.0;
+		var offsetX = 0;
+		var offsetY = 0;
+		var _g = 0;
+		var _g1 = graphics.__commands;
+		while(_g < _g1.length) {
+			var command = _g1[_g];
+			++_g;
+			switch(command[1]) {
+			case 3:
+				var y = command[7];
+				var x = command[6];
+				var cy2 = command[5];
+				var cy1 = command[4];
+				var cx2 = command[3];
+				var cx1 = command[2];
+				cairo.curveTo(cx1 - offsetX,cy1 - offsetY,cx2 - offsetX,cy2 - offsetY,x - offsetX,y - offsetY);
+				positionX = x;
+				positionY = y;
+				break;
+			case 4:
+				var y1 = command[5];
+				var x1 = command[4];
+				var cy = command[3];
+				var cx = command[2];
+				openfl._internal.renderer.cairo.CairoGraphics.quadraticCurveTo(cx - offsetX,cy - offsetY,x1 - offsetX,y1 - offsetY);
+				positionX = x1;
+				positionY = y1;
+				break;
+			case 5:
+				var radius = command[4];
+				var y2 = command[3];
+				var x2 = command[2];
+				cairo.arc(x2 - offsetX,y2 - offsetY,radius,0,Math.PI * 2);
+				break;
+			case 6:
+				var height = command[5];
+				var width = command[4];
+				var y3 = command[3];
+				var x3 = command[2];
+				x3 -= offsetX;
+				y3 -= offsetY;
+				var kappa = .5522848;
+				var ox = width / 2 * kappa;
+				var oy = height / 2 * kappa;
+				var xe = x3 + width;
+				var ye = y3 + height;
+				var xm = x3 + width / 2;
+				var ym = y3 + height / 2;
+				cairo.moveTo(x3,ym);
+				cairo.curveTo(x3,ym - oy,xm - ox,y3,xm,y3);
+				cairo.curveTo(xm + ox,y3,xe,ym - oy,xe,ym);
+				cairo.curveTo(xe,ym + oy,xm + ox,ye,xm,ye);
+				cairo.curveTo(xm - ox,ye,x3,ym + oy,x3,ym);
+				break;
+			case 7:
+				var height1 = command[5];
+				var width1 = command[4];
+				var y4 = command[3];
+				var x4 = command[2];
+				cairo.rectangle(x4 - offsetX,y4 - offsetY,width1,height1);
+				break;
+			case 8:
+				var ry = command[7];
+				var rx = command[6];
+				var height2 = command[5];
+				var width2 = command[4];
+				var y5 = command[3];
+				var x5 = command[2];
+				openfl._internal.renderer.cairo.CairoGraphics.drawRoundRect(x5 - offsetX,y5 - offsetY,width2,height2,rx,ry);
+				break;
+			case 13:
+				var y6 = command[3];
+				var x6 = command[2];
+				cairo.lineTo(x6 - offsetX,y6 - offsetY);
+				positionX = x6;
+				positionY = y6;
+				break;
+			case 14:
+				var y7 = command[3];
+				var x7 = command[2];
+				cairo.moveTo(x7 - offsetX,y7 - offsetY);
+				positionX = x7;
+				positionY = y7;
+				break;
+			default:
+			}
+		}
+	}
+};
+openfl._internal.renderer.cairo.CairoMaskManager = function(renderSession) {
+	openfl._internal.renderer.AbstractMaskManager.call(this,renderSession);
+};
+$hxClasses["openfl._internal.renderer.cairo.CairoMaskManager"] = openfl._internal.renderer.cairo.CairoMaskManager;
+openfl._internal.renderer.cairo.CairoMaskManager.__name__ = ["openfl","_internal","renderer","cairo","CairoMaskManager"];
+openfl._internal.renderer.cairo.CairoMaskManager.__super__ = openfl._internal.renderer.AbstractMaskManager;
+openfl._internal.renderer.cairo.CairoMaskManager.prototype = $extend(openfl._internal.renderer.AbstractMaskManager.prototype,{
+	pushMask: function(mask) {
+		var cairo = this.renderSession.cairo;
+		cairo.save();
+		var transform = mask.__getTransform();
+		cairo.set_matrix(transform.__toMatrix3());
+		cairo.newPath();
+		mask.__renderCairoMask(this.renderSession);
+		cairo.clipPreserve();
+	}
+	,pushRect: function(rect,transform) {
+		var cairo = this.renderSession.cairo;
+		cairo.save();
+		cairo.set_matrix(new lime.math.Matrix3(transform.a,transform.c,transform.b,transform.d,transform.tx,transform.ty));
+		cairo.newPath();
+		cairo.rectangle(rect.x,rect.y,rect.width,rect.height);
+		cairo.clipPreserve();
+	}
+	,popMask: function() {
+		this.renderSession.cairo.restore();
+	}
+	,__class__: openfl._internal.renderer.cairo.CairoMaskManager
+});
+openfl._internal.renderer.cairo.CairoRenderer = function(width,height,cairo) {
+	openfl._internal.renderer.AbstractRenderer.call(this,width,height);
+	this.cairo = cairo;
+	this.renderSession = new openfl._internal.renderer.RenderSession();
+	this.renderSession.cairo = cairo;
+	this.renderSession.roundPixels = true;
+	this.renderSession.renderer = this;
+	this.renderSession.maskManager = new openfl._internal.renderer.cairo.CairoMaskManager(this.renderSession);
+};
+$hxClasses["openfl._internal.renderer.cairo.CairoRenderer"] = openfl._internal.renderer.cairo.CairoRenderer;
+openfl._internal.renderer.cairo.CairoRenderer.__name__ = ["openfl","_internal","renderer","cairo","CairoRenderer"];
+openfl._internal.renderer.cairo.CairoRenderer.__super__ = openfl._internal.renderer.AbstractRenderer;
+openfl._internal.renderer.cairo.CairoRenderer.prototype = $extend(openfl._internal.renderer.AbstractRenderer.prototype,{
+	render: function(stage) {
+		this.cairo.identityMatrix();
+		if(stage.__clearBeforeRender) {
+			this.cairo.setSourceRGB(stage.__colorSplit[0],stage.__colorSplit[1],stage.__colorSplit[2]);
+			this.cairo.paint();
+		}
+		stage.__renderCairo(this.renderSession);
+	}
+	,__class__: openfl._internal.renderer.cairo.CairoRenderer
+});
+openfl._internal.renderer.cairo.CairoShape = function() { };
+$hxClasses["openfl._internal.renderer.cairo.CairoShape"] = openfl._internal.renderer.cairo.CairoShape;
+openfl._internal.renderer.cairo.CairoShape.__name__ = ["openfl","_internal","renderer","cairo","CairoShape"];
+openfl._internal.renderer.cairo.CairoShape.render = function(shape,renderSession) {
+	if(!shape.__renderable || shape.__worldAlpha <= 0) return;
+	var graphics = shape.__graphics;
+	if(graphics != null) {
+		openfl._internal.renderer.cairo.CairoGraphics.render(graphics,renderSession);
+		if(graphics.__cairo != null) {
+			if(shape.__mask != null) renderSession.maskManager.pushMask(shape.__mask);
+			var cairo = renderSession.cairo;
+			var scrollRect = shape.get_scrollRect();
+			var transform = shape.__worldTransform;
+			if(renderSession.roundPixels) {
+				var matrix = transform.__toMatrix3();
+				matrix.tx = Math.round(matrix.tx);
+				matrix.ty = Math.round(matrix.ty);
+				cairo.set_matrix(matrix);
+			} else cairo.set_matrix(transform.__toMatrix3());
+			cairo.setSourceSurface(graphics.__cairo.get_target(),graphics.__bounds.x,graphics.__bounds.y);
+			cairo.paintWithAlpha(shape.__worldAlpha);
+			if(shape.__mask != null) renderSession.maskManager.popMask();
+		}
+	}
 };
 openfl._internal.renderer.canvas = {};
 openfl._internal.renderer.canvas.CanvasBitmap = function() { };
@@ -11113,50 +13064,50 @@ openfl._internal.renderer.canvas.CanvasBitmap.render = function(bitmap,renderSes
 openfl._internal.renderer.canvas.CanvasGraphics = function() { };
 $hxClasses["openfl._internal.renderer.canvas.CanvasGraphics"] = openfl._internal.renderer.canvas.CanvasGraphics;
 openfl._internal.renderer.canvas.CanvasGraphics.__name__ = ["openfl","_internal","renderer","canvas","CanvasGraphics"];
+openfl._internal.renderer.canvas.CanvasGraphics.bitmapFill = null;
+openfl._internal.renderer.canvas.CanvasGraphics.bitmapRepeat = null;
 openfl._internal.renderer.canvas.CanvasGraphics.bounds = null;
+openfl._internal.renderer.canvas.CanvasGraphics.fillCommands = null;
+openfl._internal.renderer.canvas.CanvasGraphics.graphics = null;
 openfl._internal.renderer.canvas.CanvasGraphics.hasFill = null;
 openfl._internal.renderer.canvas.CanvasGraphics.hasStroke = null;
-openfl._internal.renderer.canvas.CanvasGraphics.inPath = null;
 openfl._internal.renderer.canvas.CanvasGraphics.inversePendingMatrix = null;
 openfl._internal.renderer.canvas.CanvasGraphics.pendingMatrix = null;
-openfl._internal.renderer.canvas.CanvasGraphics.positionX = null;
-openfl._internal.renderer.canvas.CanvasGraphics.positionY = null;
-openfl._internal.renderer.canvas.CanvasGraphics.setFill = null;
+openfl._internal.renderer.canvas.CanvasGraphics.strokeCommands = null;
 openfl._internal.renderer.canvas.CanvasGraphics.context = null;
 openfl._internal.renderer.canvas.CanvasGraphics.pattern = null;
-openfl._internal.renderer.canvas.CanvasGraphics.beginPath = function() {
-	if(!openfl._internal.renderer.canvas.CanvasGraphics.inPath) {
-		openfl._internal.renderer.canvas.CanvasGraphics.context.beginPath();
-		openfl._internal.renderer.canvas.CanvasGraphics.inPath = true;
-	}
-};
 openfl._internal.renderer.canvas.CanvasGraphics.beginPatternFill = function(bitmapFill,bitmapRepeat) {
-	if(openfl._internal.renderer.canvas.CanvasGraphics.setFill || bitmapFill == null) return;
+	if(openfl._internal.renderer.canvas.CanvasGraphics.hasFill || bitmapFill == null) return;
 	if(openfl._internal.renderer.canvas.CanvasGraphics.pattern == null) openfl._internal.renderer.canvas.CanvasGraphics.pattern = openfl._internal.renderer.canvas.CanvasGraphics.context.createPattern(bitmapFill.__image.get_src(),bitmapRepeat?"repeat":"no-repeat");
 	openfl._internal.renderer.canvas.CanvasGraphics.context.fillStyle = openfl._internal.renderer.canvas.CanvasGraphics.pattern;
-	openfl._internal.renderer.canvas.CanvasGraphics.setFill = true;
+	openfl._internal.renderer.canvas.CanvasGraphics.hasFill = true;
 };
-openfl._internal.renderer.canvas.CanvasGraphics.closePath = function(closeFill) {
-	if(openfl._internal.renderer.canvas.CanvasGraphics.inPath) {
-		if(openfl._internal.renderer.canvas.CanvasGraphics.hasFill) {
-			openfl._internal.renderer.canvas.CanvasGraphics.context.translate(-openfl._internal.renderer.canvas.CanvasGraphics.bounds.x,-openfl._internal.renderer.canvas.CanvasGraphics.bounds.y);
-			if(openfl._internal.renderer.canvas.CanvasGraphics.pendingMatrix != null) {
-				openfl._internal.renderer.canvas.CanvasGraphics.context.transform(openfl._internal.renderer.canvas.CanvasGraphics.pendingMatrix.a,openfl._internal.renderer.canvas.CanvasGraphics.pendingMatrix.b,openfl._internal.renderer.canvas.CanvasGraphics.pendingMatrix.c,openfl._internal.renderer.canvas.CanvasGraphics.pendingMatrix.d,openfl._internal.renderer.canvas.CanvasGraphics.pendingMatrix.tx,openfl._internal.renderer.canvas.CanvasGraphics.pendingMatrix.ty);
-				openfl._internal.renderer.canvas.CanvasGraphics.context.fill();
-				openfl._internal.renderer.canvas.CanvasGraphics.context.transform(openfl._internal.renderer.canvas.CanvasGraphics.inversePendingMatrix.a,openfl._internal.renderer.canvas.CanvasGraphics.inversePendingMatrix.b,openfl._internal.renderer.canvas.CanvasGraphics.inversePendingMatrix.c,openfl._internal.renderer.canvas.CanvasGraphics.inversePendingMatrix.d,openfl._internal.renderer.canvas.CanvasGraphics.inversePendingMatrix.tx,openfl._internal.renderer.canvas.CanvasGraphics.inversePendingMatrix.ty);
-			} else openfl._internal.renderer.canvas.CanvasGraphics.context.fill();
-			openfl._internal.renderer.canvas.CanvasGraphics.context.translate(openfl._internal.renderer.canvas.CanvasGraphics.bounds.x,openfl._internal.renderer.canvas.CanvasGraphics.bounds.y);
-		}
-		openfl._internal.renderer.canvas.CanvasGraphics.context.closePath();
-		if(openfl._internal.renderer.canvas.CanvasGraphics.hasStroke) openfl._internal.renderer.canvas.CanvasGraphics.context.stroke();
-	}
-	openfl._internal.renderer.canvas.CanvasGraphics.inPath = false;
-	if(closeFill) {
-		openfl._internal.renderer.canvas.CanvasGraphics.hasFill = false;
-		openfl._internal.renderer.canvas.CanvasGraphics.hasStroke = false;
-		openfl._internal.renderer.canvas.CanvasGraphics.pendingMatrix = null;
-		openfl._internal.renderer.canvas.CanvasGraphics.inversePendingMatrix = null;
-	}
+openfl._internal.renderer.canvas.CanvasGraphics.createTempPatternCanvas = function(bitmap,repeat,width,height) {
+	var canvas = window.document.createElement("canvas");
+	var context = canvas.getContext("2d");
+	canvas.width = width;
+	canvas.height = height;
+	context.fillStyle = context.createPattern(bitmap.__image.get_src(),repeat?"repeat":"no-repeat");
+	context.beginPath();
+	context.moveTo(0,0);
+	context.lineTo(0,height);
+	context.lineTo(width,height);
+	context.lineTo(width,0);
+	context.lineTo(0,0);
+	context.closePath();
+	context.fill();
+	return canvas;
+};
+openfl._internal.renderer.canvas.CanvasGraphics.endFill = function() {
+	openfl._internal.renderer.canvas.CanvasGraphics.context.beginPath();
+	openfl._internal.renderer.canvas.CanvasGraphics.playCommands(openfl._internal.renderer.canvas.CanvasGraphics.fillCommands,false);
+	openfl._internal.renderer.canvas.CanvasGraphics.fillCommands = [];
+};
+openfl._internal.renderer.canvas.CanvasGraphics.endStroke = function() {
+	openfl._internal.renderer.canvas.CanvasGraphics.context.beginPath();
+	openfl._internal.renderer.canvas.CanvasGraphics.playCommands(openfl._internal.renderer.canvas.CanvasGraphics.strokeCommands,true);
+	openfl._internal.renderer.canvas.CanvasGraphics.context.closePath();
+	openfl._internal.renderer.canvas.CanvasGraphics.strokeCommands = [];
 };
 openfl._internal.renderer.canvas.CanvasGraphics.drawRoundRect = function(x,y,width,height,rx,ry) {
 	if(ry == -1) ry = rx;
@@ -11184,14 +13135,307 @@ openfl._internal.renderer.canvas.CanvasGraphics.drawRoundRect = function(x,y,wid
 	openfl._internal.renderer.canvas.CanvasGraphics.context.quadraticCurveTo(xe,y - cy2,xe,y + ry);
 	openfl._internal.renderer.canvas.CanvasGraphics.context.lineTo(xe,ye - ry);
 };
+openfl._internal.renderer.canvas.CanvasGraphics.isCCW = function(x1,y1,x2,y2,x3,y3) {
+	return (x2 - x1) * (y3 - y1) - (y2 - y1) * (x3 - x1) < 0;
+};
+openfl._internal.renderer.canvas.CanvasGraphics.normalizeUVT = function(uvt,skipT) {
+	if(skipT == null) skipT = false;
+	var max = Math.NEGATIVE_INFINITY;
+	var tmp = Math.NEGATIVE_INFINITY;
+	var len = uvt.length;
+	var _g1 = 1;
+	var _g = len + 1;
+	while(_g1 < _g) {
+		var t = _g1++;
+		if(skipT && t % 3 == 0) continue;
+		tmp = uvt.data[t - 1];
+		if(max < tmp) max = tmp;
+	}
+	var result;
+	var this1;
+	this1 = new openfl.VectorData();
+	var this2;
+	this2 = new Array(0);
+	this1.data = this2;
+	this1.length = 0;
+	this1.fixed = false;
+	result = this1;
+	var _g11 = 1;
+	var _g2 = len + 1;
+	while(_g11 < _g2) {
+		var t1 = _g11++;
+		if(skipT && t1 % 3 == 0) continue;
+		if(!result.fixed) {
+			result.length++;
+			if(result.data.length < result.length) {
+				var data;
+				var this3;
+				this3 = new Array(result.data.length + 10);
+				data = this3;
+				haxe.ds._Vector.Vector_Impl_.blit(result.data,0,data,0,result.data.length);
+				result.data = data;
+			}
+			result.data[result.length - 1] = uvt.data[t1 - 1] / max;
+		}
+		result.length;
+	}
+	return { max : max, uvt : result};
+};
+openfl._internal.renderer.canvas.CanvasGraphics.playCommands = function(commands,stroke) {
+	if(stroke == null) stroke = false;
+	openfl._internal.renderer.canvas.CanvasGraphics.bounds = openfl._internal.renderer.canvas.CanvasGraphics.graphics.__bounds;
+	var offsetX = openfl._internal.renderer.canvas.CanvasGraphics.bounds.x;
+	var offsetY = openfl._internal.renderer.canvas.CanvasGraphics.bounds.y;
+	var positionX = 0.0;
+	var positionY = 0.0;
+	var closeGap = false;
+	var startX = 0.0;
+	var startY = 0.0;
+	var _g = 0;
+	while(_g < commands.length) {
+		var command = commands[_g];
+		++_g;
+		switch(command[1]) {
+		case 3:
+			var y = command[7];
+			var x = command[6];
+			var cy2 = command[5];
+			var cx2 = command[4];
+			var cy1 = command[3];
+			var cx1 = command[2];
+			openfl._internal.renderer.canvas.CanvasGraphics.context.bezierCurveTo(cx1 - offsetX,cy1 - offsetY,cx2 - offsetX,cy2 - offsetY,x - offsetX,y - offsetY);
+			break;
+		case 4:
+			var y1 = command[5];
+			var x1 = command[4];
+			var cy = command[3];
+			var cx = command[2];
+			openfl._internal.renderer.canvas.CanvasGraphics.context.quadraticCurveTo(cx - offsetX,cy - offsetY,x1 - offsetX,y1 - offsetY);
+			break;
+		case 5:
+			var radius = command[4];
+			var y2 = command[3];
+			var x2 = command[2];
+			openfl._internal.renderer.canvas.CanvasGraphics.context.moveTo(x2 - offsetX + radius,y2 - offsetY);
+			openfl._internal.renderer.canvas.CanvasGraphics.context.arc(x2 - offsetX,y2 - offsetY,radius,0,Math.PI * 2,true);
+			break;
+		case 6:
+			var height = command[5];
+			var width = command[4];
+			var y3 = command[3];
+			var x3 = command[2];
+			x3 -= offsetX;
+			y3 -= offsetY;
+			var kappa = .5522848;
+			var ox = width / 2 * kappa;
+			var oy = height / 2 * kappa;
+			var xe = x3 + width;
+			var ye = y3 + height;
+			var xm = x3 + width / 2;
+			var ym = y3 + height / 2;
+			openfl._internal.renderer.canvas.CanvasGraphics.context.moveTo(x3,ym);
+			openfl._internal.renderer.canvas.CanvasGraphics.context.bezierCurveTo(x3,ym - oy,xm - ox,y3,xm,y3);
+			openfl._internal.renderer.canvas.CanvasGraphics.context.bezierCurveTo(xm + ox,y3,xe,ym - oy,xe,ym);
+			openfl._internal.renderer.canvas.CanvasGraphics.context.bezierCurveTo(xe,ym + oy,xm + ox,ye,xm,ye);
+			openfl._internal.renderer.canvas.CanvasGraphics.context.bezierCurveTo(xm - ox,ye,x3,ym + oy,x3,ym);
+			break;
+		case 8:
+			var ry = command[7];
+			var rx = command[6];
+			var height1 = command[5];
+			var width1 = command[4];
+			var y4 = command[3];
+			var x4 = command[2];
+			openfl._internal.renderer.canvas.CanvasGraphics.drawRoundRect(x4 - offsetX,y4 - offsetY,width1,height1,rx,ry);
+			break;
+		case 13:
+			var y5 = command[3];
+			var x5 = command[2];
+			openfl._internal.renderer.canvas.CanvasGraphics.context.lineTo(x5 - offsetX,y5 - offsetY);
+			positionX = x5;
+			positionY = y5;
+			break;
+		case 14:
+			var y6 = command[3];
+			var x6 = command[2];
+			openfl._internal.renderer.canvas.CanvasGraphics.context.moveTo(x6 - offsetX,y6 - offsetY);
+			positionX = x6;
+			positionY = y6;
+			closeGap = true;
+			startX = x6;
+			startY = y6;
+			break;
+		case 12:
+			var miterLimit = command[9];
+			var joints = command[8];
+			var caps = command[7];
+			var scaleMode = command[6];
+			var pixelHinting = command[5];
+			var alpha = command[4];
+			var color = command[3];
+			var thickness = command[2];
+			if(stroke && openfl._internal.renderer.canvas.CanvasGraphics.hasStroke) {
+				openfl._internal.renderer.canvas.CanvasGraphics.context.closePath();
+				openfl._internal.renderer.canvas.CanvasGraphics.context.stroke();
+				openfl._internal.renderer.canvas.CanvasGraphics.context.beginPath();
+			}
+			openfl._internal.renderer.canvas.CanvasGraphics.context.moveTo(positionX - offsetX,positionY - offsetY);
+			if(thickness == null) openfl._internal.renderer.canvas.CanvasGraphics.hasStroke = false; else {
+				openfl._internal.renderer.canvas.CanvasGraphics.context.lineWidth = thickness;
+				if(joints == null) openfl._internal.renderer.canvas.CanvasGraphics.context.lineJoin = "round"; else openfl._internal.renderer.canvas.CanvasGraphics.context.lineJoin = Std.string(joints).toLowerCase();
+				if(caps == null) openfl._internal.renderer.canvas.CanvasGraphics.context.lineCap = "round"; else switch(caps[1]) {
+				case 0:
+					openfl._internal.renderer.canvas.CanvasGraphics.context.lineCap = "butt";
+					break;
+				default:
+					openfl._internal.renderer.canvas.CanvasGraphics.context.lineCap = Std.string(caps).toLowerCase();
+				}
+				if(miterLimit == null) openfl._internal.renderer.canvas.CanvasGraphics.context.miterLimit = 3; else openfl._internal.renderer.canvas.CanvasGraphics.context.miterLimit = miterLimit;
+				if(alpha == 1 || alpha == null) if(color == null) openfl._internal.renderer.canvas.CanvasGraphics.context.strokeStyle = "#000000"; else openfl._internal.renderer.canvas.CanvasGraphics.context.strokeStyle = "#" + StringTools.hex(color & 16777215,6); else {
+					var r = (color & 16711680) >>> 16;
+					var g = (color & 65280) >>> 8;
+					var b = color & 255;
+					if(color == null) openfl._internal.renderer.canvas.CanvasGraphics.context.strokeStyle = "#000000"; else openfl._internal.renderer.canvas.CanvasGraphics.context.strokeStyle = "rgba(" + r + ", " + g + ", " + b + ", " + alpha + ")";
+				}
+				openfl._internal.renderer.canvas.CanvasGraphics.hasStroke = true;
+			}
+			break;
+		case 0:
+			var smooth = command[5];
+			var repeat = command[4];
+			var matrix = command[3];
+			var bitmap = command[2];
+			if(bitmap != openfl._internal.renderer.canvas.CanvasGraphics.bitmapFill || repeat != openfl._internal.renderer.canvas.CanvasGraphics.bitmapRepeat) {
+				openfl._internal.renderer.canvas.CanvasGraphics.bitmapFill = bitmap;
+				openfl._internal.renderer.canvas.CanvasGraphics.bitmapRepeat = repeat;
+				openfl._internal.renderer.canvas.CanvasGraphics.pattern = null;
+				openfl._internal.renderer.canvas.CanvasGraphics.hasFill = false;
+				bitmap.__sync();
+			}
+			if(matrix != null) {
+				openfl._internal.renderer.canvas.CanvasGraphics.pendingMatrix = matrix;
+				openfl._internal.renderer.canvas.CanvasGraphics.inversePendingMatrix = new openfl.geom.Matrix(matrix.a,matrix.b,matrix.c,matrix.d,matrix.tx,matrix.ty);
+				openfl._internal.renderer.canvas.CanvasGraphics.inversePendingMatrix.invert();
+			} else {
+				openfl._internal.renderer.canvas.CanvasGraphics.pendingMatrix = null;
+				openfl._internal.renderer.canvas.CanvasGraphics.inversePendingMatrix = null;
+			}
+			break;
+		case 1:
+			var alpha1 = command[3];
+			var rgb = command[2];
+			if(alpha1 < 0.005) openfl._internal.renderer.canvas.CanvasGraphics.hasFill = false; else {
+				if(alpha1 == 1) openfl._internal.renderer.canvas.CanvasGraphics.context.fillStyle = "#" + StringTools.hex(rgb,6); else {
+					var r1 = (rgb & 16711680) >>> 16;
+					var g1 = (rgb & 65280) >>> 8;
+					var b1 = rgb & 255;
+					openfl._internal.renderer.canvas.CanvasGraphics.context.fillStyle = "rgba(" + r1 + ", " + g1 + ", " + b1 + ", " + alpha1 + ")";
+				}
+				openfl._internal.renderer.canvas.CanvasGraphics.bitmapFill = null;
+				openfl._internal.renderer.canvas.CanvasGraphics.hasFill = true;
+			}
+			break;
+		case 2:
+			var focalPointRatio = command[9];
+			var interpolationMethod = command[8];
+			var spreadMethod = command[7];
+			var matrix1 = command[6];
+			var ratios = command[5];
+			var alphas = command[4];
+			var colors = command[3];
+			var type = command[2];
+			var gradientFill = null;
+			switch(type[1]) {
+			case 0:
+				if(matrix1 == null) matrix1 = new openfl.geom.Matrix();
+				var point = matrix1.transformPoint(new openfl.geom.Point(1638.4,0));
+				gradientFill = openfl._internal.renderer.canvas.CanvasGraphics.context.createRadialGradient(matrix1.tx,matrix1.ty,0,matrix1.tx,matrix1.ty,(point.x - matrix1.tx) / 2);
+				break;
+			case 1:
+				var matrix2;
+				if(matrix1 != null) matrix2 = new openfl.geom.Matrix(matrix1.a,matrix1.b,matrix1.c,matrix1.d,matrix1.tx,matrix1.ty); else matrix2 = new openfl.geom.Matrix();
+				var point1 = matrix2.transformPoint(new openfl.geom.Point(-819.2,0));
+				var point2 = matrix2.transformPoint(new openfl.geom.Point(819.2,0));
+				gradientFill = openfl._internal.renderer.canvas.CanvasGraphics.context.createLinearGradient(point1.x,point1.y,point2.x,point2.y);
+				break;
+			}
+			var _g2 = 0;
+			var _g1 = colors.length;
+			while(_g2 < _g1) {
+				var i = _g2++;
+				var rgb1 = colors[i];
+				var alpha2 = alphas[i];
+				var r2 = (rgb1 & 16711680) >>> 16;
+				var g2 = (rgb1 & 65280) >>> 8;
+				var b2 = rgb1 & 255;
+				var ratio = ratios[i] / 255;
+				if(ratio < 0) ratio = 0;
+				if(ratio > 1) ratio = 1;
+				gradientFill.addColorStop(ratio,"rgba(" + r2 + ", " + g2 + ", " + b2 + ", " + alpha2 + ")");
+			}
+			openfl._internal.renderer.canvas.CanvasGraphics.context.fillStyle = gradientFill;
+			openfl._internal.renderer.canvas.CanvasGraphics.bitmapFill = null;
+			openfl._internal.renderer.canvas.CanvasGraphics.hasFill = true;
+			break;
+		case 7:
+			var height2 = command[5];
+			var width2 = command[4];
+			var y7 = command[3];
+			var x7 = command[2];
+			var optimizationUsed = false;
+			if(openfl._internal.renderer.canvas.CanvasGraphics.bitmapFill != null) {
+				var st = 0;
+				var sr = 0;
+				var sb = 0;
+				var sl = 0;
+				var canOptimizeMatrix = true;
+				if(openfl._internal.renderer.canvas.CanvasGraphics.pendingMatrix != null) {
+					if(openfl._internal.renderer.canvas.CanvasGraphics.pendingMatrix.b != 0 || openfl._internal.renderer.canvas.CanvasGraphics.pendingMatrix.c != 0) canOptimizeMatrix = false; else {
+						var stl = openfl._internal.renderer.canvas.CanvasGraphics.inversePendingMatrix.transformPoint(new openfl.geom.Point(x7,y7));
+						var sbr = openfl._internal.renderer.canvas.CanvasGraphics.inversePendingMatrix.transformPoint(new openfl.geom.Point(x7 + width2,y7 + height2));
+						st = stl.y;
+						sl = stl.x;
+						sb = sbr.y;
+						sr = sbr.x;
+					}
+				} else {
+					st = y7;
+					sl = x7;
+					sb = y7 + height2;
+					sr = x7 + width2;
+				}
+				if(canOptimizeMatrix && st >= 0 && sl >= 0 && sr <= openfl._internal.renderer.canvas.CanvasGraphics.bitmapFill.width && sb <= openfl._internal.renderer.canvas.CanvasGraphics.bitmapFill.height) {
+					optimizationUsed = true;
+					openfl._internal.renderer.canvas.CanvasGraphics.context.drawImage(openfl._internal.renderer.canvas.CanvasGraphics.bitmapFill.__image.get_src(),sl,st,sr - sl,sb - st,x7 - offsetX,y7 - offsetY,width2,height2);
+				}
+			}
+			if(!optimizationUsed) openfl._internal.renderer.canvas.CanvasGraphics.context.rect(x7 - offsetX,y7 - offsetY,width2,height2);
+			break;
+		default:
+		}
+	}
+	if(stroke && openfl._internal.renderer.canvas.CanvasGraphics.hasStroke) {
+		if(openfl._internal.renderer.canvas.CanvasGraphics.hasFill && closeGap) openfl._internal.renderer.canvas.CanvasGraphics.context.lineTo(startX - offsetX,startY - offsetY);
+		openfl._internal.renderer.canvas.CanvasGraphics.context.stroke();
+	}
+	if(!stroke) {
+		if(openfl._internal.renderer.canvas.CanvasGraphics.hasFill || openfl._internal.renderer.canvas.CanvasGraphics.bitmapFill != null) {
+			if(openfl._internal.renderer.canvas.CanvasGraphics.bitmapFill != null) openfl._internal.renderer.canvas.CanvasGraphics.beginPatternFill(openfl._internal.renderer.canvas.CanvasGraphics.bitmapFill,openfl._internal.renderer.canvas.CanvasGraphics.bitmapRepeat);
+			openfl._internal.renderer.canvas.CanvasGraphics.context.translate(-openfl._internal.renderer.canvas.CanvasGraphics.bounds.x,-openfl._internal.renderer.canvas.CanvasGraphics.bounds.y);
+			if(openfl._internal.renderer.canvas.CanvasGraphics.pendingMatrix != null) {
+				openfl._internal.renderer.canvas.CanvasGraphics.context.transform(openfl._internal.renderer.canvas.CanvasGraphics.pendingMatrix.a,openfl._internal.renderer.canvas.CanvasGraphics.pendingMatrix.b,openfl._internal.renderer.canvas.CanvasGraphics.pendingMatrix.c,openfl._internal.renderer.canvas.CanvasGraphics.pendingMatrix.d,openfl._internal.renderer.canvas.CanvasGraphics.pendingMatrix.tx,openfl._internal.renderer.canvas.CanvasGraphics.pendingMatrix.ty);
+				openfl._internal.renderer.canvas.CanvasGraphics.context.fill();
+				openfl._internal.renderer.canvas.CanvasGraphics.context.transform(openfl._internal.renderer.canvas.CanvasGraphics.inversePendingMatrix.a,openfl._internal.renderer.canvas.CanvasGraphics.inversePendingMatrix.b,openfl._internal.renderer.canvas.CanvasGraphics.inversePendingMatrix.c,openfl._internal.renderer.canvas.CanvasGraphics.inversePendingMatrix.d,openfl._internal.renderer.canvas.CanvasGraphics.inversePendingMatrix.tx,openfl._internal.renderer.canvas.CanvasGraphics.inversePendingMatrix.ty);
+			} else openfl._internal.renderer.canvas.CanvasGraphics.context.fill();
+			openfl._internal.renderer.canvas.CanvasGraphics.context.translate(openfl._internal.renderer.canvas.CanvasGraphics.bounds.x,openfl._internal.renderer.canvas.CanvasGraphics.bounds.y);
+			openfl._internal.renderer.canvas.CanvasGraphics.context.closePath();
+		}
+	}
+};
 openfl._internal.renderer.canvas.CanvasGraphics.render = function(graphics,renderSession) {
 	if(graphics.__dirty) {
+		openfl._internal.renderer.canvas.CanvasGraphics.graphics = graphics;
 		openfl._internal.renderer.canvas.CanvasGraphics.bounds = graphics.__bounds;
-		openfl._internal.renderer.canvas.CanvasGraphics.hasFill = false;
-		openfl._internal.renderer.canvas.CanvasGraphics.hasStroke = false;
-		openfl._internal.renderer.canvas.CanvasGraphics.inPath = false;
-		openfl._internal.renderer.canvas.CanvasGraphics.positionX = 0;
-		openfl._internal.renderer.canvas.CanvasGraphics.positionY = 0;
 		if(!graphics.__visible || graphics.__commands.length == 0 || openfl._internal.renderer.canvas.CanvasGraphics.bounds == null || openfl._internal.renderer.canvas.CanvasGraphics.bounds.width == 0 || openfl._internal.renderer.canvas.CanvasGraphics.bounds.height == 0) {
 			graphics.__canvas = null;
 			graphics.__context = null;
@@ -11205,8 +13449,12 @@ openfl._internal.renderer.canvas.CanvasGraphics.render = function(graphics,rende
 			graphics.__canvas.height = Math.ceil(openfl._internal.renderer.canvas.CanvasGraphics.bounds.height);
 			var offsetX = openfl._internal.renderer.canvas.CanvasGraphics.bounds.x;
 			var offsetY = openfl._internal.renderer.canvas.CanvasGraphics.bounds.y;
-			var bitmapFill = null;
-			var bitmapRepeat = false;
+			openfl._internal.renderer.canvas.CanvasGraphics.fillCommands = new Array();
+			openfl._internal.renderer.canvas.CanvasGraphics.strokeCommands = new Array();
+			openfl._internal.renderer.canvas.CanvasGraphics.hasFill = false;
+			openfl._internal.renderer.canvas.CanvasGraphics.hasStroke = false;
+			openfl._internal.renderer.canvas.CanvasGraphics.bitmapFill = null;
+			openfl._internal.renderer.canvas.CanvasGraphics.bitmapRepeat = false;
 			var _g = 0;
 			var _g1 = graphics.__commands;
 			try {
@@ -11214,200 +13462,198 @@ openfl._internal.renderer.canvas.CanvasGraphics.render = function(graphics,rende
 					var command = _g1[_g];
 					++_g;
 					switch(command[1]) {
-					case 0:
-						var smooth = command[5];
-						var repeat = command[4];
-						var matrix = command[3];
-						var bitmap = command[2];
-						openfl._internal.renderer.canvas.CanvasGraphics.closePath(false);
-						if(bitmap != bitmapFill || repeat != bitmapRepeat) {
-							bitmapFill = bitmap;
-							bitmapRepeat = repeat;
-							openfl._internal.renderer.canvas.CanvasGraphics.pattern = null;
-							openfl._internal.renderer.canvas.CanvasGraphics.setFill = false;
-							bitmap.__sync();
-						}
-						if(matrix != null) {
-							openfl._internal.renderer.canvas.CanvasGraphics.pendingMatrix = matrix;
-							openfl._internal.renderer.canvas.CanvasGraphics.inversePendingMatrix = new openfl.geom.Matrix(matrix.a,matrix.b,matrix.c,matrix.d,matrix.tx,matrix.ty);
-							openfl._internal.renderer.canvas.CanvasGraphics.inversePendingMatrix.invert();
-						} else {
-							openfl._internal.renderer.canvas.CanvasGraphics.pendingMatrix = null;
-							openfl._internal.renderer.canvas.CanvasGraphics.inversePendingMatrix = null;
-						}
-						openfl._internal.renderer.canvas.CanvasGraphics.hasFill = true;
+					case 3:case 4:case 13:case 14:
+						openfl._internal.renderer.canvas.CanvasGraphics.fillCommands.push(command);
+						openfl._internal.renderer.canvas.CanvasGraphics.strokeCommands.push(command);
 						break;
-					case 1:
-						var alpha = command[3];
-						var rgb = command[2];
-						openfl._internal.renderer.canvas.CanvasGraphics.closePath(false);
-						if(alpha == 1) openfl._internal.renderer.canvas.CanvasGraphics.context.fillStyle = "#" + StringTools.hex(rgb,6); else {
-							var r = (rgb & 16711680) >>> 16;
-							var g = (rgb & 65280) >>> 8;
-							var b = rgb & 255;
-							openfl._internal.renderer.canvas.CanvasGraphics.context.fillStyle = "rgba(" + r + ", " + g + ", " + b + ", " + alpha + ")";
-						}
-						bitmapFill = null;
-						openfl._internal.renderer.canvas.CanvasGraphics.setFill = true;
-						openfl._internal.renderer.canvas.CanvasGraphics.hasFill = true;
+					case 11:
+						openfl._internal.renderer.canvas.CanvasGraphics.endFill();
+						openfl._internal.renderer.canvas.CanvasGraphics.endStroke();
+						openfl._internal.renderer.canvas.CanvasGraphics.hasFill = false;
 						break;
-					case 2:
-						var focalPointRatio = command[9];
-						var interpolationMethod = command[8];
-						var spreadMethod = command[7];
-						var matrix1 = command[6];
-						var ratios = command[5];
-						var alphas = command[4];
-						var colors = command[3];
-						var type = command[2];
-						openfl._internal.renderer.canvas.CanvasGraphics.closePath(false);
-						var gradientFill = null;
-						switch(type[1]) {
-						case 0:
-							if(matrix1 == null) matrix1 = new openfl.geom.Matrix();
-							var point = matrix1.transformPoint(new openfl.geom.Point(1638.4,0));
-							gradientFill = openfl._internal.renderer.canvas.CanvasGraphics.context.createRadialGradient(matrix1.tx,matrix1.ty,0,matrix1.tx,matrix1.ty,(point.x - matrix1.tx) / 2);
-							break;
-						case 1:
-							var matrix2;
-							if(matrix1 != null) matrix2 = new openfl.geom.Matrix(matrix1.a,matrix1.b,matrix1.c,matrix1.d,matrix1.tx,matrix1.ty); else matrix2 = new openfl.geom.Matrix();
-							matrix2.tx -= matrix2.a * 1638.4 / 2;
-							matrix2.ty -= matrix2.d * 1638.4 / 2;
-							var point1 = matrix2.transformPoint(new openfl.geom.Point(0,0));
-							var point2 = matrix2.transformPoint(new openfl.geom.Point(1638.4,0));
-							gradientFill = openfl._internal.renderer.canvas.CanvasGraphics.context.createLinearGradient(point1.x,point1.y,point2.x,point2.y);
-							break;
-						}
-						var _g3 = 0;
-						var _g2 = colors.length;
-						while(_g3 < _g2) {
-							var i = _g3++;
-							var rgb1 = colors[i];
-							var alpha1 = alphas[i];
-							var r1 = (rgb1 & 16711680) >>> 16;
-							var g1 = (rgb1 & 65280) >>> 8;
-							var b1 = rgb1 & 255;
-							var ratio = ratios[i] / 255;
-							if(ratio < 0) ratio = 0;
-							if(ratio > 1) ratio = 1;
-							gradientFill.addColorStop(ratio,"rgba(" + r1 + ", " + g1 + ", " + b1 + ", " + alpha1 + ")");
-						}
-						openfl._internal.renderer.canvas.CanvasGraphics.context.fillStyle = gradientFill;
-						bitmapFill = null;
-						openfl._internal.renderer.canvas.CanvasGraphics.setFill = true;
-						openfl._internal.renderer.canvas.CanvasGraphics.hasFill = true;
+					case 12:
+						openfl._internal.renderer.canvas.CanvasGraphics.strokeCommands.push(command);
 						break;
-					case 3:
-						var y = command[7];
-						var x = command[6];
-						var cy2 = command[5];
-						var cx2 = command[4];
-						var cy1 = command[3];
-						var cx1 = command[2];
-						openfl._internal.renderer.canvas.CanvasGraphics.beginPatternFill(bitmapFill,bitmapRepeat);
-						openfl._internal.renderer.canvas.CanvasGraphics.beginPath();
-						openfl._internal.renderer.canvas.CanvasGraphics.context.bezierCurveTo(cx1 - offsetX,cy1 - offsetY,cx2 - offsetX,cy2 - offsetY,x - offsetX,y - offsetY);
-						openfl._internal.renderer.canvas.CanvasGraphics.positionX = x;
-						openfl._internal.renderer.canvas.CanvasGraphics.positionY = y;
+					case 0:case 1:case 2:
+						openfl._internal.renderer.canvas.CanvasGraphics.endFill();
+						openfl._internal.renderer.canvas.CanvasGraphics.endStroke();
+						openfl._internal.renderer.canvas.CanvasGraphics.fillCommands.push(command);
+						openfl._internal.renderer.canvas.CanvasGraphics.strokeCommands.push(command);
 						break;
-					case 4:
-						var y1 = command[5];
-						var x1 = command[4];
-						var cy = command[3];
-						var cx = command[2];
-						openfl._internal.renderer.canvas.CanvasGraphics.beginPatternFill(bitmapFill,bitmapRepeat);
-						openfl._internal.renderer.canvas.CanvasGraphics.beginPath();
-						openfl._internal.renderer.canvas.CanvasGraphics.context.quadraticCurveTo(cx - offsetX,cy - offsetY,x1 - offsetX,y1 - offsetY);
-						openfl._internal.renderer.canvas.CanvasGraphics.positionX = x1;
-						openfl._internal.renderer.canvas.CanvasGraphics.positionY = y1;
+					case 5:case 6:case 7:case 8:
+						openfl._internal.renderer.canvas.CanvasGraphics.endFill();
+						openfl._internal.renderer.canvas.CanvasGraphics.endStroke();
+						openfl._internal.renderer.canvas.CanvasGraphics.fillCommands.push(command);
+						openfl._internal.renderer.canvas.CanvasGraphics.strokeCommands.push(command);
 						break;
-					case 5:
-						var radius = command[4];
-						var y2 = command[3];
-						var x2 = command[2];
-						openfl._internal.renderer.canvas.CanvasGraphics.beginPatternFill(bitmapFill,bitmapRepeat);
-						openfl._internal.renderer.canvas.CanvasGraphics.beginPath();
-						openfl._internal.renderer.canvas.CanvasGraphics.context.moveTo(x2 - offsetX + radius,y2 - offsetY);
-						openfl._internal.renderer.canvas.CanvasGraphics.context.arc(x2 - offsetX,y2 - offsetY,radius,0,Math.PI * 2,true);
-						break;
-					case 6:
-						var height = command[5];
-						var width = command[4];
-						var y3 = command[3];
-						var x3 = command[2];
-						x3 -= offsetX;
-						y3 -= offsetY;
-						var kappa = .5522848;
-						var ox = width / 2 * kappa;
-						var oy = height / 2 * kappa;
-						var xe = x3 + width;
-						var ye = y3 + height;
-						var xm = x3 + width / 2;
-						var ym = y3 + height / 2;
-						openfl._internal.renderer.canvas.CanvasGraphics.beginPatternFill(bitmapFill,bitmapRepeat);
-						openfl._internal.renderer.canvas.CanvasGraphics.beginPath();
-						openfl._internal.renderer.canvas.CanvasGraphics.context.moveTo(x3,ym);
-						openfl._internal.renderer.canvas.CanvasGraphics.context.bezierCurveTo(x3,ym - oy,xm - ox,y3,xm,y3);
-						openfl._internal.renderer.canvas.CanvasGraphics.context.bezierCurveTo(xm + ox,y3,xe,ym - oy,xe,ym);
-						openfl._internal.renderer.canvas.CanvasGraphics.context.bezierCurveTo(xe,ym + oy,xm + ox,ye,xm,ye);
-						openfl._internal.renderer.canvas.CanvasGraphics.context.bezierCurveTo(xm - ox,ye,x3,ym + oy,x3,ym);
-						break;
-					case 7:
-						var height1 = command[5];
-						var width1 = command[4];
-						var y4 = command[3];
-						var x4 = command[2];
-						var optimizationUsed = false;
-						if(bitmapFill != null) {
-							var st = 0;
-							var sr = 0;
-							var sb = 0;
-							var sl = 0;
-							var canOptimizeMatrix = true;
-							if(openfl._internal.renderer.canvas.CanvasGraphics.pendingMatrix != null) {
-								if(openfl._internal.renderer.canvas.CanvasGraphics.pendingMatrix.b != 0 || openfl._internal.renderer.canvas.CanvasGraphics.pendingMatrix.c != 0) canOptimizeMatrix = false; else {
-									var stl = openfl._internal.renderer.canvas.CanvasGraphics.inversePendingMatrix.transformPoint(new openfl.geom.Point(x4,y4));
-									var sbr = openfl._internal.renderer.canvas.CanvasGraphics.inversePendingMatrix.transformPoint(new openfl.geom.Point(x4 + width1,y4 + height1));
-									st = stl.y;
-									sl = stl.x;
-									sb = sbr.y;
-									sr = sbr.x;
+					case 10:
+						var culling = command[5];
+						var uvtData = command[4];
+						var indices = command[3];
+						var vertices = command[2];
+						openfl._internal.renderer.canvas.CanvasGraphics.endFill();
+						openfl._internal.renderer.canvas.CanvasGraphics.endStroke();
+						var v = vertices;
+						var ind = indices;
+						var uvt = uvtData;
+						var pattern = null;
+						var colorFill = openfl._internal.renderer.canvas.CanvasGraphics.bitmapFill == null;
+						if(colorFill && uvt != null) throw "__break__";
+						if(!colorFill) {
+							if(uvtData == null) {
+								var this1;
+								this1 = new openfl.VectorData();
+								var this2;
+								this2 = new Array(0);
+								this1.data = this2;
+								this1.length = 0;
+								this1.fixed = false;
+								uvtData = this1;
+								var _g3 = 0;
+								var _g2 = v.length / 2 | 0;
+								while(_g3 < _g2) {
+									var i = _g3++;
+									if(!uvtData.fixed) {
+										uvtData.length++;
+										if(uvtData.data.length < uvtData.length) {
+											var data;
+											var this3;
+											this3 = new Array(uvtData.data.length + 10);
+											data = this3;
+											haxe.ds._Vector.Vector_Impl_.blit(uvtData.data,0,data,0,uvtData.data.length);
+											uvtData.data = data;
+										}
+										uvtData.data[uvtData.length - 1] = v.data[i * 2] / openfl._internal.renderer.canvas.CanvasGraphics.bitmapFill.width;
+									}
+									uvtData.length;
+									if(!uvtData.fixed) {
+										uvtData.length++;
+										if(uvtData.data.length < uvtData.length) {
+											var data1;
+											var this4;
+											this4 = new Array(uvtData.data.length + 10);
+											data1 = this4;
+											haxe.ds._Vector.Vector_Impl_.blit(uvtData.data,0,data1,0,uvtData.data.length);
+											uvtData.data = data1;
+										}
+										uvtData.data[uvtData.length - 1] = v.data[i * 2 + 1] / openfl._internal.renderer.canvas.CanvasGraphics.bitmapFill.height;
+									}
+									uvtData.length;
 								}
-							} else {
-								st = y4;
-								sl = x4;
-								sb = y4 + height1;
-								sr = x4 + width1;
 							}
-							if(canOptimizeMatrix && st >= 0 && sl >= 0 && sr <= bitmapFill.width && sb <= bitmapFill.height) {
-								optimizationUsed = true;
-								openfl._internal.renderer.canvas.CanvasGraphics.context.drawImage(bitmapFill.__image.get_src(),sl,st,sr - sl,sb - st,x4 - offsetX,y4 - offsetY,width1,height1);
+							var skipT = uvtData.length != v.length;
+							var normalizedUVT = openfl._internal.renderer.canvas.CanvasGraphics.normalizeUVT(uvtData,skipT);
+							var maxUVT = normalizedUVT.max;
+							uvt = normalizedUVT.uvt;
+							if(maxUVT > 1) pattern = openfl._internal.renderer.canvas.CanvasGraphics.createTempPatternCanvas(openfl._internal.renderer.canvas.CanvasGraphics.bitmapFill,openfl._internal.renderer.canvas.CanvasGraphics.bitmapRepeat,openfl._internal.renderer.canvas.CanvasGraphics.bounds.width | 0,openfl._internal.renderer.canvas.CanvasGraphics.bounds.height | 0); else pattern = openfl._internal.renderer.canvas.CanvasGraphics.createTempPatternCanvas(openfl._internal.renderer.canvas.CanvasGraphics.bitmapFill,openfl._internal.renderer.canvas.CanvasGraphics.bitmapRepeat,openfl._internal.renderer.canvas.CanvasGraphics.bitmapFill.width,openfl._internal.renderer.canvas.CanvasGraphics.bitmapFill.height);
+						}
+						var i1 = 0;
+						var l = ind.length;
+						var a;
+						var b;
+						var c;
+						var iax;
+						var iay;
+						var ibx;
+						var iby;
+						var icx;
+						var icy;
+						var x1;
+						var y1;
+						var x2;
+						var y2;
+						var x3;
+						var y3;
+						var uvx1;
+						var uvy1;
+						var uvx2;
+						var uvy2;
+						var uvx3;
+						var uvy3;
+						var denom;
+						var t1;
+						var t2;
+						var t3;
+						var t4;
+						var dx;
+						var dy;
+						while(i1 < l) {
+							a = i1;
+							b = i1 + 1;
+							c = i1 + 2;
+							iax = ind.data[a] * 2;
+							iay = ind.data[a] * 2 + 1;
+							ibx = ind.data[b] * 2;
+							iby = ind.data[b] * 2 + 1;
+							icx = ind.data[c] * 2;
+							icy = ind.data[c] * 2 + 1;
+							x1 = v.data[iax];
+							y1 = v.data[iay];
+							x2 = v.data[ibx];
+							y2 = v.data[iby];
+							x3 = v.data[icx];
+							y3 = v.data[icy];
+							switch(culling[1]) {
+							case 2:
+								if(!((x2 - x1) * (y3 - y1) - (y2 - y1) * (x3 - x1) < 0)) {
+									i1 += 3;
+									continue;
+								}
+								break;
+							case 0:
+								if((x2 - x1) * (y3 - y1) - (y2 - y1) * (x3 - x1) < 0) {
+									i1 += 3;
+									continue;
+								}
+								break;
+							default:
 							}
+							if(colorFill) {
+								openfl._internal.renderer.canvas.CanvasGraphics.context.beginPath();
+								openfl._internal.renderer.canvas.CanvasGraphics.context.moveTo(x1,y1);
+								openfl._internal.renderer.canvas.CanvasGraphics.context.lineTo(x2,y2);
+								openfl._internal.renderer.canvas.CanvasGraphics.context.lineTo(x3,y3);
+								openfl._internal.renderer.canvas.CanvasGraphics.context.closePath();
+								openfl._internal.renderer.canvas.CanvasGraphics.context.fill();
+								i1 += 3;
+								continue;
+							}
+							openfl._internal.renderer.canvas.CanvasGraphics.context.save();
+							openfl._internal.renderer.canvas.CanvasGraphics.context.beginPath();
+							openfl._internal.renderer.canvas.CanvasGraphics.context.moveTo(x1,y1);
+							openfl._internal.renderer.canvas.CanvasGraphics.context.lineTo(x2,y2);
+							openfl._internal.renderer.canvas.CanvasGraphics.context.lineTo(x3,y3);
+							openfl._internal.renderer.canvas.CanvasGraphics.context.closePath();
+							openfl._internal.renderer.canvas.CanvasGraphics.context.clip();
+							uvx1 = uvt.data[iax] * pattern.width;
+							uvx2 = uvt.data[ibx] * pattern.width;
+							uvx3 = uvt.data[icx] * pattern.width;
+							uvy1 = uvt.data[iay] * pattern.height;
+							uvy2 = uvt.data[iby] * pattern.height;
+							uvy3 = uvt.data[icy] * pattern.height;
+							denom = uvx1 * (uvy3 - uvy2) - uvx2 * uvy3 + uvx3 * uvy2 + (uvx2 - uvx3) * uvy1;
+							if(denom == 0) {
+								i1 += 3;
+								continue;
+							}
+							t1 = -(uvy1 * (x3 - x2) - uvy2 * x3 + uvy3 * x2 + (uvy2 - uvy3) * x1) / denom;
+							t2 = (uvy2 * y3 + uvy1 * (y2 - y3) - uvy3 * y2 + (uvy3 - uvy2) * y1) / denom;
+							t3 = (uvx1 * (x3 - x2) - uvx2 * x3 + uvx3 * x2 + (uvx2 - uvx3) * x1) / denom;
+							t4 = -(uvx2 * y3 + uvx1 * (y2 - y3) - uvx3 * y2 + (uvx3 - uvx2) * y1) / denom;
+							dx = (uvx1 * (uvy3 * x2 - uvy2 * x3) + uvy1 * (uvx2 * x3 - uvx3 * x2) + (uvx3 * uvy2 - uvx2 * uvy3) * x1) / denom;
+							dy = (uvx1 * (uvy3 * y2 - uvy2 * y3) + uvy1 * (uvx2 * y3 - uvx3 * y2) + (uvx3 * uvy2 - uvx2 * uvy3) * y1) / denom;
+							openfl._internal.renderer.canvas.CanvasGraphics.context.transform(t1,t2,t3,t4,dx,dy);
+							openfl._internal.renderer.canvas.CanvasGraphics.context.drawImage(pattern,0,0);
+							openfl._internal.renderer.canvas.CanvasGraphics.context.restore();
+							i1 += 3;
 						}
-						if(!optimizationUsed) {
-							openfl._internal.renderer.canvas.CanvasGraphics.beginPatternFill(bitmapFill,bitmapRepeat);
-							openfl._internal.renderer.canvas.CanvasGraphics.beginPath();
-							openfl._internal.renderer.canvas.CanvasGraphics.context.rect(x4 - offsetX,y4 - offsetY,width1,height1);
-						}
-						break;
-					case 8:
-						var ry = command[7];
-						var rx = command[6];
-						var height2 = command[5];
-						var width2 = command[4];
-						var y5 = command[3];
-						var x5 = command[2];
-						openfl._internal.renderer.canvas.CanvasGraphics.beginPatternFill(bitmapFill,bitmapRepeat);
-						openfl._internal.renderer.canvas.CanvasGraphics.beginPath();
-						openfl._internal.renderer.canvas.CanvasGraphics.drawRoundRect(x5 - offsetX,y5 - offsetY,width2,height2,rx,ry);
 						break;
 					case 9:
 						var count = command[6];
 						var flags = command[5];
-						var smooth1 = command[4];
+						var smooth = command[4];
 						var tileData = command[3];
 						var sheet = command[2];
-						openfl._internal.renderer.canvas.CanvasGraphics.closePath(false);
 						var useScale = (flags & 1) > 0;
 						var useRotation = (flags & 2) > 0;
 						var useTransform = (flags & 16) > 0;
@@ -11492,217 +13738,6 @@ openfl._internal.renderer.canvas.CanvasGraphics.render = function(graphics,rende
 						}
 						if(useBlendAdd) openfl._internal.renderer.canvas.CanvasGraphics.context.globalCompositeOperation = "source-over";
 						break;
-					case 11:
-						openfl._internal.renderer.canvas.CanvasGraphics.closePath(true);
-						break;
-					case 12:
-						var miterLimit = command[9];
-						var joints = command[8];
-						var caps = command[7];
-						var scaleMode = command[6];
-						var pixelHinting = command[5];
-						var alpha2 = command[4];
-						var color = command[3];
-						var thickness = command[2];
-						openfl._internal.renderer.canvas.CanvasGraphics.closePath(false);
-						if(thickness == null) openfl._internal.renderer.canvas.CanvasGraphics.hasStroke = false; else {
-							openfl._internal.renderer.canvas.CanvasGraphics.context.lineWidth = thickness;
-							if(joints == null) openfl._internal.renderer.canvas.CanvasGraphics.context.lineJoin = "round"; else openfl._internal.renderer.canvas.CanvasGraphics.context.lineJoin = Std.string(joints).toLowerCase();
-							if(caps == null) openfl._internal.renderer.canvas.CanvasGraphics.context.lineCap = "round"; else switch(caps[1]) {
-							case 0:
-								openfl._internal.renderer.canvas.CanvasGraphics.context.lineCap = "butt";
-								break;
-							default:
-								openfl._internal.renderer.canvas.CanvasGraphics.context.lineCap = Std.string(caps).toLowerCase();
-							}
-							if(miterLimit == null) openfl._internal.renderer.canvas.CanvasGraphics.context.miterLimit = 3; else openfl._internal.renderer.canvas.CanvasGraphics.context.miterLimit = miterLimit;
-							if(alpha2 == 1 || alpha2 == null) if(color == null) openfl._internal.renderer.canvas.CanvasGraphics.context.strokeStyle = "#000000"; else openfl._internal.renderer.canvas.CanvasGraphics.context.strokeStyle = "#" + StringTools.hex(color & 16777215,6); else {
-								var r2 = (color & 16711680) >>> 16;
-								var g2 = (color & 65280) >>> 8;
-								var b2 = color & 255;
-								if(color == null) openfl._internal.renderer.canvas.CanvasGraphics.context.strokeStyle = "#000000"; else openfl._internal.renderer.canvas.CanvasGraphics.context.strokeStyle = "rgba(" + r2 + ", " + g2 + ", " + b2 + ", " + alpha2 + ")";
-							}
-							openfl._internal.renderer.canvas.CanvasGraphics.hasStroke = true;
-						}
-						break;
-					case 13:
-						var y6 = command[3];
-						var x6 = command[2];
-						openfl._internal.renderer.canvas.CanvasGraphics.beginPatternFill(bitmapFill,bitmapRepeat);
-						openfl._internal.renderer.canvas.CanvasGraphics.beginPath();
-						openfl._internal.renderer.canvas.CanvasGraphics.context.lineTo(x6 - offsetX,y6 - offsetY);
-						openfl._internal.renderer.canvas.CanvasGraphics.positionX = x6;
-						openfl._internal.renderer.canvas.CanvasGraphics.positionY = y6;
-						break;
-					case 14:
-						var y7 = command[3];
-						var x7 = command[2];
-						openfl._internal.renderer.canvas.CanvasGraphics.beginPath();
-						openfl._internal.renderer.canvas.CanvasGraphics.context.moveTo(x7 - offsetX,y7 - offsetY);
-						openfl._internal.renderer.canvas.CanvasGraphics.positionX = x7;
-						openfl._internal.renderer.canvas.CanvasGraphics.positionY = y7;
-						break;
-					case 10:
-						var culling = command[5];
-						var uvtData = command[4];
-						var indices = command[3];
-						var vertices = command[2];
-						openfl._internal.renderer.canvas.CanvasGraphics.closePath(false);
-						var v = vertices;
-						var ind = indices;
-						var uvt = uvtData;
-						var pattern = null;
-						var colorFill = bitmapFill == null;
-						if(colorFill && uvt != null) throw "__break__";
-						if(!colorFill) {
-							if(uvtData == null) {
-								var this1;
-								this1 = new openfl.VectorData();
-								var this2;
-								this2 = new Array(0);
-								this1.data = this2;
-								this1.length = 0;
-								this1.fixed = false;
-								uvtData = this1;
-								var _g31 = 0;
-								var _g21 = v.length / 2 | 0;
-								while(_g31 < _g21) {
-									var i1 = _g31++;
-									if(!uvtData.fixed) {
-										uvtData.length++;
-										if(uvtData.data.length < uvtData.length) {
-											var data;
-											var this3;
-											this3 = new Array(uvtData.data.length + 10);
-											data = this3;
-											haxe.ds._Vector.Vector_Impl_.blit(uvtData.data,0,data,0,uvtData.data.length);
-											uvtData.data = data;
-										}
-										uvtData.data[uvtData.length - 1] = v.data[i1 * 2] / bitmapFill.width;
-									}
-									uvtData.length;
-									if(!uvtData.fixed) {
-										uvtData.length++;
-										if(uvtData.data.length < uvtData.length) {
-											var data1;
-											var this4;
-											this4 = new Array(uvtData.data.length + 10);
-											data1 = this4;
-											haxe.ds._Vector.Vector_Impl_.blit(uvtData.data,0,data1,0,uvtData.data.length);
-											uvtData.data = data1;
-										}
-										uvtData.data[uvtData.length - 1] = v.data[i1 * 2 + 1] / bitmapFill.height;
-									}
-									uvtData.length;
-								}
-							}
-							var skipT = uvtData.length != v.length;
-							var normalizedUvt = openfl._internal.renderer.canvas.CanvasGraphics.normalizeUvt(uvtData,skipT);
-							var maxUvt = normalizedUvt.max;
-							uvt = normalizedUvt.uvt;
-							if(maxUvt > 1) pattern = openfl._internal.renderer.canvas.CanvasGraphics.createTempPatternCanvas(bitmapFill,bitmapRepeat,openfl._internal.renderer.canvas.CanvasGraphics.bounds.width,openfl._internal.renderer.canvas.CanvasGraphics.bounds.height); else pattern = openfl._internal.renderer.canvas.CanvasGraphics.createTempPatternCanvas(bitmapFill,bitmapRepeat,bitmapFill.width,bitmapFill.height);
-						}
-						var i2 = 0;
-						var l = ind.length;
-						var a;
-						var b3;
-						var c;
-						var iax;
-						var iay;
-						var ibx;
-						var iby;
-						var icx;
-						var icy;
-						var x11;
-						var y11;
-						var x21;
-						var y21;
-						var x31;
-						var y31;
-						var uvx1;
-						var uvy1;
-						var uvx2;
-						var uvy2;
-						var uvx3;
-						var uvy3;
-						var denom;
-						var t1;
-						var t2;
-						var t3;
-						var t4;
-						var dx;
-						var dy;
-						while(i2 < l) {
-							a = i2;
-							b3 = i2 + 1;
-							c = i2 + 2;
-							iax = ind.data[a] * 2;
-							iay = ind.data[a] * 2 + 1;
-							ibx = ind.data[b3] * 2;
-							iby = ind.data[b3] * 2 + 1;
-							icx = ind.data[c] * 2;
-							icy = ind.data[c] * 2 + 1;
-							x11 = v.data[iax];
-							y11 = v.data[iay];
-							x21 = v.data[ibx];
-							y21 = v.data[iby];
-							x31 = v.data[icx];
-							y31 = v.data[icy];
-							switch(culling[1]) {
-							case 2:
-								if(!((x21 - x11) * (y31 - y11) - (y21 - y11) * (x31 - x11) < 0)) {
-									i2 += 3;
-									continue;
-								}
-								break;
-							case 0:
-								if((x21 - x11) * (y31 - y11) - (y21 - y11) * (x31 - x11) < 0) {
-									i2 += 3;
-									continue;
-								}
-								break;
-							default:
-							}
-							if(colorFill) {
-								openfl._internal.renderer.canvas.CanvasGraphics.context.beginPath();
-								openfl._internal.renderer.canvas.CanvasGraphics.context.moveTo(x11,y11);
-								openfl._internal.renderer.canvas.CanvasGraphics.context.lineTo(x21,y21);
-								openfl._internal.renderer.canvas.CanvasGraphics.context.lineTo(x31,y31);
-								openfl._internal.renderer.canvas.CanvasGraphics.context.closePath();
-								openfl._internal.renderer.canvas.CanvasGraphics.context.fill();
-								i2 += 3;
-								continue;
-							}
-							openfl._internal.renderer.canvas.CanvasGraphics.context.save();
-							openfl._internal.renderer.canvas.CanvasGraphics.context.beginPath();
-							openfl._internal.renderer.canvas.CanvasGraphics.context.moveTo(x11,y11);
-							openfl._internal.renderer.canvas.CanvasGraphics.context.lineTo(x21,y21);
-							openfl._internal.renderer.canvas.CanvasGraphics.context.lineTo(x31,y31);
-							openfl._internal.renderer.canvas.CanvasGraphics.context.closePath();
-							openfl._internal.renderer.canvas.CanvasGraphics.context.clip();
-							uvx1 = uvt.data[iax] * pattern.width;
-							uvx2 = uvt.data[ibx] * pattern.width;
-							uvx3 = uvt.data[icx] * pattern.width;
-							uvy1 = uvt.data[iay] * pattern.height;
-							uvy2 = uvt.data[iby] * pattern.height;
-							uvy3 = uvt.data[icy] * pattern.height;
-							denom = uvx1 * (uvy3 - uvy2) - uvx2 * uvy3 + uvx3 * uvy2 + (uvx2 - uvx3) * uvy1;
-							if(denom == 0) {
-								i2 += 3;
-								continue;
-							}
-							t1 = -(uvy1 * (x31 - x21) - uvy2 * x31 + uvy3 * x21 + (uvy2 - uvy3) * x11) / denom;
-							t2 = (uvy2 * y31 + uvy1 * (y21 - y31) - uvy3 * y21 + (uvy3 - uvy2) * y11) / denom;
-							t3 = (uvx1 * (x31 - x21) - uvx2 * x31 + uvx3 * x21 + (uvx2 - uvx3) * x11) / denom;
-							t4 = -(uvx2 * y31 + uvx1 * (y21 - y31) - uvx3 * y21 + (uvx3 - uvx2) * y11) / denom;
-							dx = (uvx1 * (uvy3 * x21 - uvy2 * x31) + uvy1 * (uvx2 * x31 - uvx3 * x21) + (uvx3 * uvy2 - uvx2 * uvy3) * x11) / denom;
-							dy = (uvx1 * (uvy3 * y21 - uvy2 * y31) + uvy1 * (uvx2 * y31 - uvx3 * y21) + (uvx3 * uvy2 - uvx2 * uvy3) * y11) / denom;
-							openfl._internal.renderer.canvas.CanvasGraphics.context.transform(t1,t2,t3,t4,dx,dy);
-							openfl._internal.renderer.canvas.CanvasGraphics.context.drawImage(pattern,0,0);
-							openfl._internal.renderer.canvas.CanvasGraphics.context.restore();
-							i2 += 3;
-						}
-						break;
 					default:
 						openfl.Lib.notImplemented("CanvasGraphics");
 					}
@@ -11710,7 +13745,8 @@ openfl._internal.renderer.canvas.CanvasGraphics.render = function(graphics,rende
 			} catch( e ) { if( e != "__break__" ) throw e; }
 		}
 		graphics.set___dirty(false);
-		openfl._internal.renderer.canvas.CanvasGraphics.closePath(false);
+		if(openfl._internal.renderer.canvas.CanvasGraphics.fillCommands.length > 0) openfl._internal.renderer.canvas.CanvasGraphics.endFill();
+		if(openfl._internal.renderer.canvas.CanvasGraphics.strokeCommands.length > 0) openfl._internal.renderer.canvas.CanvasGraphics.endStroke();
 	}
 };
 openfl._internal.renderer.canvas.CanvasGraphics.renderMask = function(graphics,renderSession) {
@@ -11807,68 +13843,35 @@ openfl._internal.renderer.canvas.CanvasGraphics.renderMask = function(graphics,r
 		}
 	}
 };
-openfl._internal.renderer.canvas.CanvasGraphics.createTempPatternCanvas = function(bitmap,repeat,width,height) {
-	var canvas = window.document.createElement("canvas");
-	var context = canvas.getContext("2d");
-	canvas.width = Math.ceil(width);
-	canvas.height = Math.ceil(height);
-	context.fillStyle = context.createPattern(bitmap.__image.get_src(),repeat?"repeat":"no-repeat");
-	context.beginPath();
-	context.moveTo(0,0);
-	context.lineTo(0,height);
-	context.lineTo(width,height);
-	context.lineTo(width,0);
-	context.lineTo(0,0);
-	context.closePath();
-	context.fill();
-	return canvas;
+openfl._internal.renderer.canvas.CanvasMaskManager = function(renderSession) {
+	openfl._internal.renderer.AbstractMaskManager.call(this,renderSession);
 };
-openfl._internal.renderer.canvas.CanvasGraphics.isCCW = function(x1,y1,x2,y2,x3,y3) {
-	return (x2 - x1) * (y3 - y1) - (y2 - y1) * (x3 - x1) < 0;
-};
-openfl._internal.renderer.canvas.CanvasGraphics.normalizeUvt = function(uvt,skipT) {
-	if(skipT == null) skipT = false;
-	var max = Math.NEGATIVE_INFINITY;
-	var tmp = Math.NEGATIVE_INFINITY;
-	var len = uvt.length;
-	var _g1 = 1;
-	var _g = len + 1;
-	while(_g1 < _g) {
-		var t = _g1++;
-		if(skipT && t % 3 == 0) continue;
-		tmp = uvt.data[t - 1];
-		if(max < tmp) max = tmp;
+$hxClasses["openfl._internal.renderer.canvas.CanvasMaskManager"] = openfl._internal.renderer.canvas.CanvasMaskManager;
+openfl._internal.renderer.canvas.CanvasMaskManager.__name__ = ["openfl","_internal","renderer","canvas","CanvasMaskManager"];
+openfl._internal.renderer.canvas.CanvasMaskManager.__super__ = openfl._internal.renderer.AbstractMaskManager;
+openfl._internal.renderer.canvas.CanvasMaskManager.prototype = $extend(openfl._internal.renderer.AbstractMaskManager.prototype,{
+	pushMask: function(mask) {
+		var context = this.renderSession.context;
+		context.save();
+		var transform = mask.__getTransform();
+		context.setTransform(transform.a,transform.c,transform.b,transform.d,transform.tx,transform.ty);
+		context.beginPath();
+		mask.__renderCanvasMask(this.renderSession);
+		context.clip();
 	}
-	var result;
-	var this1;
-	this1 = new openfl.VectorData();
-	var this2;
-	this2 = new Array(0);
-	this1.data = this2;
-	this1.length = 0;
-	this1.fixed = false;
-	result = this1;
-	var _g11 = 1;
-	var _g2 = len + 1;
-	while(_g11 < _g2) {
-		var t1 = _g11++;
-		if(skipT && t1 % 3 == 0) continue;
-		if(!result.fixed) {
-			result.length++;
-			if(result.data.length < result.length) {
-				var data;
-				var this3;
-				this3 = new Array(result.data.length + 10);
-				data = this3;
-				haxe.ds._Vector.Vector_Impl_.blit(result.data,0,data,0,result.data.length);
-				result.data = data;
-			}
-			result.data[result.length - 1] = uvt.data[t1 - 1] / max;
-		}
-		result.length;
+	,pushRect: function(rect,transform) {
+		var context = this.renderSession.context;
+		context.save();
+		context.setTransform(transform.a,transform.c,transform.b,transform.d,transform.tx,transform.ty);
+		context.beginPath();
+		context.rect(rect.x,rect.y,rect.width,rect.height);
+		context.clip();
 	}
-	return { max : max, uvt : result};
-};
+	,popMask: function() {
+		this.renderSession.context.restore();
+	}
+	,__class__: openfl._internal.renderer.canvas.CanvasMaskManager
+});
 openfl._internal.renderer.canvas.CanvasRenderer = function(width,height,context) {
 	openfl._internal.renderer.AbstractRenderer.call(this,width,height);
 	this.context = context;
@@ -11876,7 +13879,7 @@ openfl._internal.renderer.canvas.CanvasRenderer = function(width,height,context)
 	this.renderSession.context = context;
 	this.renderSession.roundPixels = true;
 	this.renderSession.renderer = this;
-	this.renderSession.maskManager = new openfl._internal.renderer.canvas.MaskManager(this.renderSession);
+	this.renderSession.maskManager = new openfl._internal.renderer.canvas.CanvasMaskManager(this.renderSession);
 };
 $hxClasses["openfl._internal.renderer.canvas.CanvasRenderer"] = openfl._internal.renderer.canvas.CanvasRenderer;
 openfl._internal.renderer.canvas.CanvasRenderer.__name__ = ["openfl","_internal","renderer","canvas","CanvasRenderer"];
@@ -11931,8 +13934,10 @@ openfl._internal.renderer.canvas.CanvasTextField.render = function(textField,ren
 };
 openfl._internal.renderer.canvas.CanvasTextField.renderText = function(textField,text,format,offsetX) {
 	openfl._internal.renderer.canvas.CanvasTextField.context.font = textField.__getFont(format);
-	openfl._internal.renderer.canvas.CanvasTextField.context.textBaseline = "top";
 	openfl._internal.renderer.canvas.CanvasTextField.context.fillStyle = "#" + StringTools.hex(format.color,6);
+	openfl._internal.renderer.canvas.CanvasTextField.context.textBaseline = "top";
+	var yOffset = 0.0;
+	if(new EReg("(iPad|iPhone|iPod|Firefox)","g").match(window.navigator.userAgent)) yOffset = format.size * 0.185;
 	var lines = [];
 	if(textField.get_wordWrap()) {
 		var words = text.split(" ");
@@ -11951,8 +13956,8 @@ openfl._internal.renderer.canvas.CanvasTextField.renderText = function(textField
 					test = line + word.substring(0,newLineIndex) + " ";
 					if(openfl._internal.renderer.canvas.CanvasTextField.context.measureText(test).width > textField.__width - 4 && i > 0) {
 						lines.push(line);
-						lines.push(word.substring(0,newLineIndex) + " ");
-					} else lines.push(line + word.substring(0,newLineIndex) + " ");
+						lines.push(word.substring(0,newLineIndex));
+					} else lines.push(line + word.substring(0,newLineIndex));
 					word = HxOverrides.substr(word,newLineIndex + 1,null);
 					newLineIndex = word.indexOf("\n");
 					line = "";
@@ -11968,7 +13973,6 @@ openfl._internal.renderer.canvas.CanvasTextField.renderText = function(textField
 		}
 		if(line != "") lines.push(line);
 	} else lines = text.split("\n");
-	var yOffset = 0;
 	var _g2 = 0;
 	while(_g2 < lines.length) {
 		var line1 = lines[_g2];
@@ -11992,7 +13996,7 @@ openfl._internal.renderer.canvas.CanvasTextField.renderText = function(textField
 };
 openfl._internal.renderer.canvas.CanvasTextField.update = function(textField) {
 	if(textField.__dirty) {
-		if((textField.__text == null || textField.__text == "") && !textField.background && !textField.border || (textField.get_width() <= 0 || textField.get_height() <= 0) && textField.autoSize != openfl.text.TextFieldAutoSize.LEFT) {
+		if((textField.__text == null || textField.__text == "") && !textField.background && !textField.border && !textField.__hasFocus || (textField.get_width() <= 0 || textField.get_height() <= 0) && textField.autoSize != openfl.text.TextFieldAutoSize.LEFT) {
 			textField.__canvas = null;
 			textField.__context = null;
 			textField.__dirty = false;
@@ -12002,7 +14006,7 @@ openfl._internal.renderer.canvas.CanvasTextField.update = function(textField) {
 				textField.__context = textField.__canvas.getContext("2d");
 			}
 			openfl._internal.renderer.canvas.CanvasTextField.context = textField.__context;
-			if(textField.__text != null && textField.__text != "") {
+			if(textField.__text != null && textField.__text != "" || textField.__hasFocus) {
 				var text = textField.get_text();
 				if(textField.displayAsPassword) {
 					var length = text.length;
@@ -12038,16 +14042,16 @@ openfl._internal.renderer.canvas.CanvasTextField.update = function(textField) {
 					}
 				}
 				if(textField.__hasFocus && textField.__selectionStart == textField.__cursorPosition && textField.__showCursor) {
-					var cursorOffset = textField.__getTextWidth(text.substring(0,textField.__cursorPosition));
+					var cursorOffset = textField.__getTextWidth(text.substring(0,textField.__cursorPosition)) + 3;
 					openfl._internal.renderer.canvas.CanvasTextField.context.fillStyle = "#" + StringTools.hex(textField.__textFormat.color,6);
-					openfl._internal.renderer.canvas.CanvasTextField.context.fillRect(cursorOffset,5,1,textField.__textFormat.size - 5);
-				} else if(textField.__hasFocus && Math.abs(textField.__selectionStart - textField.__cursorPosition) > 0 && !textField.__isKeyDown) {
+					openfl._internal.renderer.canvas.CanvasTextField.context.fillRect(cursorOffset,5,1,textField.__textFormat.size * 1.185 - 4);
+				} else if(textField.__hasFocus && Math.abs(textField.__selectionStart - textField.__cursorPosition) > 0) {
 					var lowPos = Std["int"](Math.min(textField.__selectionStart,textField.__cursorPosition));
 					var highPos = Std["int"](Math.max(textField.__selectionStart,textField.__cursorPosition));
-					var xPos = textField.__getTextWidth(text.substring(0,lowPos));
+					var xPos = textField.__getTextWidth(text.substring(0,lowPos)) + 2;
 					var widthPos = textField.__getTextWidth(text.substring(lowPos,highPos));
-					openfl._internal.renderer.canvas.CanvasTextField.context.fillStyle = "#" + StringTools.hex(textField.__textFormat.color,6);
-					openfl._internal.renderer.canvas.CanvasTextField.context.fillRect(xPos,5,widthPos,textField.__textFormat.size - 5);
+					openfl._internal.renderer.canvas.CanvasTextField.context.fillStyle = "#000000";
+					openfl._internal.renderer.canvas.CanvasTextField.context.fillRect(xPos,5,widthPos,textField.__textFormat.size * 1.185 - 4);
 				}
 				if(textField.__ranges == null) openfl._internal.renderer.canvas.CanvasTextField.renderText(textField,text,textField.__textFormat,0); else {
 					var currentIndex = 0;
@@ -12085,34 +14089,6 @@ openfl._internal.renderer.canvas.CanvasTextField.update = function(textField) {
 		}
 	}
 	return false;
-};
-openfl._internal.renderer.canvas.MaskManager = function(renderSession) {
-	this.renderSession = renderSession;
-};
-$hxClasses["openfl._internal.renderer.canvas.MaskManager"] = openfl._internal.renderer.canvas.MaskManager;
-openfl._internal.renderer.canvas.MaskManager.__name__ = ["openfl","_internal","renderer","canvas","MaskManager"];
-openfl._internal.renderer.canvas.MaskManager.prototype = {
-	pushMask: function(mask) {
-		var context = this.renderSession.context;
-		context.save();
-		var transform = mask.__getTransform();
-		context.setTransform(transform.a,transform.c,transform.b,transform.d,transform.tx,transform.ty);
-		context.beginPath();
-		mask.__renderMask(this.renderSession);
-		context.clip();
-	}
-	,pushRect: function(rect,transform) {
-		var context = this.renderSession.context;
-		context.save();
-		context.setTransform(transform.a,transform.c,transform.b,transform.d,transform.tx,transform.ty);
-		context.beginPath();
-		context.rect(rect.x,rect.y,rect.width,rect.height);
-		context.clip();
-	}
-	,popMask: function() {
-		this.renderSession.context.restore();
-	}
-	,__class__: openfl._internal.renderer.canvas.MaskManager
 };
 openfl._internal.renderer.dom = {};
 openfl._internal.renderer.dom.DOMBitmap = function() { };
@@ -12325,7 +14301,7 @@ $hxClasses["openfl._internal.renderer.opengl.GLBitmap"] = openfl._internal.rende
 openfl._internal.renderer.opengl.GLBitmap.__name__ = ["openfl","_internal","renderer","opengl","GLBitmap"];
 openfl._internal.renderer.opengl.GLBitmap.render = function(bitmap,renderSession) {
 	if(!bitmap.__renderable || bitmap.__worldAlpha <= 0 || bitmap.bitmapData == null || !bitmap.bitmapData.__isValid) return;
-	renderSession.spriteBatch.renderBitmapData(bitmap.bitmapData,bitmap.smoothing,bitmap.__worldTransform,bitmap.__worldColorTransform,bitmap.__worldAlpha,bitmap.blendMode);
+	renderSession.spriteBatch.renderBitmapData(bitmap.bitmapData,bitmap.smoothing,bitmap.__worldTransform,bitmap.__worldColorTransform,bitmap.__worldAlpha,bitmap.blendMode,bitmap.pixelSnapping);
 };
 openfl._internal.renderer.opengl.GLRenderer = function(width,height,gl,transparent,antialias,preserveDrawingBuffer) {
 	if(preserveDrawingBuffer == null) preserveDrawingBuffer = false;
@@ -12333,6 +14309,10 @@ openfl._internal.renderer.opengl.GLRenderer = function(width,height,gl,transpare
 	if(transparent == null) transparent = false;
 	if(height == null) height = 600;
 	if(width == null) width = 800;
+	this.vpHeight = 0;
+	this.vpWidth = 0;
+	this.vpY = 0;
+	this.vpX = 0;
 	openfl._internal.renderer.AbstractRenderer.call(this,width,height);
 	this.transparent = transparent;
 	this.preserveDrawingBuffer = preserveDrawingBuffer;
@@ -12360,6 +14340,7 @@ openfl._internal.renderer.opengl.GLRenderer = function(width,height,gl,transpare
 		openfl._internal.renderer.opengl.GLRenderer.blendModesWebGL.set(openfl.display.BlendMode.OVERLAY,[gl.ONE,gl.ONE_MINUS_SRC_ALPHA]);
 		openfl._internal.renderer.opengl.GLRenderer.blendModesWebGL.set(openfl.display.BlendMode.SUBTRACT,[gl.ONE,gl.ONE_MINUS_SRC_ALPHA]);
 	}
+	this.projectionMatrix = new openfl.geom.Matrix();
 	this.projection = new openfl.geom.Point();
 	this.projection.x = this.width / 2;
 	this.projection.y = -this.height / 2;
@@ -12368,7 +14349,6 @@ openfl._internal.renderer.opengl.GLRenderer = function(width,height,gl,transpare
 	this.contextLost = false;
 	this.shaderManager = new openfl._internal.renderer.opengl.utils.ShaderManager(gl);
 	this.spriteBatch = new openfl._internal.renderer.opengl.utils.SpriteBatch(gl);
-	this.maskManager = new openfl._internal.renderer.opengl.utils.MaskManager(gl);
 	this.filterManager = new openfl._internal.renderer.opengl.utils.FilterManager(gl,this.transparent);
 	this.stencilManager = new openfl._internal.renderer.opengl.utils.StencilManager(gl);
 	this.blendModeManager = new openfl._internal.renderer.opengl.utils.BlendModeManager(gl);
@@ -12382,8 +14362,10 @@ openfl._internal.renderer.opengl.GLRenderer = function(width,height,gl,transpare
 	this.renderSession.spriteBatch = this.spriteBatch;
 	this.renderSession.stencilManager = this.stencilManager;
 	this.renderSession.renderer = this;
-	this.renderSession.projection = this.projection;
-	this.renderSession.offset = this.offset;
+	this.renderSession.defaultFramebuffer = this.defaultFramebuffer;
+	this.renderSession.projectionMatrix = this.projectionMatrix;
+	this.maskManager = new openfl._internal.renderer.opengl.utils.GLMaskManager(this.renderSession);
+	this.renderSession.maskManager = this.maskManager;
 	this.shaderManager.setShader(this.shaderManager.defaultShader);
 	gl.disable(gl.DEPTH_TEST);
 	gl.disable(gl.CULL_FACE);
@@ -12409,6 +14391,24 @@ openfl._internal.renderer.opengl.GLRenderer.prototype = $extend(openfl._internal
 		this.gl = null;
 		this.renderSession = null;
 	}
+	,setViewport: function(x,y,width,height) {
+		if(!(this.vpX == x && this.vpY == y && this.vpWidth == width && this.vpHeight == height)) {
+			this.vpX = x;
+			this.vpY = y;
+			this.vpWidth = width;
+			this.vpHeight = height;
+			this.gl.viewport(x,y,width,height);
+			this.setOrtho(x,y,width,height);
+		}
+	}
+	,setOrtho: function(x,y,width,height) {
+		var o = this.projectionMatrix;
+		o.identity();
+		o.a = 1 / width * 2;
+		o.d = -1 / height * 2;
+		o.tx = -1 - x * o.a;
+		o.ty = 1 - y * o.d;
+	}
 	,handleContextLost: function(event) {
 		event.preventDefault();
 		this.contextLost = true;
@@ -12426,13 +14426,13 @@ openfl._internal.renderer.opengl.GLRenderer.prototype = $extend(openfl._internal
 		gl.disable(gl.CULL_FACE);
 		gl.enable(gl.BLEND);
 		gl.colorMask(true,true,true,this.transparent);
-		gl.viewport(0,0,this.width,this.height);
+		this.setViewport(0,0,this.width,this.height);
 		this.contextLost = false;
 	}
 	,render: function(stage) {
 		if(this.contextLost) return;
 		var gl = this.gl;
-		gl.viewport(0,0,this.width,this.height);
+		this.setViewport(0,0,this.width,this.height);
 		gl.bindFramebuffer(gl.FRAMEBUFFER,this.defaultFramebuffer);
 		if(this.transparent) gl.clearColor(0,0,0,0); else gl.clearColor(stage.__colorSplit[0],stage.__colorSplit[1],stage.__colorSplit[2],1);
 		gl.clear(gl.COLOR_BUFFER_BIT);
@@ -12442,8 +14442,6 @@ openfl._internal.renderer.opengl.GLRenderer.prototype = $extend(openfl._internal
 		this.renderSession.blendModeManager.setBlendMode(openfl.display.BlendMode.NORMAL);
 		this.renderSession.drawCount = 0;
 		this.renderSession.currentBlendMode = null;
-		this.renderSession.projection = projection;
-		this.renderSession.offset = this.offset;
 		this.spriteBatch.begin(this.renderSession);
 		this.filterManager.begin(this.renderSession,buffer);
 		displayObject.__renderGL(this.renderSession);
@@ -12453,7 +14451,7 @@ openfl._internal.renderer.opengl.GLRenderer.prototype = $extend(openfl._internal
 		this.width = width;
 		this.height = height;
 		openfl._internal.renderer.AbstractRenderer.prototype.resize.call(this,width,height);
-		this.gl.viewport(0,0,width,height);
+		this.setViewport(0,0,width,height);
 		this.projection.x = width / 2;
 		this.projection.y = -height / 2;
 	}
@@ -12464,231 +14462,8 @@ $hxClasses["openfl._internal.renderer.opengl.GLTextField"] = openfl._internal.re
 openfl._internal.renderer.opengl.GLTextField.__name__ = ["openfl","_internal","renderer","opengl","GLTextField"];
 openfl._internal.renderer.opengl.GLTextField.render = function(textField,renderSession) {
 	if(!textField.__renderable || textField.__worldAlpha <= 0) return;
-	openfl._internal.renderer.opengl.GLTextField.update(textField);
-	if(textField.__graphics == null) textField.__graphics = new openfl.display.Graphics();
-	var graphics = textField.__graphics;
-	graphics.clear();
-	if(textField.border || textField.background) {
-		if(textField.border) graphics.lineStyle(1,textField.borderColor);
-		if(textField.background) graphics.beginFill(textField.backgroundColor);
-		graphics.drawRect(0.5,0.5,textField.__width - 1,textField.__height - 1);
-	}
-	if(textField.__tileData != null) {
-		var $it0 = textField.__tilesheets.keys();
-		while( $it0.hasNext() ) {
-			var tilesheet = $it0.next();
-			graphics.drawTiles(tilesheet,textField.__tileData.h[tilesheet.__id__],true,4,textField.__tileDataLength.h[tilesheet.__id__]);
-		}
-	}
+	openfl._internal.renderer.TextFieldGraphics.render(textField);
 	openfl._internal.renderer.opengl.utils.GraphicsRenderer.render(textField,renderSession);
-};
-openfl._internal.renderer.opengl.GLTextField.renderText = function(textField,text,format,offsetX,textWidth) {
-	var font = textField.__getFontInstance(format);
-	if(font != null && format.size != null) {
-		if(!(openfl._internal.renderer.opengl.GLTextField.glyphs.h.__keys__[font.__id__] != null)) {
-			var value = new haxe.ds.IntMap();
-			openfl._internal.renderer.opengl.GLTextField.glyphs.set(font,value);
-		}
-		var size = format.size | 0;
-		var fontGlyphs = openfl._internal.renderer.opengl.GLTextField.glyphs.h[font.__id__];
-		if(!fontGlyphs.exists(size)) {
-			var value1 = font.renderGlyphs(font.getGlyphs(),size);
-			fontGlyphs.set(size,value1);
-		}
-		var images = fontGlyphs.get(size);
-		if(!(openfl._internal.renderer.opengl.GLTextField.bitmapData.h.__keys__[font.__id__] != null)) {
-			var value2 = new haxe.ds.IntMap();
-			openfl._internal.renderer.opengl.GLTextField.bitmapData.set(font,value2);
-		}
-		var fontBitmapData = openfl._internal.renderer.opengl.GLTextField.bitmapData.h[font.__id__];
-		if(!fontBitmapData.exists(size)) {
-			var width;
-			var height;
-			var data;
-			var $it0 = images.iterator();
-			while( $it0.hasNext() ) {
-				var image = $it0.next();
-				width = image.buffer.width;
-				height = image.buffer.height;
-				data = image.get_data();
-				break;
-			}
-			var bitmapData = new openfl.display.BitmapData(width,height);
-			var _g = 0;
-			while(_g < width) {
-				var x = _g++;
-				var _g1 = 0;
-				while(_g1 < height) {
-					var y = _g1++;
-					var alpha = data[y * width + x];
-					var color = alpha << 24 | 16711680 | 65280 | 255;
-					bitmapData.setPixel32(x,y,color);
-				}
-			}
-			fontBitmapData.set(size,bitmapData);
-		}
-		var bitmapData1 = fontBitmapData.get(size);
-		if(!(openfl._internal.renderer.opengl.GLTextField.tilesheets.h.__keys__[bitmapData1.__id__] != null)) {
-			var tilesheet = new openfl.display.Tilesheet(bitmapData1);
-			var tileID = new haxe.ds.IntMap();
-			var image1;
-			var index;
-			var $it1 = images.keys();
-			while( $it1.hasNext() ) {
-				var key = $it1.next();
-				image1 = images.get(key);
-				index = tilesheet.addTileRect(new openfl.geom.Rectangle(image1.offsetX,image1.offsetY,image1.width,image1.height));
-				tileID.set(key,index);
-			}
-			openfl._internal.renderer.opengl.GLTextField.tileIDs.set(bitmapData1,tileID);
-			openfl._internal.renderer.opengl.GLTextField.tilesheets.set(bitmapData1,tilesheet);
-		}
-		var tilesheet1 = openfl._internal.renderer.opengl.GLTextField.tilesheets.h[bitmapData1.__id__];
-		var tileID1 = openfl._internal.renderer.opengl.GLTextField.tileIDs.h[bitmapData1.__id__];
-		var r = (format.color >> 16 & 255) / 255;
-		var g = (format.color >> 8 & 255) / 255;
-		var b = (format.color & 255) / 255;
-		var tlm = textField.getLineMetrics(0);
-		var image2;
-		var x1 = offsetX;
-		var y1 = 2 + tlm.ascent;
-		var tileData;
-		textField.__tilesheets.set(tilesheet1,true);
-		if(!(textField.__tileData.h.__keys__[tilesheet1.__id__] != null)) {
-			tileData = new Array();
-			textField.__tileData.set(tilesheet1,tileData);
-			textField.__tileDataLength.set(tilesheet1,0);
-		}
-		tileData = textField.__tileData.h[tilesheet1.__id__];
-		var offsetY = 0;
-		var lines = text.split("\n");
-		if(textField.__textLayout == null) textField.__textLayout = new lime.text.TextLayout();
-		var textLayout = textField.__textLayout;
-		var length = 0;
-		var line_i = 0;
-		var oldX = x1;
-		var _g2 = 0;
-		while(_g2 < lines.length) {
-			var line = lines[_g2];
-			++_g2;
-			tlm = textField.getLineMetrics(line_i);
-			x1 = oldX;
-			var _g11 = format.align;
-			switch(_g11[1]) {
-			case 0:case 2:
-				x1 += 0;
-				break;
-			case 3:
-				x1 += (textField.__width - 4 - tlm.width) / 2;
-				break;
-			case 1:
-				x1 += textField.__width - 4 - tlm.width;
-				break;
-			}
-			textLayout.set_text(null);
-			textLayout.set_font(font);
-			textLayout.set_size(size);
-			textLayout.set_text(line);
-			var _g12 = 0;
-			var _g21 = textLayout.positions;
-			while(_g12 < _g21.length) {
-				var position = _g21[_g12];
-				++_g12;
-				image2 = images.get(position.glyph);
-				if(image2 != null) {
-					if(length >= tileData.length) {
-						tileData.push(x1 + position.offset.x + image2.x);
-						tileData.push(y1 + position.offset.y - image2.y);
-						tileData.push(tileID1.get(position.glyph));
-						tileData.push(r);
-						tileData.push(g);
-						tileData.push(b);
-					} else {
-						tileData[length] = x1 + position.offset.x + image2.x;
-						tileData[length + 1] = y1 + position.offset.y - image2.y;
-						tileData[length + 2] = tileID1.get(position.glyph);
-						tileData[length + 3] = r;
-						tileData[length + 4] = g;
-						tileData[length + 5] = b;
-					}
-					length += 6;
-				}
-				x1 += position.advance.x;
-				y1 -= position.advance.y;
-			}
-			y1 += tlm.height;
-			line_i++;
-		}
-		textField.__tileDataLength.set(tilesheet1,length);
-	}
-};
-openfl._internal.renderer.opengl.GLTextField.update = function(textField) {
-	if(textField.__dirty) {
-		if((textField.__text == null || textField.__text == "") && !textField.background && !textField.border || (textField.get_width() <= 0 || textField.get_height() <= 0) && textField.autoSize != openfl.text.TextFieldAutoSize.LEFT) {
-			textField.__tilesheets = null;
-			textField.__tileData = null;
-			textField.__tileDataLength = null;
-			textField.__dirty = false;
-		} else {
-			textField.__tilesheets = new haxe.ds.ObjectMap();
-			if(textField.__tileData == null) {
-				textField.__tileData = new haxe.ds.ObjectMap();
-				textField.__tileDataLength = new haxe.ds.ObjectMap();
-			}
-			if(textField.__text != null && textField.__text != "") {
-				var text = textField.get_text();
-				if(textField.displayAsPassword) {
-					var length = text.length;
-					var mask = "";
-					var _g = 0;
-					while(_g < length) {
-						var i = _g++;
-						mask += "*";
-					}
-					text = mask;
-				}
-				var measurements = textField.__measureText();
-				var textWidth = 0.0;
-				var _g1 = 0;
-				while(_g1 < measurements.length) {
-					var measurement = measurements[_g1];
-					++_g1;
-					textWidth += measurement;
-				}
-				if(textField.autoSize == openfl.text.TextFieldAutoSize.LEFT) {
-					textField.__width = textWidth + 4;
-					textField.__height = textField.get_textHeight() + 4;
-				}
-				if(textField.__ranges == null) openfl._internal.renderer.opengl.GLTextField.renderText(textField,text,textField.__textFormat,2,textWidth); else {
-					var currentIndex = 0;
-					var range;
-					var offsetX = 2.0;
-					var _g11 = 0;
-					var _g2 = textField.__ranges.length;
-					while(_g11 < _g2) {
-						var i1 = _g11++;
-						range = textField.__ranges[i1];
-						openfl._internal.renderer.opengl.GLTextField.renderText(textField,text.substring(range.start,range.end),range.format,offsetX,textWidth);
-						offsetX += measurements[i1];
-					}
-				}
-			} else if(textField.autoSize == openfl.text.TextFieldAutoSize.LEFT) {
-				textField.__width = 4;
-				textField.__height = 4;
-			}
-			var $it0 = textField.__tileData.keys();
-			while( $it0.hasNext() ) {
-				var key = $it0.next();
-				if(!(textField.__tilesheets.h.__keys__[key.__id__] != null)) {
-					textField.__tileData.remove(key);
-					textField.__tileDataLength.remove(key);
-				}
-			}
-			textField.__dirty = false;
-			return true;
-		}
-	}
-	return false;
 };
 openfl._internal.renderer.opengl.shaders2 = {};
 openfl._internal.renderer.opengl.shaders2.Shader = function(gl) {
@@ -12801,7 +14576,7 @@ openfl._internal.renderer.opengl.shaders2.Shader.prototype = {
 };
 openfl._internal.renderer.opengl.shaders2.DefaultShader = function(gl) {
 	openfl._internal.renderer.opengl.shaders2.Shader.call(this,gl);
-	this.vertexSrc = ["attribute vec2 " + Std.string("aPosition") + ";","attribute vec2 " + Std.string("aTexCoord0") + ";","attribute vec4 " + Std.string("aColor") + ";","uniform vec2 " + Std.string("uProjectionVector") + ";","uniform vec2 " + Std.string("uOffsetVector") + ";","varying vec2 vTexCoord;","varying vec4 vColor;","const vec2 center = vec2(-1.0, 1.0);","void main(void) {","   gl_Position = vec4( ((" + Std.string("aPosition") + " + " + Std.string("uOffsetVector") + ") / " + Std.string("uProjectionVector") + ") + center , 0.0, 1.0);","   vTexCoord = " + Std.string("aTexCoord0") + ";","   vColor = " + Std.string("aColor") + ";","}"];
+	this.vertexSrc = ["attribute vec2 " + Std.string("aPosition") + ";","attribute vec2 " + Std.string("aTexCoord0") + ";","attribute vec4 " + Std.string("aColor") + ";","uniform mat3 " + Std.string("uProjectionMatrix") + ";","varying vec2 vTexCoord;","varying vec4 vColor;","void main(void) {","   gl_Position = vec4((" + Std.string("uProjectionMatrix") + " * vec3(" + Std.string("aPosition") + ", 1.0)).xy, 0.0, 1.0);","   vTexCoord = " + Std.string("aTexCoord0") + ";","   vColor = " + Std.string("aColor") + ";","}"];
 	this.fragmentSrc = ["#ifdef GL_ES","precision lowp float;","#endif","uniform sampler2D " + Std.string("uSampler0") + ";","uniform vec4 " + Std.string("uColorMultiplier") + ";","uniform vec4 " + Std.string("uColorOffset") + ";","varying vec2 vTexCoord;","varying vec4 vColor;","vec4 colorTransform(const vec4 color, const vec4 tint, const vec4 multiplier, const vec4 offset) {","   vec4 unmultiply = vec4(color.rgb / color.a, color.a);","   vec4 result = unmultiply * tint * multiplier;","   result = result + offset;","   result = clamp(result, 0., 1.);","   result = vec4(result.rgb * result.a, result.a);","   return result;","}","void main(void) {","   vec4 tc = texture2D(" + Std.string("uSampler0") + ", vTexCoord);","   gl_FragColor = colorTransform(tc, vColor, " + Std.string("uColorMultiplier") + ", " + Std.string("uColorOffset") + ");","}"];
 	this.init();
 };
@@ -12814,8 +14589,7 @@ openfl._internal.renderer.opengl.shaders2.DefaultShader.prototype = $extend(open
 		this.getAttribLocation("aPosition");
 		this.getAttribLocation("aTexCoord0");
 		this.getAttribLocation("aColor");
-		this.getUniformLocation("uProjectionVector");
-		this.getUniformLocation("uOffsetVector");
+		this.getUniformLocation("uProjectionMatrix");
 		this.getUniformLocation("uSampler0");
 		this.getUniformLocation("uColorMultiplier");
 		this.getUniformLocation("uColorOffset");
@@ -12831,7 +14605,7 @@ $hxClasses["openfl._internal.renderer.opengl.shaders2._DefaultShader.Uniform_Imp
 openfl._internal.renderer.opengl.shaders2._DefaultShader.Uniform_Impl_.__name__ = ["openfl","_internal","renderer","opengl","shaders2","_DefaultShader","Uniform_Impl_"];
 openfl._internal.renderer.opengl.shaders2.DrawTrianglesShader = function(gl) {
 	openfl._internal.renderer.opengl.shaders2.Shader.call(this,gl);
-	this.vertexSrc = ["attribute vec2 " + Std.string("aPosition") + ";","attribute vec2 " + Std.string("aTexCoord0") + ";","attribute vec4 " + Std.string("aColor") + ";","uniform vec2 " + Std.string("uProjectionVector") + ";","uniform vec2 " + Std.string("uOffsetVector") + ";","varying vec2 vTexCoord;","varying vec4 vColor;","const vec2 center = vec2(-1.0, 1.0);","void main(void) {","   gl_Position = vec4( ((" + Std.string("aPosition") + " + " + Std.string("uOffsetVector") + ") / " + Std.string("uProjectionVector") + ") + center , 0.0, 1.0);","   vTexCoord = " + Std.string("aTexCoord0") + ";","   vColor = " + Std.string("aColor") + ".bgra;","}"];
+	this.vertexSrc = ["attribute vec2 " + Std.string("aPosition") + ";","attribute vec2 " + Std.string("aTexCoord0") + ";","attribute vec4 " + Std.string("aColor") + ";","uniform mat3 " + Std.string("uProjectionMatrix") + ";","varying vec2 vTexCoord;","varying vec4 vColor;","void main(void) {","   gl_Position = vec4((" + Std.string("uProjectionMatrix") + " * vec3(" + Std.string("aPosition") + ", 1.0)).xy, 0.0, 1.0);","   vTexCoord = " + Std.string("aTexCoord0") + ";","   vColor = " + Std.string("aColor") + ".bgra;","}"];
 	this.fragmentSrc = ["#ifdef GL_ES","precision lowp float;","#endif","uniform sampler2D " + Std.string("uSampler0") + ";","uniform vec3 " + Std.string("uColor") + ";","uniform bool " + Std.string("uUseTexture") + ";","uniform float " + Std.string("uAlpha") + ";","uniform vec4 " + Std.string("uColorMultiplier") + ";","uniform vec4 " + Std.string("uColorOffset") + ";","varying vec2 vTexCoord;","varying vec4 vColor;","vec4 tmp;","vec4 colorTransform(const vec4 color, const vec4 tint, const vec4 multiplier, const vec4 offset) {","   vec4 unmultiply = vec4(color.rgb / color.a, color.a);","   vec4 result = unmultiply * tint * multiplier;","   result = result + offset;","   result = clamp(result, 0., 1.);","   result = vec4(result.rgb * result.a, result.a);","   return result;","}","void main(void) {","   if(" + Std.string("uUseTexture") + ") {","       tmp = texture2D(" + Std.string("uSampler0") + ", vTexCoord);","   } else {","       tmp = vec4(" + Std.string("uColor") + ", 1.);","   }","   gl_FragColor = colorTransform(tmp, vColor, " + Std.string("uColorMultiplier") + ", " + Std.string("uColorOffset") + ");","}"];
 	this.init();
 };
@@ -12845,8 +14619,7 @@ openfl._internal.renderer.opengl.shaders2.DrawTrianglesShader.prototype = $exten
 		this.getAttribLocation("aTexCoord0");
 		this.getAttribLocation("aColor");
 		this.getUniformLocation("uSampler0");
-		this.getUniformLocation("uProjectionVector");
-		this.getUniformLocation("uOffsetVector");
+		this.getUniformLocation("uProjectionMatrix");
 		this.getUniformLocation("uColor");
 		this.getUniformLocation("uAlpha");
 		this.getUniformLocation("uUseTexture");
@@ -12864,7 +14637,7 @@ $hxClasses["openfl._internal.renderer.opengl.shaders2._DrawTrianglesShader.Unifo
 openfl._internal.renderer.opengl.shaders2._DrawTrianglesShader.Uniform_Impl_.__name__ = ["openfl","_internal","renderer","opengl","shaders2","_DrawTrianglesShader","Uniform_Impl_"];
 openfl._internal.renderer.opengl.shaders2.FillShader = function(gl) {
 	openfl._internal.renderer.opengl.shaders2.Shader.call(this,gl);
-	this.vertexSrc = ["attribute vec2 " + Std.string("aPosition") + ";","uniform mat3 " + Std.string("uTranslationMatrix") + ";","uniform vec2 " + Std.string("uProjectionVector") + ";","uniform vec2 " + Std.string("uOffsetVector") + ";","uniform vec4 " + Std.string("uColor") + ";","uniform float " + Std.string("uAlpha") + ";","uniform vec4 " + Std.string("uColorMultiplier") + ";","uniform vec4 " + Std.string("uColorOffset") + ";","varying vec4 vColor;","vec4 colorTransform(const vec4 color, const float alpha, const vec4 multiplier, const vec4 offset) {","   vec4 result = color * multiplier;","   result.a *= alpha;","   result = result + offset;","   result = clamp(result, 0., 1.);","   result = vec4(result.rgb * result.a, result.a);","   return result;","}","void main(void) {","   vec3 v = " + Std.string("uTranslationMatrix") + " * vec3(" + Std.string("aPosition") + ", 1.0);","   v -= " + Std.string("uOffsetVector") + ".xyx;","   gl_Position = vec4( v.x / " + Std.string("uProjectionVector") + ".x -1.0, v.y / - " + Std.string("uProjectionVector") + ".y + 1.0 , 0.0, 1.0);","   vColor = colorTransform(" + Std.string("uColor") + ", " + Std.string("uAlpha") + ", " + Std.string("uColorMultiplier") + ", " + Std.string("uColorOffset") + ");","}"];
+	this.vertexSrc = ["attribute vec2 " + Std.string("aPosition") + ";","uniform mat3 " + Std.string("uTranslationMatrix") + ";","uniform mat3 " + Std.string("uProjectionMatrix") + ";","uniform vec4 " + Std.string("uColor") + ";","uniform float " + Std.string("uAlpha") + ";","uniform vec4 " + Std.string("uColorMultiplier") + ";","uniform vec4 " + Std.string("uColorOffset") + ";","varying vec4 vColor;","vec4 colorTransform(const vec4 color, const float alpha, const vec4 multiplier, const vec4 offset) {","   vec4 result = color * multiplier;","   result.a *= alpha;","   result = result + offset;","   result = clamp(result, 0., 1.);","   result = vec4(result.rgb * result.a, result.a);","   return result;","}","void main(void) {","   gl_Position = vec4((" + Std.string("uProjectionMatrix") + " * " + Std.string("uTranslationMatrix") + " * vec3(" + Std.string("aPosition") + ", 1.0)).xy, 0.0, 1.0);","   vColor = colorTransform(" + Std.string("uColor") + ", " + Std.string("uAlpha") + ", " + Std.string("uColorMultiplier") + ", " + Std.string("uColorOffset") + ");","}"];
 	this.fragmentSrc = ["#ifdef GL_ES","precision lowp float;","#endif","varying vec4 vColor;","void main(void) {","   gl_FragColor = vColor;","}"];
 	this.init();
 };
@@ -12876,8 +14649,7 @@ openfl._internal.renderer.opengl.shaders2.FillShader.prototype = $extend(openfl.
 		openfl._internal.renderer.opengl.shaders2.Shader.prototype.init.call(this);
 		this.getAttribLocation("aPosition");
 		this.getUniformLocation("uTranslationMatrix");
-		this.getUniformLocation("uProjectionVector");
-		this.getUniformLocation("uOffsetVector");
+		this.getUniformLocation("uProjectionMatrix");
 		this.getUniformLocation("uColor");
 		this.getUniformLocation("uColorMultiplier");
 		this.getUniformLocation("uColorOffset");
@@ -12893,7 +14665,7 @@ $hxClasses["openfl._internal.renderer.opengl.shaders2._FillShader.Uniform_Impl_"
 openfl._internal.renderer.opengl.shaders2._FillShader.Uniform_Impl_.__name__ = ["openfl","_internal","renderer","opengl","shaders2","_FillShader","Uniform_Impl_"];
 openfl._internal.renderer.opengl.shaders2.PatternFillShader = function(gl) {
 	openfl._internal.renderer.opengl.shaders2.Shader.call(this,gl);
-	this.vertexSrc = ["attribute vec2 " + Std.string("aPosition") + ";","uniform mat3 " + Std.string("uTranslationMatrix") + ";","uniform vec2 " + Std.string("uProjectionVector") + ";","uniform vec2 " + Std.string("uOffsetVector") + ";","uniform mat3 " + Std.string("uPatternMatrix") + ";","varying vec2 vPosition;","void main(void) {","   vec3 v = " + Std.string("uTranslationMatrix") + " * vec3(" + Std.string("aPosition") + " , 1.0);","   v -= " + Std.string("uOffsetVector") + ".xyx;","   gl_Position = vec4( v.x / " + Std.string("uProjectionVector") + ".x -1.0, v.y / - " + Std.string("uProjectionVector") + ".y + 1.0 , 0.0, 1.0);","   vPosition = (" + Std.string("uPatternMatrix") + " * vec3(" + Std.string("aPosition") + ", 1)).xy;","}"];
+	this.vertexSrc = ["attribute vec2 " + Std.string("aPosition") + ";","uniform mat3 " + Std.string("uTranslationMatrix") + ";","uniform mat3 " + Std.string("uProjectionMatrix") + ";","uniform mat3 " + Std.string("uPatternMatrix") + ";","varying vec2 vPosition;","void main(void) {","   gl_Position = vec4((" + Std.string("uProjectionMatrix") + " * " + Std.string("uTranslationMatrix") + " * vec3(" + Std.string("aPosition") + ", 1.0)).xy, 0.0, 1.0);","   vPosition = (" + Std.string("uPatternMatrix") + " * vec3(" + Std.string("aPosition") + ", 1)).xy;","}"];
 	this.fragmentSrc = ["#ifdef GL_ES","precision lowp float;","#endif","uniform float " + Std.string("uAlpha") + ";","uniform vec2 " + Std.string("uPatternTL") + ";","uniform vec2 " + Std.string("uPatternBR") + ";","uniform sampler2D " + Std.string("uSampler0") + ";","uniform vec4 " + Std.string("uColorMultiplier") + ";","uniform vec4 " + Std.string("uColorOffset") + ";","varying vec2 vPosition;","vec4 colorTransform(const vec4 color, const float alpha, const vec4 multiplier, const vec4 offset) {","   vec4 unmultiply = vec4(color.rgb / color.a, color.a);","   vec4 result = unmultiply * multiplier;","   result.a *= alpha;","   result = result + offset;","   result = clamp(result, 0., 1.);","   result = vec4(result.rgb * result.a, result.a);","   return result;","}","void main(void) {","   vec2 pos = mix(" + Std.string("uPatternTL") + ", " + Std.string("uPatternBR") + ", vPosition);","   vec4 tcol = texture2D(" + Std.string("uSampler0") + ", pos);","   gl_FragColor = colorTransform(tcol, " + Std.string("uAlpha") + ", " + Std.string("uColorMultiplier") + ", " + Std.string("uColorOffset") + ");","}"];
 	this.init();
 };
@@ -12906,8 +14678,7 @@ openfl._internal.renderer.opengl.shaders2.PatternFillShader.prototype = $extend(
 		this.getAttribLocation("aPosition");
 		this.getUniformLocation("uTranslationMatrix");
 		this.getUniformLocation("uPatternMatrix");
-		this.getUniformLocation("uProjectionVector");
-		this.getUniformLocation("uOffsetVector");
+		this.getUniformLocation("uProjectionMatrix");
 		this.getUniformLocation("uSampler0");
 		this.getUniformLocation("uPatternTL");
 		this.getUniformLocation("uPatternBR");
@@ -12926,7 +14697,7 @@ $hxClasses["openfl._internal.renderer.opengl.shaders2._PatternFillShader.Uniform
 openfl._internal.renderer.opengl.shaders2._PatternFillShader.Uniform_Impl_.__name__ = ["openfl","_internal","renderer","opengl","shaders2","_PatternFillShader","Uniform_Impl_"];
 openfl._internal.renderer.opengl.shaders2.PrimitiveShader = function(gl) {
 	openfl._internal.renderer.opengl.shaders2.Shader.call(this,gl);
-	this.vertexSrc = ["attribute vec2 " + Std.string("aPosition") + ";","attribute vec4 " + Std.string("aColor") + ";","uniform mat3 " + Std.string("uTranslationMatrix") + ";","uniform vec2 " + Std.string("uProjectionVector") + ";","uniform vec2 " + Std.string("uOffsetVector") + ";","uniform vec4 " + Std.string("uColorMultiplier") + ";","uniform vec4 " + Std.string("uColorOffset") + ";","uniform float " + Std.string("uAlpha") + ";","varying vec4 vColor;","vec4 colorTransform(const vec4 color, const float alpha, const vec4 multiplier, const vec4 offset) {","   vec4 result = color * multiplier;","   result.a *= alpha;","   result = result + offset;","   result = clamp(result, 0., 1.);","   result = vec4(result.rgb * result.a, result.a);","   return result;","}","void main(void) {","   vec3 v = " + Std.string("uTranslationMatrix") + " * vec3(" + Std.string("aPosition") + " , 1.0);","   v -= " + Std.string("uOffsetVector") + ".xyx;","   gl_Position = vec4( v.x / " + Std.string("uProjectionVector") + ".x -1.0, v.y / -" + Std.string("uProjectionVector") + ".y + 1.0 , 0.0, 1.0);","   vColor = colorTransform(" + Std.string("aColor") + ", " + Std.string("uAlpha") + ", " + Std.string("uColorMultiplier") + ", " + Std.string("uColorOffset") + ");","}"];
+	this.vertexSrc = ["attribute vec2 " + Std.string("aPosition") + ";","attribute vec4 " + Std.string("aColor") + ";","uniform mat3 " + Std.string("uTranslationMatrix") + ";","uniform mat3 " + Std.string("uProjectionMatrix") + ";","uniform vec4 " + Std.string("uColorMultiplier") + ";","uniform vec4 " + Std.string("uColorOffset") + ";","uniform float " + Std.string("uAlpha") + ";","varying vec4 vColor;","vec4 colorTransform(const vec4 color, const float alpha, const vec4 multiplier, const vec4 offset) {","   vec4 result = color * multiplier;","   result.a *= alpha;","   result = result + offset;","   result = clamp(result, 0., 1.);","   result = vec4(result.rgb * result.a, result.a);","   return result;","}","void main(void) {","   gl_Position = vec4((" + Std.string("uProjectionMatrix") + " * " + Std.string("uTranslationMatrix") + " * vec3(" + Std.string("aPosition") + ", 1.0)).xy, 0.0, 1.0);","   vColor = colorTransform(" + Std.string("aColor") + ", " + Std.string("uAlpha") + ", " + Std.string("uColorMultiplier") + ", " + Std.string("uColorOffset") + ");","}"];
 	this.fragmentSrc = ["#ifdef GL_ES","precision lowp float;","#endif","varying vec4 vColor;","void main(void) {","   gl_FragColor = vColor;","}"];
 	this.init();
 };
@@ -12939,8 +14710,7 @@ openfl._internal.renderer.opengl.shaders2.PrimitiveShader.prototype = $extend(op
 		this.getAttribLocation("aPosition");
 		this.getAttribLocation("aColor");
 		this.getUniformLocation("uTranslationMatrix");
-		this.getUniformLocation("uProjectionVector");
-		this.getUniformLocation("uOffsetVector");
+		this.getUniformLocation("uProjectionMatrix");
 		this.getUniformLocation("uAlpha");
 		this.getUniformLocation("uColorMultiplier");
 		this.getUniformLocation("uColorOffset");
@@ -12965,9 +14735,13 @@ openfl._internal.renderer.opengl.utils.BlendModeManager.prototype = {
 	destroy: function() {
 		this.gl = null;
 	}
-	,setBlendMode: function(blendMode) {
-		if(blendMode == null) blendMode = openfl.display.BlendMode.NORMAL;
-		if(this.currentBlendMode == blendMode) return false;
+	,setBlendMode: function(blendMode,force) {
+		if(force == null) force = false;
+		if(blendMode == null) {
+			blendMode = openfl.display.BlendMode.NORMAL;
+			force = true;
+		}
+		if(!force && this.currentBlendMode == blendMode) return false;
 		this.currentBlendMode = blendMode;
 		var blendModeWebGL = openfl._internal.renderer.opengl.GLRenderer.blendModesWebGL.get(this.currentBlendMode);
 		this.gl.blendFunc(blendModeWebGL[0],blendModeWebGL[1]);
@@ -13519,9 +15293,8 @@ openfl._internal.renderer.opengl.utils.FilterManager.prototype = {
 	,begin: function(renderSession,buffer) {
 		this.renderSession = renderSession;
 		this.defaultShader = renderSession.shaderManager.defaultShader;
-		var projection = renderSession.projection;
-		this.width = projection.x * 2 | 0;
-		this.height = -projection.y * 2 | 0;
+		this.width = 0;
+		this.height = 0;
 		this.buffer = buffer;
 	}
 	,destroy: function() {
@@ -13612,6 +15385,29 @@ openfl._internal.renderer.opengl.utils.FilterTexture.prototype = {
 	}
 	,__class__: openfl._internal.renderer.opengl.utils.FilterTexture
 };
+openfl._internal.renderer.opengl.utils.GLMaskManager = function(renderSession) {
+	openfl._internal.renderer.AbstractMaskManager.call(this,renderSession);
+	this.setContext(renderSession.gl);
+};
+$hxClasses["openfl._internal.renderer.opengl.utils.GLMaskManager"] = openfl._internal.renderer.opengl.utils.GLMaskManager;
+openfl._internal.renderer.opengl.utils.GLMaskManager.__name__ = ["openfl","_internal","renderer","opengl","utils","GLMaskManager"];
+openfl._internal.renderer.opengl.utils.GLMaskManager.__super__ = openfl._internal.renderer.AbstractMaskManager;
+openfl._internal.renderer.opengl.utils.GLMaskManager.prototype = $extend(openfl._internal.renderer.AbstractMaskManager.prototype,{
+	destroy: function() {
+		this.gl = null;
+	}
+	,pushMask: function(mask) {
+		this.renderSession.stencilManager.pushMask(mask,this.renderSession);
+	}
+	,popMask: function() {
+		this.renderSession.stencilManager.popMask(null,this.renderSession);
+	}
+	,setContext: function(gl) {
+		if(this.renderSession != null) this.renderSession.gl = gl;
+		this.gl = gl;
+	}
+	,__class__: openfl._internal.renderer.opengl.utils.GLMaskManager
+});
 openfl._internal.renderer.opengl.utils.VertexAttribute = function(components,type,normalized,name,defaultValue) {
 	if(normalized == null) normalized = false;
 	this.enabled = true;
@@ -14538,13 +16334,12 @@ openfl._internal.renderer.opengl.utils.GraphicsRenderer.render = function(object
 	var dirty = graphics.__dirty;
 	if(graphics.__commands.length <= 0) return;
 	if(dirty) openfl._internal.renderer.opengl.utils.GraphicsRenderer.updateGraphics(object,object.__graphics,renderSession.gl,object.cacheAsBitmap);
-	openfl._internal.renderer.opengl.utils.GraphicsRenderer.renderGraphics(object,renderSession,renderSession.projection,false);
+	openfl._internal.renderer.opengl.utils.GraphicsRenderer.renderGraphics(object,renderSession,false);
 };
-openfl._internal.renderer.opengl.utils.GraphicsRenderer.renderGraphics = function(object,renderSession,projection,localCoords) {
+openfl._internal.renderer.opengl.utils.GraphicsRenderer.renderGraphics = function(object,renderSession,localCoords) {
 	if(localCoords == null) localCoords = false;
 	var graphics = object.__graphics;
 	var gl = renderSession.gl;
-	var offset = renderSession.offset;
 	var glStack = graphics.__glStack[openfl._internal.renderer.opengl.GLRenderer.glContextId];
 	var bucket;
 	var translationMatrix;
@@ -14561,14 +16356,14 @@ openfl._internal.renderer.opengl.utils.GraphicsRenderer.renderGraphics = functio
 		switch(_g2[1]) {
 		case 1:case 2:
 			if(batchDrawing && !localCoords) renderSession.spriteBatch.finish();
-			renderSession.stencilManager.pushBucket(bucket,renderSession,projection,translationMatrix.toArray(true));
-			var shader = openfl._internal.renderer.opengl.utils.GraphicsRenderer.prepareShader(bucket,renderSession,object,projection,translationMatrix.toArray(true));
+			renderSession.stencilManager.pushBucket(bucket,renderSession,translationMatrix.toArray(true));
+			var shader = openfl._internal.renderer.opengl.utils.GraphicsRenderer.prepareShader(bucket,renderSession,object,translationMatrix.toArray(true));
 			openfl._internal.renderer.opengl.utils.GraphicsRenderer.renderFill(bucket,shader,renderSession);
 			renderSession.stencilManager.popBucket(object,bucket,renderSession);
 			break;
 		case 5:
 			if(batchDrawing && !localCoords) renderSession.spriteBatch.finish();
-			var shader1 = openfl._internal.renderer.opengl.utils.GraphicsRenderer.prepareShader(bucket,renderSession,object,projection,null);
+			var shader1 = openfl._internal.renderer.opengl.utils.GraphicsRenderer.prepareShader(bucket,renderSession,object,null);
 			openfl._internal.renderer.opengl.utils.GraphicsRenderer.renderDrawTriangles(bucket,shader1,renderSession);
 			break;
 		case 6:
@@ -14590,8 +16385,7 @@ openfl._internal.renderer.opengl.utils.GraphicsRenderer.renderGraphics = functio
 				var shader2 = renderSession.shaderManager.primitiveShader;
 				renderSession.shaderManager.setShader(shader2);
 				gl.uniformMatrix3fv(shader2.getUniformLocation("uTranslationMatrix"),false,translationMatrix.toArray(true));
-				gl.uniform2f(shader2.getUniformLocation("uProjectionVector"),projection.x,-projection.y);
-				gl.uniform2f(shader2.getUniformLocation("uOffsetVector"),-offset.x,-offset.y);
+				gl.uniformMatrix3fv(shader2.getUniformLocation("uProjectionMatrix"),false,renderSession.projectionMatrix.toArray(true));
 				gl.uniform1f(shader2.getUniformLocation("uAlpha"),1);
 				gl.uniform4f(shader2.getUniformLocation("uColorMultiplier"),ct.redMultiplier,ct.greenMultiplier,ct.blueMultiplier,ct.alphaMultiplier);
 				gl.uniform4f(shader2.getUniformLocation("uColorOffset"),ct.redOffset / 255,ct.greenOffset / 255,ct.blueOffset / 255,ct.alphaOffset / 255);
@@ -14687,20 +16481,19 @@ openfl._internal.renderer.opengl.utils.GraphicsRenderer.prepareBucket = function
 			bucket.textureSmooth = s;
 			bucket.texture = b.getTexture(glStack.gl);
 			bucket.uploadTileBuffer = true;
-			var tMatrix = bucket.textureMatrix;
-			tMatrix.identity();
 			var pMatrix;
 			if(m == null) pMatrix = new openfl.geom.Matrix(); else pMatrix = new openfl.geom.Matrix(m.a,m.b,m.c,m.d,m.tx,m.ty);
-			tMatrix.concat(pMatrix);
-			pMatrix = pMatrix.invert();
-			var tx = pMatrix.tx / b.width;
-			var ty = pMatrix.ty / b.height;
+			pMatrix.invert();
+			pMatrix.scale(1 / b.width,1 / b.height);
+			var tx = pMatrix.tx;
+			var ty = pMatrix.ty;
+			pMatrix.tx = 0;
+			pMatrix.ty = 0;
 			bucket.textureTL.x = tx;
 			bucket.textureTL.y = ty;
 			bucket.textureBR.x = tx + 1;
 			bucket.textureBR.y = ty + 1;
-			tMatrix.scale(1 / b.width,1 / b.height);
-			bucket.textureMatrix = tMatrix;
+			bucket.textureMatrix = pMatrix;
 			break;
 		default:
 			bucket = openfl._internal.renderer.opengl.utils.GraphicsRenderer.switchBucket(path.fillIndex,glStack,openfl._internal.renderer.opengl.utils.BucketMode.Line);
@@ -14749,9 +16542,8 @@ openfl._internal.renderer.opengl.utils.GraphicsRenderer.switchBucket = function(
 	bucket.fillIndex = fillIndex;
 	return bucket;
 };
-openfl._internal.renderer.opengl.utils.GraphicsRenderer.prepareShader = function(bucket,renderSession,object,projection,translationMatrix) {
+openfl._internal.renderer.opengl.utils.GraphicsRenderer.prepareShader = function(bucket,renderSession,object,translationMatrix) {
 	var gl = renderSession.gl;
-	var offset = renderSession.offset;
 	var shader = null;
 	var _g = bucket.mode;
 	switch(_g[1]) {
@@ -14769,27 +16561,24 @@ openfl._internal.renderer.opengl.utils.GraphicsRenderer.prepareShader = function
 	}
 	if(shader == null) return null;
 	var newShader = renderSession.shaderManager.setShader(shader);
-	gl.uniform2f(shader.getUniformLocation("uOffsetVector"),-offset.x,-offset.y);
 	gl.uniform1f(shader.getUniformLocation("uAlpha"),object.__worldAlpha);
+	gl.uniformMatrix3fv(shader.getUniformLocation("uProjectionMatrix"),false,renderSession.projectionMatrix.toArray(true));
 	var ct = object.__worldColorTransform;
 	gl.uniform4f(shader.getUniformLocation("uColorMultiplier"),ct.redMultiplier,ct.greenMultiplier,ct.blueMultiplier,ct.alphaMultiplier);
 	gl.uniform4f(shader.getUniformLocation("uColorOffset"),ct.redOffset / 255,ct.greenOffset / 255,ct.blueOffset / 255,ct.alphaOffset / 255);
 	var _g1 = bucket.mode;
 	switch(_g1[1]) {
 	case 1:
-		gl.uniform2f(shader.getUniformLocation("uProjectionVector"),projection.x,-projection.y);
 		gl.uniformMatrix3fv(shader.getUniformLocation("uTranslationMatrix"),false,translationMatrix);
 		gl.uniform4fv(shader.getUniformLocation("uColor"),new Float32Array(bucket.color));
 		break;
 	case 2:
-		gl.uniform2f(shader.getUniformLocation("uProjectionVector"),projection.x,-projection.y);
 		gl.uniformMatrix3fv(shader.getUniformLocation("uTranslationMatrix"),false,translationMatrix);
 		gl.uniform2f(shader.getUniformLocation("uPatternTL"),bucket.textureTL.x,bucket.textureTL.y);
 		gl.uniform2f(shader.getUniformLocation("uPatternBR"),bucket.textureBR.x,bucket.textureBR.y);
-		gl.uniformMatrix3fv(shader.getUniformLocation("uPatternMatrix"),false,bucket.textureMatrix.toArray(false));
+		gl.uniformMatrix3fv(shader.getUniformLocation("uPatternMatrix"),false,bucket.textureMatrix.toArray(true));
 		break;
 	case 5:
-		gl.uniform2f(shader.getUniformLocation("uProjectionVector"),projection.x,projection.y);
 		if(bucket.texture != null) gl.uniform1i(shader.getUniformLocation("uUseTexture"),1); else {
 			gl.uniform1i(shader.getUniformLocation("uUseTexture"),0);
 			gl.uniform4fv(shader.getUniformLocation("uColor"),new Float32Array(bucket.color));
@@ -15223,7 +17012,7 @@ openfl._internal.renderer.opengl.utils.PolyK.triangulate = function(p) {
 				al = n;
 				sign = false;
 			} else {
-				haxe.Log.trace("Warning: shape too complex to fill",{ fileName : "GraphicsRenderer.hx", lineNumber : 1712, className : "openfl._internal.renderer.opengl.utils.PolyK", methodName : "triangulate"});
+				haxe.Log.trace("Warning: shape too complex to fill",{ fileName : "GraphicsRenderer.hx", lineNumber : 1704, className : "openfl._internal.renderer.opengl.utils.PolyK", methodName : "triangulate"});
 				return [];
 			}
 		}
@@ -15271,26 +17060,6 @@ openfl._internal.renderer.opengl.utils._GraphicsRenderer = {};
 openfl._internal.renderer.opengl.utils._GraphicsRenderer.RenderMode_Impl_ = function() { };
 $hxClasses["openfl._internal.renderer.opengl.utils._GraphicsRenderer.RenderMode_Impl_"] = openfl._internal.renderer.opengl.utils._GraphicsRenderer.RenderMode_Impl_;
 openfl._internal.renderer.opengl.utils._GraphicsRenderer.RenderMode_Impl_.__name__ = ["openfl","_internal","renderer","opengl","utils","_GraphicsRenderer","RenderMode_Impl_"];
-openfl._internal.renderer.opengl.utils.MaskManager = function(gl) {
-	this.setContext(gl);
-};
-$hxClasses["openfl._internal.renderer.opengl.utils.MaskManager"] = openfl._internal.renderer.opengl.utils.MaskManager;
-openfl._internal.renderer.opengl.utils.MaskManager.__name__ = ["openfl","_internal","renderer","opengl","utils","MaskManager"];
-openfl._internal.renderer.opengl.utils.MaskManager.prototype = {
-	destroy: function() {
-		this.gl = null;
-	}
-	,setContext: function(gl) {
-		this.gl = gl;
-	}
-	,pushMask: function(object,renderSession) {
-		renderSession.stencilManager.pushMask(object,renderSession);
-	}
-	,popMask: function(object,renderSession) {
-		renderSession.stencilManager.popMask(object,renderSession);
-	}
-	,__class__: openfl._internal.renderer.opengl.utils.MaskManager
-};
 openfl._internal.renderer.opengl.utils.ShaderManager = function(gl) {
 	this.setContext(gl);
 };
@@ -15316,7 +17085,12 @@ openfl._internal.renderer.opengl.utils.ShaderManager.prototype = {
 	}
 	,setShader: function(shader,force) {
 		if(force == null) force = false;
-		if(!force && this.currentShader.ID == shader.ID) return false;
+		if(shader == null) {
+			this.currentShader = null;
+			this.gl.useProgram(null);
+			return true;
+		}
+		if(this.currentShader != null && !force && this.currentShader.ID == shader.ID) return false;
 		this.currentShader = shader;
 		this.gl.useProgram(shader.program);
 		return true;
@@ -15406,7 +17180,7 @@ openfl._internal.renderer.opengl.utils.SpriteBatch.prototype = {
 	,stop: function() {
 		this.flush();
 	}
-	,renderBitmapData: function(bitmapData,smoothing,matrix,ct,alpha,blendMode) {
+	,renderBitmapData: function(bitmapData,smoothing,matrix,ct,alpha,blendMode,pixelSnapping) {
 		if(alpha == null) alpha = 1;
 		if(bitmapData == null) return;
 		var texture = bitmapData.getTexture(this.gl);
@@ -15422,7 +17196,7 @@ openfl._internal.renderer.opengl.utils.SpriteBatch.prototype = {
 		this.attributes[2].enabled = this.lastEnableColor;
 		this.elementsPerVertex = this.getElementsPerVertex();
 		var index = this.batchedSprites * 4 * this.elementsPerVertex;
-		this.fillVertices(index,bitmapData.width,bitmapData.height,matrix,uvs,null,color);
+		this.fillVertices(index,bitmapData.width,bitmapData.height,matrix,uvs,null,color,pixelSnapping);
 		this.setState(this.batchedSprites,texture,smoothing,blendMode,ct,true);
 		this.batchedSprites++;
 	}
@@ -15598,7 +17372,7 @@ openfl._internal.renderer.opengl.utils.SpriteBatch.prototype = {
 				uvs.y3 = tileUV.height;
 				bIndex = this.batchedSprites * 4 * this.elementsPerVertex;
 				color = ((alpha * 255 | 0) & 255) << 24 | (tint & 255) << 16 | (tint >> 8 & 255) << 8 | tint >> 16 & 255;
-				this.fillVertices(bIndex,rect.width,rect.height,matrix,uvs,null,color);
+				this.fillVertices(bIndex,rect.width,rect.height,matrix,uvs,null,color,openfl.display.PixelSnapping.NEVER);
 				this.setState(this.batchedSprites,texture,smooth,blendMode,object.__worldColorTransform,false);
 				this.batchedSprites++;
 			}
@@ -15630,11 +17404,11 @@ openfl._internal.renderer.opengl.utils.SpriteBatch.prototype = {
 		this.attributes[2].enabled = this.lastEnableColor;
 		this.elementsPerVertex = this.getElementsPerVertex();
 		var index = this.batchedSprites * 4 * this.elementsPerVertex;
-		this.fillVertices(index,cachedTexture.width,cachedTexture.height,worldTransform,uvs,null,color);
+		this.fillVertices(index,cachedTexture.width,cachedTexture.height,worldTransform,uvs,null,color,null);
 		this.setState(this.batchedSprites,cachedTexture.texture,null,object.blendMode,object.__worldColorTransform);
 		this.batchedSprites++;
 	}
-	,fillVertices: function(index,width,height,matrix,uvs,pivot,color) {
+	,fillVertices: function(index,width,height,matrix,uvs,pivot,color,pixelSnapping) {
 		if(color == null) color = -1;
 		var w0;
 		var w1;
@@ -15651,6 +17425,8 @@ openfl._internal.renderer.opengl.utils.SpriteBatch.prototype = {
 			h0 = height * (1 - pivot.y);
 			h1 = height * -pivot.y;
 		}
+		if(pixelSnapping == null) pixelSnapping = openfl.display.PixelSnapping.NEVER;
+		var snap = pixelSnapping != openfl.display.PixelSnapping.NEVER;
 		var a = matrix.a;
 		var b = matrix.b;
 		var c = matrix.c;
@@ -15658,23 +17434,43 @@ openfl._internal.renderer.opengl.utils.SpriteBatch.prototype = {
 		var tx = matrix.tx;
 		var ty = matrix.ty;
 		var cOffsetIndex = 0;
-		this.positions[index++] = a * w1 + c * h1 + tx;
-		this.positions[index++] = d * h1 + b * w1 + ty;
+		if(!snap) {
+			this.positions[index++] = a * w1 + c * h1 + tx;
+			this.positions[index++] = d * h1 + b * w1 + ty;
+		} else {
+			this.positions[index++] = Math.round(a * w1 + c * h1 + tx);
+			this.positions[index++] = Math.round(d * h1 + b * w1 + ty);
+		}
 		this.positions[index++] = uvs.x0;
 		this.positions[index++] = uvs.y0;
 		if(this.enableColor) this.colors[index++] = color;
-		this.positions[index++] = a * w0 + c * h1 + tx;
-		this.positions[index++] = d * h1 + b * w0 + ty;
+		if(!snap) {
+			this.positions[index++] = a * w0 + c * h1 + tx;
+			this.positions[index++] = d * h1 + b * w0 + ty;
+		} else {
+			this.positions[index++] = Math.round(a * w0 + c * h1 + tx);
+			this.positions[index++] = Math.round(d * h1 + b * w0 + ty);
+		}
 		this.positions[index++] = uvs.x1;
 		this.positions[index++] = uvs.y1;
 		if(this.enableColor) this.colors[index++] = color;
-		this.positions[index++] = a * w0 + c * h0 + tx;
-		this.positions[index++] = d * h0 + b * w0 + ty;
+		if(!snap) {
+			this.positions[index++] = a * w0 + c * h0 + tx;
+			this.positions[index++] = d * h0 + b * w0 + ty;
+		} else {
+			this.positions[index++] = Math.round(a * w0 + c * h0 + tx);
+			this.positions[index++] = Math.round(d * h0 + b * w0 + ty);
+		}
 		this.positions[index++] = uvs.x2;
 		this.positions[index++] = uvs.y2;
 		if(this.enableColor) this.colors[index++] = color;
-		this.positions[index++] = a * w1 + c * h0 + tx;
-		this.positions[index++] = d * h0 + b * w1 + ty;
+		if(!snap) {
+			this.positions[index++] = a * w1 + c * h0 + tx;
+			this.positions[index++] = d * h0 + b * w1 + ty;
+		} else {
+			this.positions[index++] = Math.round(a * w1 + c * h0 + tx);
+			this.positions[index++] = Math.round(d * h0 + b * w1 + ty);
+		}
 		this.positions[index++] = uvs.x3;
 		this.positions[index++] = uvs.y3;
 		if(this.enableColor) this.colors[index++] = color;
@@ -15744,8 +17540,7 @@ openfl._internal.renderer.opengl.utils.SpriteBatch.prototype = {
 		if(state.shader == null) shader = this.renderSession.shaderManager.defaultShader; else shader = state.shader;
 		this.renderSession.shaderManager.setShader(shader);
 		shader.bindVertexArray(this.vertexArray);
-		var projection = this.renderSession.projection;
-		this.gl.uniform2f(shader.getUniformLocation("uProjectionVector"),projection.x,projection.y);
+		this.gl.uniformMatrix3fv(shader.getUniformLocation("uProjectionMatrix"),false,this.renderSession.projectionMatrix.toArray(true));
 		if(state.colorTransform != null) {
 			var ct = state.colorTransform;
 			this.gl.uniform4f(shader.getUniformLocation("uColorMultiplier"),ct.redMultiplier,ct.greenMultiplier,ct.blueMultiplier,state.skipColorTransformAlpha?1:ct.alphaMultiplier);
@@ -15824,18 +17619,16 @@ openfl._internal.renderer.opengl.utils.StencilManager = function(gl) {
 $hxClasses["openfl._internal.renderer.opengl.utils.StencilManager"] = openfl._internal.renderer.opengl.utils.StencilManager;
 openfl._internal.renderer.opengl.utils.StencilManager.__name__ = ["openfl","_internal","renderer","opengl","utils","StencilManager"];
 openfl._internal.renderer.opengl.utils.StencilManager.prototype = {
-	prepareGraphics: function(fill,renderSession,projection,translationMatrix) {
-		var offset = renderSession.offset;
+	prepareGraphics: function(fill,renderSession,translationMatrix) {
 		var shader = renderSession.shaderManager.fillShader;
 		renderSession.shaderManager.setShader(shader);
 		this.gl.uniformMatrix3fv(shader.getUniformLocation("uTranslationMatrix"),false,translationMatrix);
-		this.gl.uniform2f(shader.getUniformLocation("uProjectionVector"),projection.x,-projection.y);
-		this.gl.uniform2f(shader.getUniformLocation("uOffsetVector"),-offset.x,-offset.y);
+		this.gl.uniformMatrix3fv(shader.getUniformLocation("uProjectionMatrix"),false,renderSession.projectionMatrix.toArray(true));
 		fill.vertexArray.bind();
 		shader.bindVertexArray(fill.vertexArray);
 		this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER,fill.indexBuffer);
 	}
-	,pushBucket: function(bucket,renderSession,projection,translationMatrix,isMask) {
+	,pushBucket: function(bucket,renderSession,translationMatrix,isMask) {
 		if(isMask == null) isMask = false;
 		if(!isMask) {
 			this.gl.enable(this.gl.STENCIL_TEST);
@@ -15852,7 +17645,7 @@ openfl._internal.renderer.opengl.utils.StencilManager.prototype = {
 			var fill = _g1[_g];
 			++_g;
 			if(fill.available) continue;
-			this.prepareGraphics(fill,renderSession,projection,translationMatrix);
+			this.prepareGraphics(fill,renderSession,translationMatrix);
 			this.gl.drawElements(fill.drawMode,fill.glIndices.length,this.gl.UNSIGNED_SHORT,0);
 		}
 		if(!isMask) {
@@ -15893,7 +17686,7 @@ openfl._internal.renderer.opengl.utils.StencilManager.prototype = {
 			var _g2 = bucket.mode;
 			switch(_g2[1]) {
 			case 1:case 2:
-				this.pushBucket(bucket,renderSession,renderSession.projection,translationMatrix.toArray(true),true);
+				this.pushBucket(bucket,renderSession,translationMatrix.toArray(true),true);
 				break;
 			default:
 			}
@@ -15903,8 +17696,6 @@ openfl._internal.renderer.opengl.utils.StencilManager.prototype = {
 		this.gl.stencilFunc(this.gl.EQUAL,this.stencilMask,255);
 	}
 	,popMask: function(object,renderSession) {
-		var maskGraphics = object.__maskGraphics;
-		if(maskGraphics == null || maskGraphics.__commands.length <= 0) return;
 		this.stencilMask--;
 		if(this.stencilMask <= 0) {
 			this.gl.disable(this.gl.STENCIL_TEST);
@@ -16063,7 +17854,7 @@ openfl.display.Bitmap.prototype = $extend(openfl.display.DisplayObjectContainer.
 	__getBounds: function(rect,matrix) {
 		if(this.bitmapData != null) {
 			var bounds = new openfl.geom.Rectangle(0,0,this.bitmapData.width,this.bitmapData.height);
-			bounds = bounds.transform(this.__worldTransform);
+			bounds = bounds.transform(matrix);
 			rect.__expand(bounds.x,bounds.y,bounds.width,bounds.height);
 		}
 	}
@@ -16076,8 +17867,17 @@ openfl.display.Bitmap.prototype = $extend(openfl.display.DisplayObjectContainer.
 		}
 		return false;
 	}
+	,__renderCairo: function(renderSession) {
+		openfl._internal.renderer.cairo.CairoBitmap.render(this,renderSession);
+	}
+	,__renderCairoMask: function(renderSession) {
+		renderSession.cairo.rectangle(0,0,this.get_width(),this.get_height());
+	}
 	,__renderCanvas: function(renderSession) {
 		openfl._internal.renderer.canvas.CanvasBitmap.render(this,renderSession);
+	}
+	,__renderCanvasMask: function(renderSession) {
+		renderSession.context.rect(0,0,this.get_width(),this.get_height());
 	}
 	,__renderDOM: function(renderSession) {
 		if(this.stage != null && this.__worldVisible && this.__renderable && this.bitmapData != null && this.bitmapData.__isValid) {
@@ -16096,10 +17896,7 @@ openfl.display.Bitmap.prototype = $extend(openfl.display.DisplayObjectContainer.
 		}
 	}
 	,__renderGL: function(renderSession) {
-		if(!this.__renderable || this.__worldAlpha <= 0 || this.bitmapData == null || !this.bitmapData.__isValid) null; else renderSession.spriteBatch.renderBitmapData(this.bitmapData,this.smoothing,this.__worldTransform,this.__worldColorTransform,this.__worldAlpha,this.blendMode);
-	}
-	,__renderMask: function(renderSession) {
-		renderSession.context.rect(0,0,this.get_width(),this.get_height());
+		if(!this.__renderable || this.__worldAlpha <= 0 || this.bitmapData == null || !this.bitmapData.__isValid) null; else renderSession.spriteBatch.renderBitmapData(this.bitmapData,this.smoothing,this.__worldTransform,this.__worldColorTransform,this.__worldAlpha,this.blendMode,this.pixelSnapping);
 	}
 	,__updateMask: function(maskGraphics) {
 		maskGraphics.__commands.push(openfl.display.DrawCommand.OverrideMatrix(this.__worldTransform));
@@ -16148,6 +17945,7 @@ openfl.display.Bitmap.prototype = $extend(openfl.display.DisplayObjectContainer.
 openfl.display.BitmapData = function(width,height,transparent,fillColor) {
 	if(fillColor == null) fillColor = -1;
 	if(transparent == null) transparent = true;
+	this.__usingFramebuffer = false;
 	this.transparent = transparent;
 	if(width == null) width = 0; else width = width;
 	if(height == null) height = 0; else height = height;
@@ -16171,6 +17969,8 @@ openfl.display.BitmapData = function(width,height,transparent,fillColor) {
 		this.__isValid = true;
 	}
 	this.__createUVs();
+	this.__worldTransform = new openfl.geom.Matrix();
+	this.__worldColorTransform = new openfl.geom.ColorTransform();
 };
 $hxClasses["openfl.display.BitmapData"] = openfl.display.BitmapData;
 openfl.display.BitmapData.__name__ = ["openfl","display","BitmapData"];
@@ -16242,6 +18042,7 @@ openfl.display.BitmapData.prototype = {
 	,colorTransform: function(rect,colorTransform) {
 		if(!this.__isValid) return;
 		this.__image.colorTransform(rect.__toLimeRectangle(),colorTransform.__toLimeColorMatrix());
+		this.__usingFramebuffer = false;
 	}
 	,copyChannel: function(sourceBitmapData,sourceRect,destPoint,sourceChannel,destChannel) {
 		if(!this.__isValid) return;
@@ -16280,11 +18081,13 @@ openfl.display.BitmapData.prototype = {
 			return;
 		}
 		this.__image.copyChannel(sourceBitmapData.__image,sourceRect.__toLimeRectangle(),destPoint.__toLimeVector2(),sourceChannel1,destChannel1);
+		this.__usingFramebuffer = false;
 	}
 	,copyPixels: function(sourceBitmapData,sourceRect,destPoint,alphaBitmapData,alphaPoint,mergeAlpha) {
 		if(mergeAlpha == null) mergeAlpha = false;
 		if(!this.__isValid || sourceBitmapData == null) return;
 		this.__image.copyPixels(sourceBitmapData.__image,sourceRect.__toLimeRectangle(),destPoint.__toLimeVector2(),alphaBitmapData != null?alphaBitmapData.__image:null,alphaPoint != null?alphaPoint.__toLimeVector2():null,mergeAlpha);
+		this.__usingFramebuffer = false;
 	}
 	,dispose: function() {
 		this.__image = null;
@@ -16292,6 +18095,15 @@ openfl.display.BitmapData.prototype = {
 		this.height = 0;
 		this.rect = null;
 		this.__isValid = false;
+		if(this.__texture != null) {
+			var renderer = openfl.Lib.current.stage.__renderer;
+			if(renderer != null) {
+				var renderSession = renderer.renderSession;
+				var gl = renderSession.gl;
+				if(gl != null) gl.deleteTexture(this.__texture);
+			}
+		}
+		if(this.__framebuffer != null) this.__framebuffer.destroy();
 	}
 	,draw: function(source,matrix,colorTransform,blendMode,clipRect,smoothing) {
 		if(smoothing == null) smoothing = false;
@@ -16324,77 +18136,11 @@ openfl.display.BitmapData.prototype = {
 			buffer.__srcContext.setTransform(1,0,0,1,0,0);
 			break;
 		case 1:
-			var renderer = openfl.Lib.current.stage.__renderer;
-			if(renderer == null) return;
-			var renderSession1 = renderer.renderSession;
-			var gl = renderSession1.gl;
-			if(gl == null) return;
-			var mainSpritebatch = renderSession1.spriteBatch;
-			var mainProjection = renderSession1.projection;
-			var renderTransparent = renderSession1.renderer.transparent;
-			if(clipRect == null) clipRect = new openfl.geom.Rectangle(0,0,this.width,this.height);
-			var tmpRect = clipRect.clone();
-			tmpRect.y = this.height - tmpRect.get_bottom();
-			var drawSelf = false;
-			if(this.__spritebatch == null) {
-				this.__spritebatch = new openfl._internal.renderer.opengl.utils.SpriteBatch(gl);
-				drawSelf = true;
-			}
-			renderSession1.spriteBatch = this.__spritebatch;
-			renderSession1.projection = new openfl.geom.Point(this.width / 2,-(this.height / 2));
-			renderSession1.renderer.transparent = this.transparent;
-			if(this.__framebuffer == null) this.__framebuffer = new openfl._internal.renderer.opengl.utils.FilterTexture(gl,this.width,this.height,smoothing);
-			this.__framebuffer.resize(this.width,this.height);
-			gl.bindFramebuffer(gl.FRAMEBUFFER,this.__framebuffer.frameBuffer);
-			gl.viewport(0,0,this.width,this.height);
-			this.__spritebatch.begin(renderSession1,drawSelf?null:tmpRect);
-			gl.colorMask(true,true,true,true);
-			renderSession1.blendModeManager.setBlendMode(openfl.display.BlendMode.NORMAL);
-			if(drawSelf) {
-				this.__framebuffer.clear();
-				this.__renderGL(renderSession1);
-				this.__spritebatch.stop();
-				this.__spritebatch.start(tmpRect);
-			}
-			var ctCache = source.__worldColorTransform;
-			var matrixCache1 = source.__worldTransform;
-			var blendModeCache = source.blendMode;
-			if(matrix == null) matrix = new openfl.geom.Matrix();
-			this.invertMatrix(matrix);
-			source.__worldTransform = matrix;
-			if(colorTransform != null) source.__worldColorTransform = colorTransform; else source.__worldColorTransform = new openfl.geom.ColorTransform();
-			source.blendMode = blendMode;
-			source.__updateChildren(false);
-			source.__renderGL(renderSession1);
-			source.__worldColorTransform = ctCache;
-			source.__worldTransform = matrixCache1;
-			source.blendMode = blendModeCache;
-			source.__updateChildren(true);
-			this.__spritebatch.finish();
-			gl.readPixels(0,0,this.width,this.height,gl.RGBA,gl.UNSIGNED_BYTE,this.__image.buffer.data);
-			gl.bindFramebuffer(gl.FRAMEBUFFER,null);
-			gl.viewport(0,0,renderSession1.renderer.width,renderSession1.renderer.height);
-			renderSession1.spriteBatch = mainSpritebatch;
-			renderSession1.projection = mainProjection;
-			renderSession1.renderer.transparent = renderTransparent;
-			gl.colorMask(true,true,true,renderSession1.renderer.transparent);
-			this.__texture = this.__framebuffer.texture;
-			this.__image.dirty = false;
-			this.__createUVs();
-			this.invertMatrix(matrix);
+			var renderSession1 = openfl.Lib.current.stage.__renderer.renderSession;
+			this.__drawGL(renderSession1,this.width,this.height,source,matrix,colorTransform,blendMode,clipRect,smoothing,!this.__usingFramebuffer,false,true);
 			break;
 		default:
 		}
-	}
-	,invertMatrix: function(matrix) {
-		var tx = matrix.tx;
-		var ty = matrix.ty;
-		matrix.tx = 0;
-		matrix.ty = 0;
-		matrix.scale(1,-1);
-		matrix.translate(0,this.height);
-		matrix.tx += tx;
-		matrix.ty -= ty;
 	}
 	,encode: function(rect,compressor,byteArray) {
 		if(!this.__isValid || rect == null) return byteArray = null;
@@ -16403,11 +18149,13 @@ openfl.display.BitmapData.prototype = {
 	}
 	,fillRect: function(rect,color) {
 		if(!this.__isValid || rect == null) return;
-		this.__image.fillRect(rect.__toLimeRectangle(),color,lime.graphics.PixelFormat.ARGB);
+		this.__image.fillRect(rect.__toLimeRectangle(),color,1);
+		this.__usingFramebuffer = false;
 	}
 	,floodFill: function(x,y,color) {
 		if(!this.__isValid) return;
-		this.__image.floodFill(x,y,color,lime.graphics.PixelFormat.ARGB);
+		this.__image.floodFill(x,y,color,1);
+		this.__usingFramebuffer = false;
 	}
 	,generateFilterRect: function(sourceRect,filter) {
 		return sourceRect.clone();
@@ -16425,33 +18173,48 @@ openfl.display.BitmapData.prototype = {
 	,getColorBoundsRect: function(mask,color,findColor) {
 		if(findColor == null) findColor = true;
 		if(!this.__isValid) return new openfl.geom.Rectangle(0,0,this.width,this.height);
-		return this.__image.get_rect().__toFlashRectangle();
+		var rect = this.__image.getColorBoundsRect(mask,color,findColor);
+		return new openfl.geom.Rectangle(rect.x,rect.y,rect.width,rect.height);
 	}
 	,getPixel: function(x,y) {
 		if(!this.__isValid) return 0;
-		return this.__image.getPixel(x,y,lime.graphics.PixelFormat.ARGB);
+		return this.__image.getPixel(x,y,1);
 	}
 	,getPixel32: function(x,y) {
 		if(!this.__isValid) return 0;
-		return this.__image.getPixel32(x,y,lime.graphics.PixelFormat.ARGB);
+		return this.__image.getPixel32(x,y,1);
 	}
 	,getPixels: function(rect) {
 		if(!this.__isValid) return null;
 		if(rect == null) rect = this.rect;
-		return this.__image.getPixels(rect.__toLimeRectangle(),lime.graphics.PixelFormat.ARGB);
+		return this.__image.getPixels(rect.__toLimeRectangle(),1);
+	}
+	,getSurface: function() {
+		if(!this.__isValid) return null;
+		if(this.__surface == null) this.__image.dirty = true;
+		if(this.__image != null && this.__image.dirty) {
+			if(this.__surface != null) lime.graphics.cairo._CairoSurface.CairoSurface_Impl_.destroy(this.__surface);
+			this.__surfaceImage = this.__image.clone();
+			this.__surfaceImage.set_format(2);
+			this.__surfaceImage.set_premultiplied(true);
+			this.__surface = lime.graphics.cairo._CairoSurface.CairoSurface_Impl_.fromImage(this.__surfaceImage);
+			this.__image.dirty = false;
+		}
+		return this.__surface;
 	}
 	,getTexture: function(gl) {
 		if(!this.__isValid) return null;
+		if(this.__usingFramebuffer && this.__framebuffer != null) return this.__framebuffer.texture;
 		if(this.__texture == null) {
 			this.__texture = gl.createTexture();
 			gl.bindTexture(gl.TEXTURE_2D,this.__texture);
 			gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);
 			gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
-			gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
-			gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);
+			gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.NEAREST);
+			gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.NEAREST);
 			this.__image.dirty = true;
 		}
-		if(this.__image.dirty) {
+		if(this.__image != null && this.__image.dirty) {
 			var format;
 			if(this.__image.buffer.bitsPerPixel == 1) format = gl.ALPHA; else format = gl.RGBA;
 			gl.bindTexture(gl.TEXTURE_2D,this.__texture);
@@ -16537,6 +18300,7 @@ openfl.display.BitmapData.prototype = {
 	,merge: function(sourceBitmapData,sourceRect,destPoint,redMultiplier,greenMultiplier,blueMultiplier,alphaMultiplier) {
 		if(!this.__isValid || sourceBitmapData == null || !sourceBitmapData.__isValid || sourceRect == null || destPoint == null) return;
 		this.__image.merge(sourceBitmapData.__image,sourceRect.__toLimeRectangle(),destPoint.__toLimeVector2(),redMultiplier,greenMultiplier,blueMultiplier,alphaMultiplier);
+		this.__usingFramebuffer = false;
 	}
 	,noise: function(randomSeed,low,high,channelOptions,grayScale) {
 		if(grayScale == null) grayScale = false;
@@ -16596,15 +18360,18 @@ openfl.display.BitmapData.prototype = {
 	}
 	,setPixel: function(x,y,color) {
 		if(!this.__isValid) return;
-		this.__image.setPixel(x,y,color,lime.graphics.PixelFormat.ARGB);
+		this.__image.setPixel(x,y,color,1);
+		this.__usingFramebuffer = false;
 	}
 	,setPixel32: function(x,y,color) {
 		if(!this.__isValid) return;
-		this.__image.setPixel32(x,y,color,lime.graphics.PixelFormat.ARGB);
+		this.__image.setPixel32(x,y,color,1);
+		this.__usingFramebuffer = false;
 	}
 	,setPixels: function(rect,byteArray) {
 		if(!this.__isValid || rect == null) return;
-		this.__image.setPixels(rect.__toLimeRectangle(),byteArray,lime.graphics.PixelFormat.ARGB);
+		this.__image.setPixels(rect.__toLimeRectangle(),byteArray,1);
+		this.__usingFramebuffer = false;
 	}
 	,setVector: function(rect,inputVector) {
 		var byteArray = new lime.utils.ByteArray();
@@ -16745,6 +18512,83 @@ openfl.display.BitmapData.prototype = {
 		this.__uvData.x3 = 0;
 		this.__uvData.y3 = 1;
 	}
+	,__drawGL: function(renderSession,width,height,source,matrix,colorTransform,blendMode,clipRect,smoothing,drawSelf,clearBuffer,readPixels) {
+		if(readPixels == null) readPixels = false;
+		if(clearBuffer == null) clearBuffer = false;
+		if(drawSelf == null) drawSelf = false;
+		if(smoothing == null) smoothing = false;
+		var renderer = openfl.Lib.current.stage.__renderer;
+		if(renderer == null) return;
+		var renderSession1 = renderer.renderSession;
+		var gl = renderSession1.gl;
+		if(gl == null) return;
+		var spritebatch = renderSession1.spriteBatch;
+		var renderTransparent = renderSession1.renderer.transparent;
+		var tmpRect;
+		if(clipRect == null) tmpRect = new openfl.geom.Rectangle(0,0,width,height); else tmpRect = clipRect.clone();
+		renderSession1.renderer.transparent = this.transparent;
+		if(this.__framebuffer == null) this.__framebuffer = new openfl._internal.renderer.opengl.utils.FilterTexture(gl,width,height,smoothing);
+		this.__framebuffer.resize(width,height);
+		gl.bindFramebuffer(gl.FRAMEBUFFER,this.__framebuffer.frameBuffer);
+		renderer.setViewport(0,0,width,height);
+		spritebatch.begin(renderSession1,drawSelf?null:tmpRect);
+		gl.colorMask(true,true,true,true);
+		renderSession1.blendModeManager.setBlendMode(openfl.display.BlendMode.NORMAL);
+		renderSession1.shaderManager.setShader(renderSession1.shaderManager.defaultShader,true);
+		if(clearBuffer || drawSelf) this.__framebuffer.clear();
+		if(drawSelf) {
+			this.__worldTransform.identity();
+			this.__flipMatrix(this.__worldTransform);
+			this.__renderGL(renderSession1);
+			spritebatch.stop();
+			gl.deleteTexture(this.__texture);
+			spritebatch.start(tmpRect);
+		}
+		var ctCache = source.__worldColorTransform;
+		var matrixCache = source.__worldTransform;
+		var blendModeCache = source.blendMode;
+		var cached = source.__cacheAsBitmap;
+		var m;
+		if(matrix != null) m = new openfl.geom.Matrix(matrix.a,matrix.b,matrix.c,matrix.d,matrix.tx,matrix.ty); else m = new openfl.geom.Matrix();
+		this.__flipMatrix(m);
+		source.__worldTransform = m;
+		if(colorTransform != null) source.__worldColorTransform = colorTransform; else source.__worldColorTransform = new openfl.geom.ColorTransform();
+		source.blendMode = blendMode;
+		source.__cacheAsBitmap = false;
+		source.__updateChildren(false);
+		source.__renderGL(renderSession1);
+		source.__worldColorTransform = ctCache;
+		source.__worldTransform = matrixCache;
+		source.blendMode = blendModeCache;
+		source.__cacheAsBitmap = cached;
+		source.__updateChildren(true);
+		spritebatch.finish();
+		if(readPixels) {
+			if(this.__image.width != width || this.__image.height != height) this.__image.resize(width,height);
+			gl.readPixels(0,0,width,height,gl.RGBA,gl.UNSIGNED_BYTE,this.__image.buffer.data);
+		}
+		gl.bindFramebuffer(gl.FRAMEBUFFER,renderSession1.defaultFramebuffer);
+		renderer.setViewport(0,0,renderSession1.renderer.width,renderSession1.renderer.height);
+		renderSession1.renderer.transparent = renderTransparent;
+		gl.colorMask(true,true,true,renderSession1.renderer.transparent);
+		this.__usingFramebuffer = true;
+		if(this.__image != null) {
+			this.__image.dirty = false;
+			this.__image.set_premultiplied(true);
+		}
+		this.__createUVs();
+		this.__isValid = true;
+	}
+	,__flipMatrix: function(m) {
+		var tx = m.tx;
+		var ty = m.ty;
+		m.tx = 0;
+		m.ty = 0;
+		m.scale(1,-1);
+		m.translate(0,this.height);
+		m.tx += tx;
+		m.ty -= ty;
+	}
 	,__fromBase64: function(base64,type,onload) {
 		var _g = this;
 		lime.graphics.Image.fromBase64(base64,type,function(image) {
@@ -16785,6 +18629,25 @@ openfl.display.BitmapData.prototype = {
 		this.rect = new openfl.geom.Rectangle(0,0,image.width,image.height);
 		this.__isValid = true;
 	}
+	,__renderCairo: function(renderSession) {
+		if(!this.__isValid) return;
+		var cairo = renderSession.cairo;
+		if(this.__worldTransform == null) this.__worldTransform = new openfl.geom.Matrix();
+		var transform = this.__worldTransform;
+		if(renderSession.roundPixels) {
+			var matrix = transform.__toMatrix3();
+			matrix.tx = Math.round(matrix.tx);
+			matrix.ty = Math.round(matrix.ty);
+			cairo.set_matrix(matrix);
+		} else cairo.set_matrix(transform.__toMatrix3());
+		var surface = this.getSurface();
+		if(surface != null) {
+			cairo.setSourceSurface(surface,0,0);
+			cairo.paint();
+		}
+	}
+	,__renderCairoMask: function(renderSession) {
+	}
 	,__renderCanvas: function(renderSession) {
 		if(!this.__isValid) return;
 		lime.graphics.utils.ImageCanvasUtil.sync(this.__image);
@@ -16795,19 +18658,17 @@ openfl.display.BitmapData.prototype = {
 		if(renderSession.roundPixels) context.setTransform(transform.a,transform.b,transform.c,transform.d,transform.tx | 0,transform.ty | 0); else context.setTransform(transform.a,transform.b,transform.c,transform.d,transform.tx,transform.ty);
 		context.drawImage(this.__image.buffer.get_src(),0,0);
 	}
+	,__renderCanvasMask: function(renderSession) {
+	}
 	,__renderGL: function(renderSession) {
-		if(this.__worldTransform == null) this.__worldTransform = new openfl.geom.Matrix();
-		if(this.__worldColorTransform == null) this.__worldColorTransform = new openfl.geom.ColorTransform();
-		renderSession.spriteBatch.renderBitmapData(this,true,this.__worldTransform,this.__worldColorTransform,this.__worldColorTransform.alphaMultiplier,this.blendMode);
-	}
-	,__renderMask: function(renderSession) {
-	}
-	,__updateMask: function(maskGraphics) {
+		renderSession.spriteBatch.renderBitmapData(this,false,this.__worldTransform,this.__worldColorTransform,this.__worldColorTransform.alphaMultiplier,this.blendMode);
 	}
 	,__sync: function() {
 		lime.graphics.utils.ImageCanvasUtil.sync(this.__image);
 	}
 	,__updateChildren: function(transformOnly) {
+	}
+	,__updateMask: function(maskGraphics) {
 	}
 	,__class__: openfl.display.BitmapData
 };
@@ -17135,7 +18996,7 @@ openfl.display.Graphics.prototype = {
 		openfl.Lib.notImplemented("Graphics.lineGradientStyle");
 	}
 	,lineStyle: function(thickness,color,alpha,pixelHinting,scaleMode,caps,joints,miterLimit) {
-		if(thickness != null) this.__halfStrokeWidth = thickness / 2; else this.__halfStrokeWidth = 0;
+		if(thickness > this.__halfStrokeWidth) this.__halfStrokeWidth = thickness; else this.__halfStrokeWidth = this.__halfStrokeWidth;
 		this.__commands.push(openfl.display.DrawCommand.LineStyle(thickness,color,alpha,pixelHinting,scaleMode,caps,joints,miterLimit));
 		if(thickness != null) this.__visible = true;
 	}
@@ -17156,12 +19017,12 @@ openfl.display.Graphics.prototype = {
 	}
 	,__getBounds: function(rect,matrix) {
 		if(this.__bounds == null) return;
-		var bounds = this.__bounds.clone().transform(matrix);
+		var bounds = this.__bounds.transform(matrix);
 		rect.__expand(bounds.x,bounds.y,bounds.width,bounds.height);
 	}
 	,__hitTest: function(x,y,shapeFlag,matrix) {
 		if(this.__bounds == null) return false;
-		var bounds = this.__bounds.clone().transform(matrix);
+		var bounds = this.__bounds.transform(matrix);
 		return x > bounds.x && y > bounds.y && x <= bounds.get_right() && y <= bounds.get_bottom();
 	}
 	,__inflateBounds: function(x,y) {
@@ -17407,6 +19268,8 @@ openfl.display.OpenGLView.prototype = $extend(openfl.display.DirectRenderer.prot
 			var rect = null;
 			if(this.get_scrollRect() == null) rect = new openfl.geom.Rectangle(0,0,this.stage.stageWidth,this.stage.stageHeight); else rect = new openfl.geom.Rectangle(this.get_x() + this.get_scrollRect().x,this.get_y() + this.get_scrollRect().y,this.get_scrollRect().width,this.get_scrollRect().height);
 			if(this.__render != null) this.__render(rect);
+			renderSession.shaderManager.setShader(null);
+			renderSession.blendModeManager.setBlendMode(null);
 		}
 	}
 	,__class__: openfl.display.OpenGLView
@@ -17526,9 +19389,6 @@ openfl.display.SpreadMethod.PAD = ["PAD",2];
 openfl.display.SpreadMethod.PAD.toString = $estr;
 openfl.display.SpreadMethod.PAD.__enum__ = openfl.display.SpreadMethod;
 openfl.display.Stage = function(width,height,color) {
-	this.__mouseY = 0;
-	this.__mouseX = 0;
-	this.__mouseOutStack = [];
 	openfl.display.DisplayObjectContainer.call(this);
 	if(color == null) {
 		this.__transparent = true;
@@ -17538,6 +19398,7 @@ openfl.display.Stage = function(width,height,color) {
 	this.__displayState = openfl.display.StageDisplayState.NORMAL;
 	this.__mouseX = 0;
 	this.__mouseY = 0;
+	this.__lastClickTime = 0;
 	this.stageWidth = width;
 	this.stageHeight = height;
 	this.stage = this;
@@ -17549,6 +19410,7 @@ openfl.display.Stage = function(width,height,color) {
 	this.stageFocusRect = true;
 	this.__clearBeforeRender = true;
 	this.__stack = [];
+	this.__mouseOutStack = [];
 	var this1;
 	this1 = new openfl.VectorData();
 	var this2;
@@ -17594,6 +19456,10 @@ openfl.display.Stage.prototype = $extend(openfl.display.DisplayObjectContainer.p
 		case 2:
 			var element = context[2];
 			this.__renderer = new openfl._internal.renderer.dom.DOMRenderer(this.stageWidth,this.stageHeight,element);
+			break;
+		case 4:
+			var cairo = context[2];
+			this.__renderer = new openfl._internal.renderer.cairo.CairoRenderer(this.stageWidth,this.stageHeight,cairo);
 			break;
 		default:
 		}
@@ -17660,6 +19526,10 @@ openfl.display.Stage.prototype = $extend(openfl.display.DisplayObjectContainer.p
 	}
 	,onRenderContextRestored: function(context) {
 	}
+	,onTextEdit: function(text,start,length) {
+	}
+	,onTextInput: function(text) {
+	}
 	,onTouchMove: function(x,y,id) {
 		this.__onTouch("touchMove",x,y,id);
 	}
@@ -17679,11 +19549,16 @@ openfl.display.Stage.prototype = $extend(openfl.display.DisplayObjectContainer.p
 		var event = new openfl.events.Event(openfl.events.Event.DEACTIVATE);
 		this.__broadcast(event,true);
 	}
+	,onWindowEnter: function() {
+	}
 	,onWindowFocusIn: function() {
 	}
 	,onWindowFocusOut: function() {
 	}
 	,onWindowFullscreen: function() {
+	}
+	,onWindowLeave: function() {
+		this.dispatchEvent(new openfl.events.Event(openfl.events.Event.MOUSE_LEAVE));
 	}
 	,onWindowMinimize: function() {
 	}
@@ -17708,7 +19583,17 @@ openfl.display.Stage.prototype = $extend(openfl.display.DisplayObjectContainer.p
 		}
 		this.__renderable = true;
 		this.__update(false,true);
-		if(this.__renderer != null) this.__renderer.render(this);
+		if(this.__renderer != null) {
+			switch(context[1]) {
+			case 4:
+				var cairo = context[2];
+				(js.Boot.__cast(this.__renderer , openfl._internal.renderer.cairo.CairoRenderer)).cairo = cairo;
+				this.__renderer.renderSession.cairo = cairo;
+				break;
+			default:
+			}
+			this.__renderer.render(this);
+		}
 		this.__rendering = false;
 	}
 	,update: function(deltaTime) {
@@ -18490,6 +20375,7 @@ openfl.display3D.Context3D.prototype = {
 		lime.graphics.opengl.GL.context.disable(3089);
 		if(this.framebuffer != null) lime.graphics.opengl.GL.context.bindFramebuffer(36160,null);
 		if(this.renderbuffer != null) lime.graphics.opengl.GL.context.bindRenderbuffer(36161,null);
+		lime.graphics.opengl.GL.context.viewport(this.scrollRect.x | 0,this.scrollRect.y | 0,this.scrollRect.width | 0,this.scrollRect.height | 0);
 	}
 	,setRenderToTexture: function(texture,enableDepthAndStencil,antiAlias,surfaceSelector) {
 		if(surfaceSelector == null) surfaceSelector = 0;
@@ -19208,12 +21094,27 @@ openfl.display3D.textures.Texture.prototype = $extend(openfl.display3D.textures.
 	}
 	,uploadFromBitmapData: function(bitmapData,miplevel) {
 		if(miplevel == null) miplevel = 0;
-		var p = lime.utils.ByteArray.__ofBuffer(bitmapData.__image.get_data().buffer);
-		this.width = bitmapData.width;
-		this.height = bitmapData.height;
-		this.uploadFromByteArray(p,0,miplevel);
+		var image = bitmapData.__image;
+		if(!image.get_premultiplied()) {
+			image = image.clone();
+			image.set_premultiplied(true);
+		}
+		this.width = image.width;
+		this.height = image.height;
+		this.uploadFromUInt8Array(image.get_data(),miplevel);
 	}
 	,uploadFromByteArray: function(data,byteArrayOffset,miplevel) {
+		if(miplevel == null) miplevel = 0;
+		var source = new Uint8Array(data.length);
+		data.position = byteArrayOffset;
+		var i = 0;
+		while(data.position < data.length) {
+			source[i] = data.readUnsignedByte();
+			i++;
+		}
+		this.uploadFromUInt8Array(source,miplevel);
+	}
+	,uploadFromUInt8Array: function(data,miplevel) {
 		if(miplevel == null) miplevel = 0;
 		lime.graphics.opengl.GL.context.bindTexture(3553,this.glTexture);
 		if(this.optimizeForRenderToTexture) {
@@ -19223,14 +21124,7 @@ openfl.display3D.textures.Texture.prototype = $extend(openfl.display3D.textures.
 			lime.graphics.opengl.GL.context.texParameteri(3553,10242,33071);
 			lime.graphics.opengl.GL.context.texParameteri(3553,10243,33071);
 		}
-		var source = new Uint8Array(data.length);
-		data.position = byteArrayOffset;
-		var i = 0;
-		while(data.position < data.length) {
-			source[i] = data.readUnsignedByte();
-			i++;
-		}
-		lime.graphics.opengl.GL.context.texImage2D(3553,miplevel,6408,this.width,this.height,0,6408,5121,source);
+		lime.graphics.opengl.GL.context.texImage2D(3553,miplevel,6408,this.width,this.height,0,6408,5121,data);
 		lime.graphics.opengl.GL.context.bindTexture(3553,null);
 	}
 	,__class__: openfl.display3D.textures.Texture
@@ -22879,6 +24773,7 @@ openfl.media.SoundChannel.prototype = $extend(openfl.events.EventDispatcher.prot
 		if(!this.__isValid) return;
 		this.__soundInstance.stop();
 		this.__soundInstance = null;
+		this.__isValid = false;
 	}
 	,get_position: function() {
 		if(!this.__isValid) return 0;
@@ -22903,6 +24798,7 @@ openfl.media.SoundChannel.prototype = $extend(openfl.events.EventDispatcher.prot
 		this.dispatchEvent(new openfl.events.Event(openfl.events.Event.SOUND_COMPLETE));
 	}
 	,source_onComplete: function() {
+		this.__dispose();
 		this.dispatchEvent(new openfl.events.Event(openfl.events.Event.SOUND_COMPLETE));
 	}
 	,__class__: openfl.media.SoundChannel
@@ -23082,7 +24978,7 @@ openfl.text.TextField = function() {
 	this.set_autoSize(openfl.text.TextFieldAutoSize.NONE);
 	this.displayAsPassword = false;
 	this.embedFonts = false;
-	this.selectable = true;
+	this.set_selectable(true);
 	this.set_borderColor(0);
 	this.set_border(false);
 	this.set_backgroundColor(16777215);
@@ -23207,12 +25103,19 @@ openfl.text.TextField.prototype = $extend(openfl.display.InteractiveObject.proto
 			this.__hiddenInput.type = "text";
 			this.__hiddenInput.style.position = "absolute";
 			this.__hiddenInput.style.opacity = "0";
+			this.__hiddenInput.style.color = "transparent";
+			this.__hiddenInput.style.left = "0px";
+			this.__hiddenInput.style.top = "50%";
+			if(new EReg("(iPad|iPhone|iPod).*OS 8_","gi").match(window.navigator.userAgent)) {
+				this.__hiddenInput.style.fontSize = "0px";
+				this.__hiddenInput.style.width = "0px";
+				this.__hiddenInput.style.height = "0px";
+			} else {
+				this.__hiddenInput.style.width = "1px";
+				this.__hiddenInput.style.height = "1px";
+			}
 			this.__hiddenInput.style.pointerEvents = "none";
-			this.__hiddenInput.style.left = this.get_x() + (this.__canvas != null?this.__canvas.offsetLeft:0) + "px";
-			this.__hiddenInput.style.top = this.get_y() + (this.__canvas != null?this.__canvas.offsetTop:0) + "px";
-			this.__hiddenInput.style.width = this.__width + "px";
-			this.__hiddenInput.style.height = this.__height + "px";
-			this.__hiddenInput.style.zIndex = "0";
+			this.__hiddenInput.style.zIndex = "-10000000";
 			if(this.maxChars > 0) this.__hiddenInput.maxLength = this.maxChars;
 			window.document.body.appendChild(this.__hiddenInput);
 			this.__hiddenInput.value = this.__text;
@@ -23227,11 +25130,11 @@ openfl.text.TextField.prototype = $extend(openfl.display.InteractiveObject.proto
 	}
 	,__getBounds: function(rect,matrix) {
 		var bounds = new openfl.geom.Rectangle(0,0,this.__width,this.__height);
-		bounds.transform(this.__worldTransform);
+		bounds = bounds.transform(matrix);
 		rect.__expand(bounds.x,bounds.y,bounds.width,bounds.height);
 	}
 	,__getCursor: function() {
-		if(this.type == openfl.text.TextFieldType.INPUT) return lime.ui.MouseCursor.TEXT; else return null;
+		if(this.type == openfl.text.TextFieldType.INPUT && this.selectable) return lime.ui.MouseCursor.TEXT; else return null;
 	}
 	,__getFont: function(format) {
 		var font;
@@ -23401,11 +25304,12 @@ openfl.text.TextField.prototype = $extend(openfl.display.InteractiveObject.proto
 		return best_m;
 	}
 	,__getPosition: function(x,y) {
+		if(x <= 2) return 0;
 		var value = this.get_text();
 		var text = value;
-		var totalW = 0;
+		var totalW = 2;
 		var pos = text.length;
-		if(x < this.__getTextWidth(text)) {
+		if(x < this.__getTextWidth(text) + 2) {
 			var _g1 = 0;
 			var _g = text.length;
 			while(_g1 < _g) {
@@ -23516,12 +25420,13 @@ openfl.text.TextField.prototype = $extend(openfl.display.InteractiveObject.proto
 			div = window.document.createElement("div");
 			div.innerHTML = new EReg("\n","g").replace(this.__text,"<br>");
 			div.style.setProperty("font",this.__getFont(this.__textFormat),null);
+			div.style.setProperty("pointer-events","none",null);
 			div.style.position = "absolute";
 			div.style.top = "110%";
 			window.document.body.appendChild(div);
 		}
 		this.__measuredWidth = div.clientWidth;
-		if(this.__div == null) div.style.width = Std.string(this.__width) + "px";
+		if(this.__div == null) div.style.width = Std.string(this.__width - 4) + "px";
 		this.__measuredHeight = div.clientHeight;
 		if(this.__div == null) window.document.body.removeChild(div);
 	}
@@ -23548,8 +25453,13 @@ openfl.text.TextField.prototype = $extend(openfl.display.InteractiveObject.proto
 		this.__text = this.__hiddenInput.value;
 		this.__ranges = null;
 		this.__isHTML = false;
-		this.__cursorPosition = this.__hiddenInput.selectionStart;
-		this.__selectionStart = this.__cursorPosition;
+		if(this.__hiddenInput.selectionDirection == "backward") {
+			this.__cursorPosition = this.__hiddenInput.selectionStart;
+			this.__selectionStart = this.__hiddenInput.selectionEnd;
+		} else {
+			this.__cursorPosition = this.__hiddenInput.selectionEnd;
+			this.__selectionStart = this.__hiddenInput.selectionStart;
+		}
 		this.__dirty = true;
 		this.dispatchEvent(new openfl.events.Event(openfl.events.Event.CHANGE,true));
 	}
@@ -23558,23 +25468,22 @@ openfl.text.TextField.prototype = $extend(openfl.display.InteractiveObject.proto
 		if(event == null) event == window.event;
 		var keyCode = event.which;
 		var isShift = event.shiftKey;
-		if(keyCode == 65 && (event.ctrlKey || event.metaKey)) {
-			this.__hiddenInput.selectionStart = 0;
-			this.__hiddenInput.selectionEnd = this.get_text().length;
-			event.preventDefault();
-			this.__dirty = true;
-			return;
-		}
-		if(keyCode == 17 || event.metaKey || event.ctrlKey) return;
 		this.__text = this.__hiddenInput.value;
 		this.__ranges = null;
 		this.__isHTML = false;
-		this.__selectionStart = this.__hiddenInput.selectionStart;
+		if(this.__hiddenInput.selectionDirection == "backward") {
+			this.__cursorPosition = this.__hiddenInput.selectionStart;
+			this.__selectionStart = this.__hiddenInput.selectionEnd;
+		} else {
+			this.__cursorPosition = this.__hiddenInput.selectionEnd;
+			this.__selectionStart = this.__hiddenInput.selectionStart;
+		}
 		this.__dirty = true;
 	}
 	,stage_onMouseMove: function(event) {
 		if(this.__hasFocus && this.__selectionStart >= 0) {
-			this.__cursorPosition = this.__getPosition(event.localX,event.localY);
+			var localPoint = this.globalToLocal(new openfl.geom.Point(event.stageX,event.stageY));
+			this.__cursorPosition = this.__getPosition(localPoint.x,localPoint.y);
 			this.__dirty = true;
 		}
 	}
@@ -23582,7 +25491,8 @@ openfl.text.TextField.prototype = $extend(openfl.display.InteractiveObject.proto
 		this.stage.removeEventListener(openfl.events.MouseEvent.MOUSE_MOVE,$bind(this,this.stage_onMouseMove));
 		this.stage.removeEventListener(openfl.events.MouseEvent.MOUSE_UP,$bind(this,this.stage_onMouseUp));
 		if(this.stage.get_focus() == this) {
-			var upPos = this.__getPosition(event.localX,event.localY);
+			var localPoint = this.globalToLocal(new openfl.geom.Point(event.stageX,event.stageY));
+			var upPos = this.__getPosition(localPoint.x,localPoint.y);
 			var leftPos;
 			var rightPos;
 			leftPos = Std["int"](Math.min(this.__selectionStart,upPos));
@@ -23595,9 +25505,9 @@ openfl.text.TextField.prototype = $extend(openfl.display.InteractiveObject.proto
 	,this_onAddedToStage: function(event) {
 		this.addEventListener(openfl.events.FocusEvent.FOCUS_IN,$bind(this,this.this_onFocusIn));
 		this.addEventListener(openfl.events.FocusEvent.FOCUS_OUT,$bind(this,this.this_onFocusOut));
-		this.__hiddenInput.addEventListener("keydown",$bind(this,this.input_onKeyDown));
-		this.__hiddenInput.addEventListener("keyup",$bind(this,this.input_onKeyUp));
-		this.__hiddenInput.addEventListener("input",$bind(this,this.input_onKeyUp));
+		this.__hiddenInput.addEventListener("keydown",$bind(this,this.input_onKeyDown),true);
+		this.__hiddenInput.addEventListener("keyup",$bind(this,this.input_onKeyUp),true);
+		this.__hiddenInput.addEventListener("input",$bind(this,this.input_onKeyUp),true);
 		this.addEventListener(openfl.events.MouseEvent.MOUSE_DOWN,$bind(this,this.this_onMouseDown));
 		if(this.stage.get_focus() == this) this.this_onFocusIn(null);
 	}
@@ -23619,20 +25529,24 @@ openfl.text.TextField.prototype = $extend(openfl.display.InteractiveObject.proto
 		this.__cursorPosition = -1;
 		this.__hasFocus = false;
 		this.__stopCursorTimer();
-		this.__hiddenInput.blur();
+		if(this.__hiddenInput != null) this.__hiddenInput.blur();
 		this.__dirty = true;
 	}
 	,this_onMouseDown: function(event) {
-		this.__selectionStart = this.__getPosition(event.localX,event.localY);
+		if(!this.selectable) return;
+		var localPoint = this.globalToLocal(new openfl.geom.Point(event.stageX,event.stageY));
+		this.__selectionStart = this.__getPosition(localPoint.x,localPoint.y);
+		this.__cursorPosition = this.__selectionStart;
 		this.stage.addEventListener(openfl.events.MouseEvent.MOUSE_MOVE,$bind(this,this.stage_onMouseMove));
 		this.stage.addEventListener(openfl.events.MouseEvent.MOUSE_UP,$bind(this,this.stage_onMouseUp));
 	}
 	,this_onRemovedFromStage: function(event) {
 		this.removeEventListener(openfl.events.FocusEvent.FOCUS_IN,$bind(this,this.this_onFocusIn));
 		this.removeEventListener(openfl.events.FocusEvent.FOCUS_OUT,$bind(this,this.this_onFocusOut));
-		if(this.__hiddenInput != null) this.__hiddenInput.removeEventListener("keydown",$bind(this,this.input_onKeyDown));
-		if(this.__hiddenInput != null) this.__hiddenInput.removeEventListener("keyup",$bind(this,this.input_onKeyUp));
-		if(this.__hiddenInput != null) this.__hiddenInput.removeEventListener("input",$bind(this,this.input_onKeyUp));
+		this.this_onFocusOut(null);
+		if(this.__hiddenInput != null) this.__hiddenInput.removeEventListener("keydown",$bind(this,this.input_onKeyDown),true);
+		if(this.__hiddenInput != null) this.__hiddenInput.removeEventListener("keyup",$bind(this,this.input_onKeyUp),true);
+		if(this.__hiddenInput != null) this.__hiddenInput.removeEventListener("input",$bind(this,this.input_onKeyUp),true);
 		this.removeEventListener(openfl.events.MouseEvent.MOUSE_DOWN,$bind(this,this.this_onMouseDown));
 		if(this.stage != null) this.stage.removeEventListener(openfl.events.MouseEvent.MOUSE_MOVE,$bind(this,this.stage_onMouseMove));
 		if(this.stage != null) this.stage.removeEventListener(openfl.events.MouseEvent.MOUSE_UP,$bind(this,this.stage_onMouseUp));
@@ -23697,7 +25611,13 @@ openfl.text.TextField.prototype = $extend(openfl.display.InteractiveObject.proto
 			var segments = value.split("<font");
 			if(segments.length == 1) {
 				value = new EReg("<.*?>","g").replace(value,"");
-				if(this.__hiddenInput != null) this.__hiddenInput.value = value;
+				if(this.__text != value && this.__hiddenInput != null) {
+					var selectionStart = this.__hiddenInput.selectionStart;
+					var selectionEnd = this.__hiddenInput.selectionEnd;
+					this.__hiddenInput.value = value;
+					this.__hiddenInput.selectionStart = selectionStart;
+					this.__hiddenInput.selectionEnd = selectionEnd;
+				}
 				return this.__text = value;
 			} else {
 				value = "";
@@ -23742,7 +25662,13 @@ openfl.text.TextField.prototype = $extend(openfl.display.InteractiveObject.proto
 				}
 			}
 		}
-		if(this.__hiddenInput != null) this.__hiddenInput.value = value;
+		if(this.__text != value && this.__hiddenInput != null) {
+			var selectionStart1 = this.__hiddenInput.selectionStart;
+			var selectionEnd1 = this.__hiddenInput.selectionEnd;
+			this.__hiddenInput.value = value;
+			this.__hiddenInput.selectionStart = selectionStart1;
+			this.__hiddenInput.selectionEnd = selectionEnd1;
+		}
 		return this.__text = value;
 	}
 	,get_maxScrollH: function() {
@@ -23759,13 +25685,23 @@ openfl.text.TextField.prototype = $extend(openfl.display.InteractiveObject.proto
 		}
 		return 1;
 	}
+	,set_selectable: function(value) {
+		if(!value && this.selectable && this.type == openfl.text.TextFieldType.INPUT) this.this_onRemovedFromStage(null);
+		return this.selectable = value;
+	}
 	,get_text: function() {
 		if(this.__isHTML) {
 		}
 		return this.__text;
 	}
 	,set_text: function(value) {
-		if(this.__text != value && this.__hiddenInput != null) this.__hiddenInput.value = value;
+		if(this.__text != value && this.__hiddenInput != null) {
+			var selectionStart = this.__hiddenInput.selectionStart;
+			var selectionEnd = this.__hiddenInput.selectionEnd;
+			this.__hiddenInput.value = value;
+			this.__hiddenInput.selectionStart = selectionStart;
+			this.__hiddenInput.selectionEnd = selectionEnd;
+		}
 		if(this.__isHTML || this.__text != value) this.__dirty = true;
 		this.__ranges = null;
 		this.__isHTML = false;
@@ -24483,6 +26419,112 @@ lime.audio.openal.ALC.ENUMERATE_ALL_EXT = 1;
 lime.audio.openal.ALC.DEFAULT_ALL_DEVICES_SPECIFIER = 4114;
 lime.audio.openal.ALC.ALL_DEVICES_SPECIFIER = 4115;
 lime.graphics.Image.__base64Chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+lime.graphics._PixelFormat.PixelFormat_Impl_.RGBA = 0;
+lime.graphics._PixelFormat.PixelFormat_Impl_.ARGB = 1;
+lime.graphics._PixelFormat.PixelFormat_Impl_.BGRA = 2;
+lime.graphics.cairo._CairoAntialias.CairoAntialias_Impl_.DEFAULT = 0;
+lime.graphics.cairo._CairoAntialias.CairoAntialias_Impl_.NONE = 1;
+lime.graphics.cairo._CairoAntialias.CairoAntialias_Impl_.GRAY = 2;
+lime.graphics.cairo._CairoAntialias.CairoAntialias_Impl_.SUBPIXEL = 3;
+lime.graphics.cairo._CairoAntialias.CairoAntialias_Impl_.FAST = 4;
+lime.graphics.cairo._CairoAntialias.CairoAntialias_Impl_.GOOD = 5;
+lime.graphics.cairo._CairoAntialias.CairoAntialias_Impl_.BEST = 6;
+lime.graphics.cairo._CairoContent.CairoContent_Impl_.COLOR = 4096;
+lime.graphics.cairo._CairoContent.CairoContent_Impl_.ALPHA = 8192;
+lime.graphics.cairo._CairoContent.CairoContent_Impl_.COLOR_ALPHA = 12288;
+lime.graphics.cairo._CairoExtend.CairoExtend_Impl_.NONE = 0;
+lime.graphics.cairo._CairoExtend.CairoExtend_Impl_.REPEAT = 1;
+lime.graphics.cairo._CairoExtend.CairoExtend_Impl_.REFLECT = 2;
+lime.graphics.cairo._CairoExtend.CairoExtend_Impl_.PAD = 3;
+lime.graphics.cairo._CairoFillRule.CairoFillRule_Impl_.WINDING = 0;
+lime.graphics.cairo._CairoFillRule.CairoFillRule_Impl_.EVEN_ODD = 1;
+lime.graphics.cairo._CairoFilter.CairoFilter_Impl_.FAST = 0;
+lime.graphics.cairo._CairoFilter.CairoFilter_Impl_.GOOD = 1;
+lime.graphics.cairo._CairoFilter.CairoFilter_Impl_.BEST = 2;
+lime.graphics.cairo._CairoFilter.CairoFilter_Impl_.NEAREST = 3;
+lime.graphics.cairo._CairoFilter.CairoFilter_Impl_.BILINEAR = 4;
+lime.graphics.cairo._CairoFilter.CairoFilter_Impl_.GAUSSIAN = 5;
+lime.graphics.cairo._CairoFormat.CairoFormat_Impl_.INVALID = -1;
+lime.graphics.cairo._CairoFormat.CairoFormat_Impl_.ARGB32 = 0;
+lime.graphics.cairo._CairoFormat.CairoFormat_Impl_.RGB24 = 1;
+lime.graphics.cairo._CairoFormat.CairoFormat_Impl_.A8 = 2;
+lime.graphics.cairo._CairoFormat.CairoFormat_Impl_.A1 = 3;
+lime.graphics.cairo._CairoFormat.CairoFormat_Impl_.RGB16_565 = 4;
+lime.graphics.cairo._CairoFormat.CairoFormat_Impl_.RGB30 = 5;
+lime.graphics.cairo._CairoLineCap.CairoLineCap_Impl_.BUTT = 0;
+lime.graphics.cairo._CairoLineCap.CairoLineCap_Impl_.ROUND = 1;
+lime.graphics.cairo._CairoLineCap.CairoLineCap_Impl_.SQUARE = 2;
+lime.graphics.cairo._CairoLineJoin.CairoLineJoin_Impl_.MITER = 0;
+lime.graphics.cairo._CairoLineJoin.CairoLineJoin_Impl_.ROUND = 1;
+lime.graphics.cairo._CairoLineJoin.CairoLineJoin_Impl_.BEVEL = 2;
+lime.graphics.cairo._CairoOperator.CairoOperator_Impl_.CLEAR = 0;
+lime.graphics.cairo._CairoOperator.CairoOperator_Impl_.SOURCE = 1;
+lime.graphics.cairo._CairoOperator.CairoOperator_Impl_.OVER = 2;
+lime.graphics.cairo._CairoOperator.CairoOperator_Impl_.IN = 3;
+lime.graphics.cairo._CairoOperator.CairoOperator_Impl_.OUT = 4;
+lime.graphics.cairo._CairoOperator.CairoOperator_Impl_.ATOP = 5;
+lime.graphics.cairo._CairoOperator.CairoOperator_Impl_.DEST = 6;
+lime.graphics.cairo._CairoOperator.CairoOperator_Impl_.DEST_OVER = 7;
+lime.graphics.cairo._CairoOperator.CairoOperator_Impl_.DEST_IN = 8;
+lime.graphics.cairo._CairoOperator.CairoOperator_Impl_.DEST_OUT = 9;
+lime.graphics.cairo._CairoOperator.CairoOperator_Impl_.DEST_ATOP = 10;
+lime.graphics.cairo._CairoOperator.CairoOperator_Impl_.XOR = 11;
+lime.graphics.cairo._CairoOperator.CairoOperator_Impl_.ADD = 12;
+lime.graphics.cairo._CairoOperator.CairoOperator_Impl_.SATURATE = 13;
+lime.graphics.cairo._CairoOperator.CairoOperator_Impl_.MULTIPLY = 14;
+lime.graphics.cairo._CairoOperator.CairoOperator_Impl_.SCREEN = 15;
+lime.graphics.cairo._CairoOperator.CairoOperator_Impl_.OVERLAY = 16;
+lime.graphics.cairo._CairoOperator.CairoOperator_Impl_.DARKEN = 17;
+lime.graphics.cairo._CairoOperator.CairoOperator_Impl_.LIGHTEN = 18;
+lime.graphics.cairo._CairoOperator.CairoOperator_Impl_.COLOR_DODGE = 19;
+lime.graphics.cairo._CairoOperator.CairoOperator_Impl_.COLOR_BURN = 20;
+lime.graphics.cairo._CairoOperator.CairoOperator_Impl_.HARD_LIGHT = 21;
+lime.graphics.cairo._CairoOperator.CairoOperator_Impl_.SOFT_LIGHT = 22;
+lime.graphics.cairo._CairoOperator.CairoOperator_Impl_.DIFFERENCE = 23;
+lime.graphics.cairo._CairoOperator.CairoOperator_Impl_.EXCLUSION = 24;
+lime.graphics.cairo._CairoOperator.CairoOperator_Impl_.HSL_HUE = 25;
+lime.graphics.cairo._CairoOperator.CairoOperator_Impl_.HSL_SATURATION = 26;
+lime.graphics.cairo._CairoOperator.CairoOperator_Impl_.HSL_COLOR = 27;
+lime.graphics.cairo._CairoOperator.CairoOperator_Impl_.HSL_LUMINOSITY = 28;
+lime.graphics.cairo._CairoStatus.CairoStatus_Impl_.SUCCESS = 0;
+lime.graphics.cairo._CairoStatus.CairoStatus_Impl_.NO_MEMORY = 1;
+lime.graphics.cairo._CairoStatus.CairoStatus_Impl_.INVALID_RESTORE = 2;
+lime.graphics.cairo._CairoStatus.CairoStatus_Impl_.INVALID_POP_GROUP = 3;
+lime.graphics.cairo._CairoStatus.CairoStatus_Impl_.NO_CURRENT_POINT = 4;
+lime.graphics.cairo._CairoStatus.CairoStatus_Impl_.INVALID_MATRIX = 5;
+lime.graphics.cairo._CairoStatus.CairoStatus_Impl_.INVALID_STATUS = 6;
+lime.graphics.cairo._CairoStatus.CairoStatus_Impl_.NULL_POINTER = 7;
+lime.graphics.cairo._CairoStatus.CairoStatus_Impl_.INVALID_STRING = 8;
+lime.graphics.cairo._CairoStatus.CairoStatus_Impl_.INVALID_PATH_DATA = 9;
+lime.graphics.cairo._CairoStatus.CairoStatus_Impl_.READ_ERROR = 10;
+lime.graphics.cairo._CairoStatus.CairoStatus_Impl_.WRITE_ERROR = 11;
+lime.graphics.cairo._CairoStatus.CairoStatus_Impl_.SURFACE_FINISHED = 12;
+lime.graphics.cairo._CairoStatus.CairoStatus_Impl_.SURFACE_TYPE_MISMATCH = 13;
+lime.graphics.cairo._CairoStatus.CairoStatus_Impl_.PATTERN_TYPE_MISMATCH = 14;
+lime.graphics.cairo._CairoStatus.CairoStatus_Impl_.INVALID_CONTENT = 15;
+lime.graphics.cairo._CairoStatus.CairoStatus_Impl_.INVALID_FORMAT = 16;
+lime.graphics.cairo._CairoStatus.CairoStatus_Impl_.INVALID_VISUAL = 17;
+lime.graphics.cairo._CairoStatus.CairoStatus_Impl_.FILE_NOT_FOUND = 18;
+lime.graphics.cairo._CairoStatus.CairoStatus_Impl_.INVALID_DASH = 19;
+lime.graphics.cairo._CairoStatus.CairoStatus_Impl_.INVALID_DSC_COMMENT = 20;
+lime.graphics.cairo._CairoStatus.CairoStatus_Impl_.INVALID_INDEX = 21;
+lime.graphics.cairo._CairoStatus.CairoStatus_Impl_.CLIP_NOT_REPRESENTABLE = 22;
+lime.graphics.cairo._CairoStatus.CairoStatus_Impl_.TEMP_FILE_ERROR = 23;
+lime.graphics.cairo._CairoStatus.CairoStatus_Impl_.INVALID_STRIDE = 24;
+lime.graphics.cairo._CairoStatus.CairoStatus_Impl_.FONT_TYPE_MISMATCH = 25;
+lime.graphics.cairo._CairoStatus.CairoStatus_Impl_.USER_FONT_IMMUTABLE = 26;
+lime.graphics.cairo._CairoStatus.CairoStatus_Impl_.USER_FONT_ERROR = 27;
+lime.graphics.cairo._CairoStatus.CairoStatus_Impl_.NEGATIVE_COUNT = 28;
+lime.graphics.cairo._CairoStatus.CairoStatus_Impl_.INVALID_CLUSTERS = 29;
+lime.graphics.cairo._CairoStatus.CairoStatus_Impl_.INVALID_SLANT = 30;
+lime.graphics.cairo._CairoStatus.CairoStatus_Impl_.INVALID_WEIGHT = 31;
+lime.graphics.cairo._CairoStatus.CairoStatus_Impl_.INVALID_SIZE = 32;
+lime.graphics.cairo._CairoStatus.CairoStatus_Impl_.USER_FONT_NOT_IMPLEMENTED = 33;
+lime.graphics.cairo._CairoStatus.CairoStatus_Impl_.DEVICE_TYPE_MISMATCH = 34;
+lime.graphics.cairo._CairoStatus.CairoStatus_Impl_.DEVICE_ERROR = 35;
+lime.graphics.cairo._CairoStatus.CairoStatus_Impl_.INVALID_MESH_CONSTRUCTION = 36;
+lime.graphics.cairo._CairoStatus.CairoStatus_Impl_.DEVICE_FINISHED = 37;
+lime.graphics.cairo._CairoStatus.CairoStatus_Impl_.JBIG2_GLOBAL_MISSING = 38;
 lime.graphics.opengl.GL.DEPTH_BUFFER_BIT = 256;
 lime.graphics.opengl.GL.STENCIL_BUFFER_BIT = 1024;
 lime.graphics.opengl.GL.COLOR_BUFFER_BIT = 16384;
@@ -25200,6 +27242,7 @@ lime.ui._KeyModifier.KeyModifier_Impl_.CTRL = 192;
 lime.ui._KeyModifier.KeyModifier_Impl_.SHIFT = 3;
 lime.ui._KeyModifier.KeyModifier_Impl_.ALT = 768;
 lime.ui._KeyModifier.KeyModifier_Impl_.META = 3072;
+lime.utils.ByteArray.lime_byte_array_get_native_pointer = lime.system.System.load("lime","lime_byte_array_get_native_pointer",1);
 lime.utils.ByteArray.lime_byte_array_overwrite_file = lime.system.System.load("lime","lime_byte_array_overwrite_file",2);
 lime.utils.ByteArray.lime_byte_array_read_file = lime.system.System.load("lime","lime_byte_array_read_file",1);
 lime.utils.ByteArray.lime_lzma_decode = lime.system.System.load("lime","lime_lzma_decode",1);
@@ -25219,22 +27262,23 @@ openfl.system.ApplicationDomain.currentDomain = new openfl.system.ApplicationDom
 openfl.geom.Matrix.__identity = new openfl.geom.Matrix();
 openfl.Lib.current = new openfl.display.MovieClip();
 openfl.Lib.__sentWarnings = new haxe.ds.StringMap();
+openfl._internal.renderer.TextFieldGraphics.bitmapData = new haxe.ds.ObjectMap();
+openfl._internal.renderer.TextFieldGraphics.glyphs = new haxe.ds.ObjectMap();
+openfl._internal.renderer.TextFieldGraphics.tilesheets = new haxe.ds.ObjectMap();
+openfl._internal.renderer.TextFieldGraphics.tileIDs = new haxe.ds.ObjectMap();
+openfl._internal.renderer.cairo.CairoGraphics.SIN45 = 0.70710678118654752440084436210485;
+openfl._internal.renderer.cairo.CairoGraphics.TAN22 = 0.4142135623730950488016887242097;
 openfl._internal.renderer.canvas.CanvasGraphics.SIN45 = 0.70710678118654752440084436210485;
 openfl._internal.renderer.canvas.CanvasGraphics.TAN22 = 0.4142135623730950488016887242097;
 openfl._internal.renderer.opengl.GLRenderer.blendModesWebGL = null;
 openfl._internal.renderer.opengl.GLRenderer.glContextId = 0;
 openfl._internal.renderer.opengl.GLRenderer.glContexts = [];
-openfl._internal.renderer.opengl.GLTextField.bitmapData = new haxe.ds.ObjectMap();
-openfl._internal.renderer.opengl.GLTextField.glyphs = new haxe.ds.ObjectMap();
-openfl._internal.renderer.opengl.GLTextField.tilesheets = new haxe.ds.ObjectMap();
-openfl._internal.renderer.opengl.GLTextField.tileIDs = new haxe.ds.ObjectMap();
 openfl._internal.renderer.opengl.shaders2.Shader.UID = 0;
 openfl._internal.renderer.opengl.shaders2._DefaultShader.Attrib_Impl_.Position = "aPosition";
 openfl._internal.renderer.opengl.shaders2._DefaultShader.Attrib_Impl_.TexCoord = "aTexCoord0";
 openfl._internal.renderer.opengl.shaders2._DefaultShader.Attrib_Impl_.Color = "aColor";
 openfl._internal.renderer.opengl.shaders2._DefaultShader.Uniform_Impl_.Sampler = "uSampler0";
-openfl._internal.renderer.opengl.shaders2._DefaultShader.Uniform_Impl_.ProjectionVector = "uProjectionVector";
-openfl._internal.renderer.opengl.shaders2._DefaultShader.Uniform_Impl_.OffsetVector = "uOffsetVector";
+openfl._internal.renderer.opengl.shaders2._DefaultShader.Uniform_Impl_.ProjectionMatrix = "uProjectionMatrix";
 openfl._internal.renderer.opengl.shaders2._DefaultShader.Uniform_Impl_.Color = "uColor";
 openfl._internal.renderer.opengl.shaders2._DefaultShader.Uniform_Impl_.Alpha = "uAlpha";
 openfl._internal.renderer.opengl.shaders2._DefaultShader.Uniform_Impl_.ColorMultiplier = "uColorMultiplier";
@@ -25244,16 +27288,14 @@ openfl._internal.renderer.opengl.shaders2._DrawTrianglesShader.Attrib_Impl_.TexC
 openfl._internal.renderer.opengl.shaders2._DrawTrianglesShader.Attrib_Impl_.Color = "aColor";
 openfl._internal.renderer.opengl.shaders2._DrawTrianglesShader.Uniform_Impl_.UseTexture = "uUseTexture";
 openfl._internal.renderer.opengl.shaders2._DrawTrianglesShader.Uniform_Impl_.Sampler = "uSampler0";
-openfl._internal.renderer.opengl.shaders2._DrawTrianglesShader.Uniform_Impl_.ProjectionVector = "uProjectionVector";
-openfl._internal.renderer.opengl.shaders2._DrawTrianglesShader.Uniform_Impl_.OffsetVector = "uOffsetVector";
+openfl._internal.renderer.opengl.shaders2._DrawTrianglesShader.Uniform_Impl_.ProjectionMatrix = "uProjectionMatrix";
 openfl._internal.renderer.opengl.shaders2._DrawTrianglesShader.Uniform_Impl_.Color = "uColor";
 openfl._internal.renderer.opengl.shaders2._DrawTrianglesShader.Uniform_Impl_.Alpha = "uAlpha";
 openfl._internal.renderer.opengl.shaders2._DrawTrianglesShader.Uniform_Impl_.ColorMultiplier = "uColorMultiplier";
 openfl._internal.renderer.opengl.shaders2._DrawTrianglesShader.Uniform_Impl_.ColorOffset = "uColorOffset";
 openfl._internal.renderer.opengl.shaders2._FillShader.Attrib_Impl_.Position = "aPosition";
 openfl._internal.renderer.opengl.shaders2._FillShader.Uniform_Impl_.TranslationMatrix = "uTranslationMatrix";
-openfl._internal.renderer.opengl.shaders2._FillShader.Uniform_Impl_.ProjectionVector = "uProjectionVector";
-openfl._internal.renderer.opengl.shaders2._FillShader.Uniform_Impl_.OffsetVector = "uOffsetVector";
+openfl._internal.renderer.opengl.shaders2._FillShader.Uniform_Impl_.ProjectionMatrix = "uProjectionMatrix";
 openfl._internal.renderer.opengl.shaders2._FillShader.Uniform_Impl_.Color = "uColor";
 openfl._internal.renderer.opengl.shaders2._FillShader.Uniform_Impl_.Alpha = "uAlpha";
 openfl._internal.renderer.opengl.shaders2._FillShader.Uniform_Impl_.ColorMultiplier = "uColorMultiplier";
@@ -25264,8 +27306,7 @@ openfl._internal.renderer.opengl.shaders2._PatternFillShader.Uniform_Impl_.Patte
 openfl._internal.renderer.opengl.shaders2._PatternFillShader.Uniform_Impl_.PatternTL = "uPatternTL";
 openfl._internal.renderer.opengl.shaders2._PatternFillShader.Uniform_Impl_.PatternBR = "uPatternBR";
 openfl._internal.renderer.opengl.shaders2._PatternFillShader.Uniform_Impl_.Sampler = "uSampler0";
-openfl._internal.renderer.opengl.shaders2._PatternFillShader.Uniform_Impl_.ProjectionVector = "uProjectionVector";
-openfl._internal.renderer.opengl.shaders2._PatternFillShader.Uniform_Impl_.OffsetVector = "uOffsetVector";
+openfl._internal.renderer.opengl.shaders2._PatternFillShader.Uniform_Impl_.ProjectionMatrix = "uProjectionMatrix";
 openfl._internal.renderer.opengl.shaders2._PatternFillShader.Uniform_Impl_.Color = "uColor";
 openfl._internal.renderer.opengl.shaders2._PatternFillShader.Uniform_Impl_.Alpha = "uAlpha";
 openfl._internal.renderer.opengl.shaders2._PatternFillShader.Uniform_Impl_.ColorMultiplier = "uColorMultiplier";
@@ -25273,8 +27314,7 @@ openfl._internal.renderer.opengl.shaders2._PatternFillShader.Uniform_Impl_.Color
 openfl._internal.renderer.opengl.shaders2._PrimitiveShader.Attrib_Impl_.Position = "aPosition";
 openfl._internal.renderer.opengl.shaders2._PrimitiveShader.Attrib_Impl_.Color = "aColor";
 openfl._internal.renderer.opengl.shaders2._PrimitiveShader.Uniform_Impl_.TranslationMatrix = "uTranslationMatrix";
-openfl._internal.renderer.opengl.shaders2._PrimitiveShader.Uniform_Impl_.ProjectionVector = "uProjectionVector";
-openfl._internal.renderer.opengl.shaders2._PrimitiveShader.Uniform_Impl_.OffsetVector = "uOffsetVector";
+openfl._internal.renderer.opengl.shaders2._PrimitiveShader.Uniform_Impl_.ProjectionMatrix = "uProjectionMatrix";
 openfl._internal.renderer.opengl.shaders2._PrimitiveShader.Uniform_Impl_.Alpha = "uAlpha";
 openfl._internal.renderer.opengl.shaders2._PrimitiveShader.Uniform_Impl_.ColorMultiplier = "uColorMultiplier";
 openfl._internal.renderer.opengl.shaders2._PrimitiveShader.Uniform_Impl_.ColorOffset = "uColorOffset";
