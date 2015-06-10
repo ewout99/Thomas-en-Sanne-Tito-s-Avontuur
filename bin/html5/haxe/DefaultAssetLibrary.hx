@@ -45,11 +45,65 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		#if flash
 		
+		className.set ("img/Background.png", __ASSET__img_background_png);
+		type.set ("img/Background.png", AssetType.IMAGE);
+		className.set ("img/bottombutton.png", __ASSET__img_bottombutton_png);
+		type.set ("img/bottombutton.png", AssetType.IMAGE);
+		className.set ("img/bottombuttonhover.png", __ASSET__img_bottombuttonhover_png);
+		type.set ("img/bottombuttonhover.png", AssetType.IMAGE);
+		className.set ("img/Button.png", __ASSET__img_button_png);
+		type.set ("img/Button.png", AssetType.IMAGE);
+		className.set ("img/ButtonHover.png", __ASSET__img_buttonhover_png);
+		type.set ("img/ButtonHover.png", AssetType.IMAGE);
+		className.set ("img/middlebutton.png", __ASSET__img_middlebutton_png);
+		type.set ("img/middlebutton.png", AssetType.IMAGE);
+		className.set ("img/middlebuttonhover.png", __ASSET__img_middlebuttonhover_png);
+		type.set ("img/middlebuttonhover.png", AssetType.IMAGE);
+		className.set ("img/topbutton.png", __ASSET__img_topbutton_png);
+		type.set ("img/topbutton.png", AssetType.IMAGE);
+		className.set ("img/topbuttonhover.png", __ASSET__img_topbuttonhover_png);
+		type.set ("img/topbuttonhover.png", AssetType.IMAGE);
 		
 		
 		#elseif html5
 		
 		var id;
+		id = "img/Background.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "img/bottombutton.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "img/bottombuttonhover.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "img/Button.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "img/ButtonHover.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "img/middlebutton.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "img/middlebuttonhover.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "img/topbutton.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "img/topbuttonhover.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
 		
 		
 		var assetsPrefix = ApplicationMain.config.assetsPrefix;
@@ -64,11 +118,47 @@ class DefaultAssetLibrary extends AssetLibrary {
 		#if openfl
 		
 		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		#end
 		
 		#if (windows || mac || linux)
 		
 		var useManifest = false;
+		
+		className.set ("img/Background.png", __ASSET__img_background_png);
+		type.set ("img/Background.png", AssetType.IMAGE);
+		
+		className.set ("img/bottombutton.png", __ASSET__img_bottombutton_png);
+		type.set ("img/bottombutton.png", AssetType.IMAGE);
+		
+		className.set ("img/bottombuttonhover.png", __ASSET__img_bottombuttonhover_png);
+		type.set ("img/bottombuttonhover.png", AssetType.IMAGE);
+		
+		className.set ("img/Button.png", __ASSET__img_button_png);
+		type.set ("img/Button.png", AssetType.IMAGE);
+		
+		className.set ("img/ButtonHover.png", __ASSET__img_buttonhover_png);
+		type.set ("img/ButtonHover.png", AssetType.IMAGE);
+		
+		className.set ("img/middlebutton.png", __ASSET__img_middlebutton_png);
+		type.set ("img/middlebutton.png", AssetType.IMAGE);
+		
+		className.set ("img/middlebuttonhover.png", __ASSET__img_middlebuttonhover_png);
+		type.set ("img/middlebuttonhover.png", AssetType.IMAGE);
+		
+		className.set ("img/topbutton.png", __ASSET__img_topbutton_png);
+		type.set ("img/topbutton.png", AssetType.IMAGE);
+		
+		className.set ("img/topbuttonhover.png", __ASSET__img_topbuttonhover_png);
+		type.set ("img/topbuttonhover.png", AssetType.IMAGE);
 		
 		
 		if (useManifest) {
@@ -670,9 +760,27 @@ class DefaultAssetLibrary extends AssetLibrary {
 #if !display
 #if flash
 
+@:keep @:bind #if display private #end class __ASSET__img_background_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_bottombutton_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_bottombuttonhover_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_button_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_buttonhover_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_middlebutton_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_middlebuttonhover_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_topbutton_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_topbuttonhover_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 
 
 #elseif html5
+
+
+
+
+
+
+
+
+
 
 
 
@@ -683,6 +791,15 @@ class DefaultAssetLibrary extends AssetLibrary {
 #if (windows || mac || linux)
 
 
+@:image("assets/img/Background.png") #if display private #end class __ASSET__img_background_png extends lime.graphics.Image {}
+@:image("assets/img/bottombutton.png") #if display private #end class __ASSET__img_bottombutton_png extends lime.graphics.Image {}
+@:image("assets/img/bottombuttonhover.png") #if display private #end class __ASSET__img_bottombuttonhover_png extends lime.graphics.Image {}
+@:image("assets/img/Button.png") #if display private #end class __ASSET__img_button_png extends lime.graphics.Image {}
+@:image("assets/img/ButtonHover.png") #if display private #end class __ASSET__img_buttonhover_png extends lime.graphics.Image {}
+@:image("assets/img/middlebutton.png") #if display private #end class __ASSET__img_middlebutton_png extends lime.graphics.Image {}
+@:image("assets/img/middlebuttonhover.png") #if display private #end class __ASSET__img_middlebuttonhover_png extends lime.graphics.Image {}
+@:image("assets/img/topbutton.png") #if display private #end class __ASSET__img_topbutton_png extends lime.graphics.Image {}
+@:image("assets/img/topbuttonhover.png") #if display private #end class __ASSET__img_topbuttonhover_png extends lime.graphics.Image {}
 
 
 

@@ -26,6 +26,24 @@ ApplicationMain.create = function() {
 	ApplicationMain.preloader.create(ApplicationMain.config);
 	var urls = [];
 	var types = [];
+	urls.push("img/Background.png");
+	types.push("IMAGE");
+	urls.push("img/bottombutton.png");
+	types.push("IMAGE");
+	urls.push("img/bottombuttonhover.png");
+	types.push("IMAGE");
+	urls.push("img/Button.png");
+	types.push("IMAGE");
+	urls.push("img/ButtonHover.png");
+	types.push("IMAGE");
+	urls.push("img/middlebutton.png");
+	types.push("IMAGE");
+	urls.push("img/middlebuttonhover.png");
+	types.push("IMAGE");
+	urls.push("img/topbutton.png");
+	types.push("IMAGE");
+	urls.push("img/topbuttonhover.png");
+	types.push("IMAGE");
 	if(ApplicationMain.config.assetsPrefix != null) {
 		var _g1 = 0;
 		var _g = urls.length;
@@ -48,7 +66,7 @@ ApplicationMain.init = function() {
 	if(loaded == total) ApplicationMain.start();
 };
 ApplicationMain.main = function() {
-	ApplicationMain.config = { antialiasing : 0, background : 0, borderless : false, company : "Ezzz", depthBuffer : false, file : "ThomasenSanneTitosAvontuur", fps : 60, fullscreen : false, height : 480, orientation : "", packageName : "ThomasenSanneTitosAvontuur", resizable : true, stencilBuffer : true, title : "Thomas-en-Sanne-Tito-s-Avontuur", version : "1.0.0", vsync : false, width : 800};
+	ApplicationMain.config = { antialiasing : 0, background : 0, borderless : false, company : "Ezzz", depthBuffer : false, file : "ThomasenSanneTitosAvontuur", fps : 60, fullscreen : false, height : 720, orientation : "", packageName : "ThomasenSanneTitosAvontuur", resizable : true, stencilBuffer : true, title : "Thomas-en-Sanne-Tito-s-Avontuur", version : "1.0.0", vsync : false, width : 1280};
 };
 ApplicationMain.start = function() {
 	var hasMain = false;
@@ -973,11 +991,21 @@ openfl.display.Sprite.prototype = $extend(openfl.display.DisplayObjectContainer.
 	,__class__: openfl.display.Sprite
 });
 var Main = function() {
+	this.currentLevel = 0;
+	this.currentChar = 0;
+	this.sound = new Sound();
+	this.music = new Music();
+	this.musicvolume = 1;
+	this.soundvolume = 1;
 	openfl.display.Sprite.call(this);
 	this.addEventListener(openfl.events.Event.ADDED_TO_STAGE,$bind(this,this.added));
 };
 $hxClasses["Main"] = Main;
 Main.__name__ = ["Main"];
+Main.instance = null;
+Main.getInstance = function() {
+	return Main.instance;
+};
 Main.main = function() {
 	openfl.Lib.current.stage.align = openfl.display.StageAlign.TOP_LEFT;
 	openfl.Lib.current.stage.scaleMode = openfl.display.StageScaleMode.NO_SCALE;
@@ -991,6 +1019,34 @@ Main.prototype = $extend(openfl.display.Sprite.prototype,{
 	,init: function() {
 		if(this.inited) return;
 		this.inited = true;
+		Main.instance = this;
+		this.switchScreen("main menu screen");
+		this.addChild(this.sound);
+		this.addChild(this.music);
+	}
+	,switchScreen: function(toScreen) {
+		if(this.currentScreen != null) this.removeChild(this.currentScreen);
+		switch(toScreen) {
+		case "main menu screen":
+			this.currentScreen = new MainMenu();
+			break;
+		case "contact screen":
+			this.currentScreen = new Contact();
+			break;
+		case "char select screen":
+			this.currentScreen = new CharachterSelect();
+			break;
+		case "level select screen":
+			this.currentScreen = new LevelSelect();
+			break;
+		case "options screen":
+			this.currentScreen = new Options();
+			break;
+		case "game screen":
+			this.currentScreen = new Game();
+			break;
+		}
+		this.addChild(this.currentScreen);
 	}
 	,added: function(e) {
 		this.removeEventListener(openfl.events.Event.ADDED_TO_STAGE,$bind(this,this.added));
@@ -1009,6 +1065,99 @@ DocumentClass.__name__ = ["DocumentClass"];
 DocumentClass.__super__ = Main;
 DocumentClass.prototype = $extend(Main.prototype,{
 	__class__: DocumentClass
+});
+var Button = function(text,image,imageHover) {
+	this.buttonTextFormat = new openfl.text.TextFormat("Arial",24,16711935,true,false,false,null,null,openfl.text.TextFormatAlign.CENTER);
+	openfl.display.Sprite.call(this);
+	this.buttonText = new openfl.text.TextField();
+	this.buttonText.set_defaultTextFormat(this.buttonTextFormat);
+	this.buttonText.set_text(text);
+	this.buttonText.selectable = false;
+	this.mainiamge = new openfl.display.Bitmap(openfl.Assets.getBitmapData(image));
+	this.mainImageHover = new openfl.display.Bitmap(openfl.Assets.getBitmapData(imageHover));
+	this.buttonText.set_x(this.mainiamge.get_x() + (this.mainiamge.get_width() - this.buttonText.get_width()) / 2);
+	this.buttonText.set_y(this.mainiamge.get_y() + (this.mainiamge.get_width() - this.mainiamge.get_width()) / 2);
+	this.draw();
+	this.addEventListener(openfl.events.MouseEvent.MOUSE_OVER,$bind(this,this.OnMouseOver));
+	this.addEventListener(openfl.events.MouseEvent.MOUSE_OUT,$bind(this,this.OnMouseOut));
+};
+$hxClasses["Button"] = Button;
+Button.__name__ = ["Button"];
+Button.__super__ = openfl.display.Sprite;
+Button.prototype = $extend(openfl.display.Sprite.prototype,{
+	draw: function() {
+		this.addChild(this.mainiamge);
+		this.addChild(this.buttonText);
+	}
+	,OnMouseOver: function(e) {
+		this.removeChildren();
+		this.addChild(this.mainImageHover);
+		this.addChild(this.buttonText);
+	}
+	,OnMouseOut: function(e) {
+		this.removeChildren();
+		this.addChild(this.mainiamge);
+		this.addChild(this.buttonText);
+	}
+	,__class__: Button
+});
+var CharachterSelect = function() {
+	this.Y = openfl.Lib.current.stage.stageHeight;
+	this.X = openfl.Lib.current.stage.stageWidth;
+	this.charSanne = new Button("Sanne","img/middlebutton.png","img/middlebuttonhover.png");
+	this.charThomas = new Button("Thomas","img/middlebutton.png","img/middlebuttonhover.png");
+	openfl.display.Sprite.call(this);
+	this.drawButtons();
+};
+$hxClasses["CharachterSelect"] = CharachterSelect;
+CharachterSelect.__name__ = ["CharachterSelect"];
+CharachterSelect.__super__ = openfl.display.Sprite;
+CharachterSelect.prototype = $extend(openfl.display.Sprite.prototype,{
+	drawButtons: function() {
+		this.charThomas.set_x(200);
+		this.charThomas.set_y(600);
+		this.charSanne.set_x(700);
+		this.charSanne.set_y(600);
+		this.addChild(this.charSanne);
+		this.addChild(this.charThomas);
+		this.charSanne.addEventListener(openfl.events.MouseEvent.CLICK,$bind(this,this.charSelect));
+		this.charThomas.addEventListener(openfl.events.MouseEvent.CLICK,$bind(this,this.charSelect));
+	}
+	,charSelect: function(e) {
+		if(e.currentTarget == this.charThomas) {
+			Main.getInstance().currentChar = 1;
+			haxe.Log.trace(Main.getInstance().currentChar,{ fileName : "CharachterSelect.hx", lineNumber : 49, className : "CharachterSelect", methodName : "charSelect"});
+			Main.getInstance().switchScreen("game screen");
+		}
+		if(e.currentTarget == this.charSanne) {
+			Main.getInstance().currentChar = 2;
+			haxe.Log.trace(Main.getInstance().currentChar,{ fileName : "CharachterSelect.hx", lineNumber : 57, className : "CharachterSelect", methodName : "charSelect"});
+			Main.getInstance().switchScreen("game screen");
+		}
+	}
+	,__class__: CharachterSelect
+});
+var Contact = function() {
+	this.Y = openfl.Lib.current.stage.stageHeight;
+	this.X = openfl.Lib.current.stage.stageWidth;
+	this.returnButton = new Button("Main Menu","img/middlebutton.png","img/middlebuttonhover.png");
+	openfl.display.Sprite.call(this);
+	this.drawButton();
+};
+$hxClasses["Contact"] = Contact;
+Contact.__name__ = ["Contact"];
+Contact.__super__ = openfl.display.Sprite;
+Contact.prototype = $extend(openfl.display.Sprite.prototype,{
+	drawButton: function() {
+		this.returnButton.set_x(this.X / 2 - this.returnButton.get_width() / 2);
+		this.returnButton.set_y(this.Y * 3 / 4 - this.returnButton.get_height() / 2);
+		this.addChild(this.returnButton);
+		this.returnButton.addEventListener(openfl.events.MouseEvent.CLICK,$bind(this,this.back));
+	}
+	,back: function(e) {
+		Main.getInstance().switchScreen("main menu screen");
+	}
+	,__class__: Contact
 });
 var lime = {};
 lime.AssetLibrary = function() {
@@ -1073,6 +1222,33 @@ var DefaultAssetLibrary = function() {
 	this.className = new haxe.ds.StringMap();
 	lime.AssetLibrary.call(this);
 	var id;
+	id = "img/Background.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
+	id = "img/bottombutton.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
+	id = "img/bottombuttonhover.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
+	id = "img/Button.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
+	id = "img/ButtonHover.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
+	id = "img/middlebutton.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
+	id = "img/middlebuttonhover.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
+	id = "img/topbutton.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
+	id = "img/topbuttonhover.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
 	var assetsPrefix = ApplicationMain.config.assetsPrefix;
 	if(assetsPrefix != null) {
 		var $it0 = this.path.keys();
@@ -1199,6 +1375,16 @@ EReg.prototype = {
 	}
 	,__class__: EReg
 };
+var Game = function() {
+	openfl.display.Sprite.call(this);
+	haxe.Log.trace("loading Game",{ fileName : "Game.hx", lineNumber : 15, className : "Game", methodName : "new"});
+};
+$hxClasses["Game"] = Game;
+Game.__name__ = ["Game"];
+Game.__super__ = openfl.display.Sprite;
+Game.prototype = $extend(openfl.display.Sprite.prototype,{
+	__class__: Game
+});
 var HxOverrides = function() { };
 $hxClasses["HxOverrides"] = HxOverrides;
 HxOverrides.__name__ = ["HxOverrides"];
@@ -1241,6 +1427,103 @@ HxOverrides.iter = function(a) {
 		return this.arr[this.cur++];
 	}};
 };
+var LevelSelect = function() {
+	this.Y = openfl.Lib.current.stage.stageHeight;
+	this.X = openfl.Lib.current.stage.stageWidth;
+	this.levelTwo = new Button("Level 2 ","img/middlebutton.png","img/middlebuttonhover.png");
+	this.levelOne = new Button("Level 1","img/middlebutton.png","img/middlebuttonhover.png");
+	this.returnButton = new Button("Main Menu","img/middlebutton.png","img/middlebuttonhover.png");
+	openfl.display.Sprite.call(this);
+	this.drawButton();
+};
+$hxClasses["LevelSelect"] = LevelSelect;
+LevelSelect.__name__ = ["LevelSelect"];
+LevelSelect.__super__ = openfl.display.Sprite;
+LevelSelect.prototype = $extend(openfl.display.Sprite.prototype,{
+	drawButton: function() {
+		this.levelOne.set_x(this.X / 2 - this.levelOne.get_width() / 2);
+		this.levelOne.set_y(this.Y / 4 - this.levelOne.get_height() / 2);
+		this.addChild(this.levelOne);
+		this.levelOne.addEventListener(openfl.events.MouseEvent.CLICK,$bind(this,this.back));
+		this.levelTwo.set_x(this.X / 2 - this.levelTwo.get_width() / 2);
+		this.levelTwo.set_y(this.Y * 2 / 4 - this.levelTwo.get_height() / 2);
+		this.addChild(this.levelTwo);
+		this.levelTwo.addEventListener(openfl.events.MouseEvent.CLICK,$bind(this,this.back));
+		this.returnButton.set_x(this.X / 2 - this.returnButton.get_width() / 2);
+		this.returnButton.set_y(this.Y * 3 / 4 - this.returnButton.get_height() / 2);
+		this.addChild(this.returnButton);
+		this.returnButton.addEventListener(openfl.events.MouseEvent.CLICK,$bind(this,this.back));
+	}
+	,back: function(e) {
+		if(e.currentTarget == this.levelOne) {
+			Main.getInstance().currentLevel = 1;
+			haxe.Log.trace(Main.getInstance().currentLevel,{ fileName : "LevelSelect.hx", lineNumber : 49, className : "LevelSelect", methodName : "back"});
+			Main.getInstance().switchScreen("main menu screen");
+		}
+		if(e.currentTarget == this.levelTwo) {
+			Main.getInstance().currentLevel = 2;
+			haxe.Log.trace(Main.getInstance().currentLevel,{ fileName : "LevelSelect.hx", lineNumber : 56, className : "LevelSelect", methodName : "back"});
+			Main.getInstance().switchScreen("main menu screen");
+		}
+		if(e.currentTarget == this.returnButton) Main.getInstance().switchScreen("main menu screen");
+	}
+	,__class__: LevelSelect
+});
+var MainMenu = function() {
+	this.Y = openfl.Lib.current.stage.stageHeight;
+	this.X = openfl.Lib.current.stage.stageWidth;
+	this.start = new Button("Start game","img/topbutton.png","img/topbuttonhover.png");
+	this.exit = new Button("Exit game","img/bottombutton.png","img/bottombuttonhover.png");
+	this.contact = new Button("Contact","img/middlebutton.png","img/middlebuttonhover.png");
+	this.options = new Button("Options","img/middlebutton.png","img/middlebuttonhover.png");
+	this.levelSelect = new Button("Level Select","img/middlebutton.png","img/middlebuttonhover.png");
+	openfl.display.Sprite.call(this);
+	this.addEventListener(openfl.events.Event.ADDED_TO_STAGE,$bind(this,this.init));
+};
+$hxClasses["MainMenu"] = MainMenu;
+MainMenu.__name__ = ["MainMenu"];
+MainMenu.__super__ = openfl.display.Sprite;
+MainMenu.prototype = $extend(openfl.display.Sprite.prototype,{
+	init: function(event) {
+		this.removeEventListener(openfl.events.Event.ADDED_TO_STAGE,$bind(this,this.init));
+		this.drawbackground();
+		this.drawmenu();
+	}
+	,drawbackground: function() {
+		var background = new openfl.display.Bitmap(openfl.Assets.getBitmapData("img/Background.png"));
+		this.addChildAt(background,0);
+	}
+	,drawmenu: function() {
+		this.addChild(this.start);
+		this.addChild(this.levelSelect);
+		this.addChild(this.options);
+		this.addChild(this.contact);
+		this.addChild(this.exit);
+		this.start.set_x(this.X / 2 - this.start.get_width() / 2);
+		this.start.set_y(150);
+		this.levelSelect.set_x(this.X / 2 - this.levelSelect.get_width() / 2);
+		this.levelSelect.set_y(250);
+		this.options.set_x(this.X / 2 - this.options.get_width() / 2);
+		this.options.set_y(350);
+		this.contact.set_x(this.X / 2 - this.contact.get_width() / 2);
+		this.contact.set_y(450);
+		this.exit.set_x(this.X / 2 - this.exit.get_width() / 2);
+		this.exit.set_y(550);
+		this.start.addEventListener(openfl.events.MouseEvent.CLICK,$bind(this,this.click));
+		this.levelSelect.addEventListener(openfl.events.MouseEvent.CLICK,$bind(this,this.click));
+		this.options.addEventListener(openfl.events.MouseEvent.CLICK,$bind(this,this.click));
+		this.contact.addEventListener(openfl.events.MouseEvent.CLICK,$bind(this,this.click));
+		this.exit.addEventListener(openfl.events.MouseEvent.CLICK,$bind(this,this.click));
+	}
+	,click: function(event) {
+		if(event.currentTarget == this.start) Main.getInstance().switchScreen("char select screen");
+		if(event.currentTarget == this.levelSelect) Main.getInstance().switchScreen("level select screen");
+		if(event.currentTarget == this.options) Main.getInstance().switchScreen("options screen");
+		if(event.currentTarget == this.contact) Main.getInstance().switchScreen("contact screen");
+		if(event.currentTarget == this.exit) haxe.Log.trace("Exit",{ fileName : "MainMenu.hx", lineNumber : 104, className : "MainMenu", methodName : "click"});
+	}
+	,__class__: MainMenu
+});
 var IMap = function() { };
 $hxClasses["IMap"] = IMap;
 IMap.__name__ = ["IMap"];
@@ -1248,6 +1531,15 @@ IMap.prototype = {
 	__class__: IMap
 };
 Math.__name__ = ["Math"];
+var Music = function() {
+	openfl.display.Sprite.call(this);
+};
+$hxClasses["Music"] = Music;
+Music.__name__ = ["Music"];
+Music.__super__ = openfl.display.Sprite;
+Music.prototype = $extend(openfl.display.Sprite.prototype,{
+	__class__: Music
+});
 var NMEPreloader = function() {
 	openfl.display.Sprite.call(this);
 	var backgroundColor = this.getBackgroundColor();
@@ -1284,11 +1576,11 @@ NMEPreloader.prototype = $extend(openfl.display.Sprite.prototype,{
 		return 0;
 	}
 	,getHeight: function() {
-		var height = 480;
+		var height = 720;
 		if(height > 0) return height; else return openfl.Lib.current.stage.stageHeight;
 	}
 	,getWidth: function() {
-		var width = 800;
+		var width = 1280;
 		if(width > 0) return width; else return openfl.Lib.current.stage.stageWidth;
 	}
 	,onInit: function() {
@@ -1302,6 +1594,54 @@ NMEPreloader.prototype = $extend(openfl.display.Sprite.prototype,{
 		this.progress.set_scaleX(percentLoaded);
 	}
 	,__class__: NMEPreloader
+});
+var Options = function() {
+	this.Y = openfl.Lib.current.stage.stageHeight;
+	this.X = openfl.Lib.current.stage.stageWidth;
+	this.decreaseMusic = new Button("- Music","img/middlebutton.png","img/middlebuttonhover.png");
+	this.increaseMusic = new Button("+ Music","img/middlebutton.png","img/middlebuttonhover.png");
+	this.decreaseSound = new Button("- Sound","img/middlebutton.png","img/middlebuttonhover.png");
+	this.increaseSound = new Button("+ Sound","img/middlebutton.png","img/middlebuttonhover.png");
+	this.returnButton = new Button("Main Menu","img/middlebutton.png","img/middlebuttonhover.png");
+	openfl.display.Sprite.call(this);
+	this.drawButton();
+};
+$hxClasses["Options"] = Options;
+Options.__name__ = ["Options"];
+Options.__super__ = openfl.display.Sprite;
+Options.prototype = $extend(openfl.display.Sprite.prototype,{
+	drawButton: function() {
+		this.increaseSound.set_x(600);
+		this.increaseSound.set_y(50);
+		this.increaseSound.addEventListener(openfl.events.MouseEvent.CLICK,$bind(this,this.editSound));
+		this.addChild(this.increaseSound);
+		this.decreaseSound.set_x(100);
+		this.decreaseSound.set_y(50);
+		this.decreaseSound.addEventListener(openfl.events.MouseEvent.CLICK,$bind(this,this.editSound));
+		this.addChild(this.decreaseSound);
+		this.increaseMusic.set_x(600);
+		this.increaseMusic.set_y(300);
+		this.increaseMusic.addEventListener(openfl.events.MouseEvent.CLICK,$bind(this,this.editSound));
+		this.addChild(this.increaseMusic);
+		this.decreaseMusic.set_x(100);
+		this.decreaseMusic.set_y(300);
+		this.decreaseMusic.addEventListener(openfl.events.MouseEvent.CLICK,$bind(this,this.editSound));
+		this.addChild(this.decreaseMusic);
+		this.returnButton.set_x(this.X / 2 - this.returnButton.get_width() / 2);
+		this.returnButton.set_y(this.Y * 3 / 4 - this.returnButton.get_height() / 2);
+		this.addChild(this.returnButton);
+		this.returnButton.addEventListener(openfl.events.MouseEvent.CLICK,$bind(this,this.back));
+	}
+	,editSound: function(e) {
+		if(e.currentTarget == this.increaseMusic) Main.getInstance().musicvolume += 0.1;
+		if(e.currentTarget == this.decreaseMusic) Main.getInstance().musicvolume -= 0.1;
+		if(e.currentTarget == this.increaseSound) Main.getInstance().soundvolume += 0.1;
+		if(e.currentTarget == this.decreaseSound) Main.getInstance().soundvolume -= 0.1;
+	}
+	,back: function(e) {
+		Main.getInstance().switchScreen("main menu screen");
+	}
+	,__class__: Options
 });
 var Reflect = function() { };
 $hxClasses["Reflect"] = Reflect;
@@ -1357,6 +1697,15 @@ Reflect.makeVarArgs = function(f) {
 		return f(a);
 	};
 };
+var Sound = function() {
+	openfl.display.Sprite.call(this);
+};
+$hxClasses["Sound"] = Sound;
+Sound.__name__ = ["Sound"];
+Sound.__super__ = openfl.display.Sprite;
+Sound.prototype = $extend(openfl.display.Sprite.prototype,{
+	__class__: Sound
+});
 var Std = function() { };
 $hxClasses["Std"] = Std;
 Std.__name__ = ["Std"];
@@ -9534,6 +9883,341 @@ lime.utils.IMemoryRange.__name__ = ["lime","utils","IMemoryRange"];
 lime.utils.IMemoryRange.prototype = {
 	__class__: lime.utils.IMemoryRange
 };
+openfl.IAssetCache = function() { };
+$hxClasses["openfl.IAssetCache"] = openfl.IAssetCache;
+openfl.IAssetCache.__name__ = ["openfl","IAssetCache"];
+openfl.IAssetCache.prototype = {
+	__class__: openfl.IAssetCache
+};
+openfl.AssetCache = function() {
+	this.__enabled = true;
+	this.bitmapData = new haxe.ds.StringMap();
+	this.font = new haxe.ds.StringMap();
+	this.sound = new haxe.ds.StringMap();
+};
+$hxClasses["openfl.AssetCache"] = openfl.AssetCache;
+openfl.AssetCache.__name__ = ["openfl","AssetCache"];
+openfl.AssetCache.__interfaces__ = [openfl.IAssetCache];
+openfl.AssetCache.prototype = {
+	clear: function(prefix) {
+		if(prefix == null) {
+			this.bitmapData = new haxe.ds.StringMap();
+			this.font = new haxe.ds.StringMap();
+			this.sound = new haxe.ds.StringMap();
+		} else {
+			var keys = this.bitmapData.keys();
+			while( keys.hasNext() ) {
+				var key = keys.next();
+				if(StringTools.startsWith(key,prefix)) this.bitmapData.remove(key);
+			}
+			var keys1 = this.font.keys();
+			while( keys1.hasNext() ) {
+				var key1 = keys1.next();
+				if(StringTools.startsWith(key1,prefix)) this.font.remove(key1);
+			}
+			var keys2 = this.sound.keys();
+			while( keys2.hasNext() ) {
+				var key2 = keys2.next();
+				if(StringTools.startsWith(key2,prefix)) this.sound.remove(key2);
+			}
+		}
+	}
+	,getBitmapData: function(id) {
+		return this.bitmapData.get(id);
+	}
+	,getFont: function(id) {
+		return this.font.get(id);
+	}
+	,getSound: function(id) {
+		return this.sound.get(id);
+	}
+	,hasBitmapData: function(id) {
+		return this.bitmapData.exists(id);
+	}
+	,hasFont: function(id) {
+		return this.font.exists(id);
+	}
+	,hasSound: function(id) {
+		return this.sound.exists(id);
+	}
+	,removeBitmapData: function(id) {
+		return this.bitmapData.remove(id);
+	}
+	,removeFont: function(id) {
+		return this.font.remove(id);
+	}
+	,removeSound: function(id) {
+		return this.sound.remove(id);
+	}
+	,setBitmapData: function(id,bitmapData) {
+		this.bitmapData.set(id,bitmapData);
+	}
+	,setFont: function(id,font) {
+		this.font.set(id,font);
+	}
+	,setSound: function(id,sound) {
+		this.sound.set(id,sound);
+	}
+	,get_enabled: function() {
+		return this.__enabled;
+	}
+	,set_enabled: function(value) {
+		return this.__enabled = value;
+	}
+	,__class__: openfl.AssetCache
+};
+openfl.Assets = function() { };
+$hxClasses["openfl.Assets"] = openfl.Assets;
+openfl.Assets.__name__ = ["openfl","Assets"];
+openfl.Assets.addEventListener = function(type,listener,useCapture,priority,useWeakReference) {
+	if(useWeakReference == null) useWeakReference = false;
+	if(priority == null) priority = 0;
+	if(useCapture == null) useCapture = false;
+	openfl.Assets.dispatcher.addEventListener(type,listener,useCapture,priority,useWeakReference);
+};
+openfl.Assets.dispatchEvent = function(event) {
+	return openfl.Assets.dispatcher.dispatchEvent(event);
+};
+openfl.Assets.exists = function(id,type) {
+	return lime.Assets.exists(id,type);
+};
+openfl.Assets.getBitmapData = function(id,useCache) {
+	if(useCache == null) useCache = true;
+	if(useCache && openfl.Assets.cache.get_enabled() && openfl.Assets.cache.hasBitmapData(id)) {
+		var bitmapData = openfl.Assets.cache.getBitmapData(id);
+		if(openfl.Assets.isValidBitmapData(bitmapData)) return bitmapData;
+	}
+	var image = lime.Assets.getImage(id,false);
+	if(image != null) {
+		var bitmapData1 = openfl.display.BitmapData.fromImage(image);
+		if(useCache && openfl.Assets.cache.get_enabled()) openfl.Assets.cache.setBitmapData(id,bitmapData1);
+		return bitmapData1;
+	}
+	return null;
+};
+openfl.Assets.getBytes = function(id) {
+	return lime.Assets.getBytes(id);
+};
+openfl.Assets.getFont = function(id,useCache) {
+	if(useCache == null) useCache = true;
+	if(useCache && openfl.Assets.cache.get_enabled() && openfl.Assets.cache.hasFont(id)) return openfl.Assets.cache.getFont(id);
+	var limeFont = lime.Assets.getFont(id,false);
+	if(limeFont != null) {
+		var font = openfl.text.Font.__fromLimeFont(limeFont);
+		if(useCache && openfl.Assets.cache.get_enabled()) openfl.Assets.cache.setFont(id,font);
+		return font;
+	}
+	return new openfl.text.Font();
+};
+openfl.Assets.getLibrary = function(name) {
+	if(name == null || name == "") name = "default";
+	return lime.Assets.libraries.get(name);
+};
+openfl.Assets.getMovieClip = function(id) {
+	var libraryName = id.substring(0,id.indexOf(":"));
+	var symbolName;
+	var pos = id.indexOf(":") + 1;
+	symbolName = HxOverrides.substr(id,pos,null);
+	var library = openfl.Assets.getLibrary(libraryName);
+	if(library != null) {
+		if(library.exists(symbolName,"MOVIE_CLIP")) {
+			if(library.isLocal(symbolName,"MOVIE_CLIP")) return library.getMovieClip(symbolName); else haxe.Log.trace("[openfl.Assets] MovieClip asset \"" + id + "\" exists, but only asynchronously",{ fileName : "Assets.hx", lineNumber : 221, className : "openfl.Assets", methodName : "getMovieClip"});
+		} else haxe.Log.trace("[openfl.Assets] There is no MovieClip asset with an ID of \"" + id + "\"",{ fileName : "Assets.hx", lineNumber : 227, className : "openfl.Assets", methodName : "getMovieClip"});
+	} else haxe.Log.trace("[openfl.Assets] There is no asset library named \"" + libraryName + "\"",{ fileName : "Assets.hx", lineNumber : 233, className : "openfl.Assets", methodName : "getMovieClip"});
+	return null;
+};
+openfl.Assets.getMusic = function(id,useCache) {
+	if(useCache == null) useCache = true;
+	var path = lime.Assets.getPath(id);
+	if(path != null) return new openfl.media.Sound(new openfl.net.URLRequest(path));
+	return null;
+};
+openfl.Assets.getPath = function(id) {
+	return lime.Assets.getPath(id);
+};
+openfl.Assets.getSound = function(id,useCache) {
+	if(useCache == null) useCache = true;
+	if(useCache && openfl.Assets.cache.get_enabled() && openfl.Assets.cache.hasSound(id)) {
+		var sound = openfl.Assets.cache.getSound(id);
+		if(openfl.Assets.isValidSound(sound)) return sound;
+	}
+	var path = lime.Assets.getPath(id);
+	if(path != null) return new openfl.media.Sound(new openfl.net.URLRequest(path));
+	return null;
+};
+openfl.Assets.getText = function(id) {
+	return lime.Assets.getText(id);
+};
+openfl.Assets.hasEventListener = function(type) {
+	return openfl.Assets.dispatcher.hasEventListener(type);
+};
+openfl.Assets.isLocal = function(id,type,useCache) {
+	if(useCache == null) useCache = true;
+	if(useCache && openfl.Assets.cache.get_enabled()) {
+		if(type == "IMAGE" || type == null) {
+			if(openfl.Assets.cache.hasBitmapData(id)) return true;
+		}
+		if(type == "FONT" || type == null) {
+			if(openfl.Assets.cache.hasFont(id)) return true;
+		}
+		if(type == "SOUND" || type == "MUSIC" || type == null) {
+			if(openfl.Assets.cache.hasSound(id)) return true;
+		}
+	}
+	var libraryName = id.substring(0,id.indexOf(":"));
+	var symbolName;
+	var pos = id.indexOf(":") + 1;
+	symbolName = HxOverrides.substr(id,pos,null);
+	var library = openfl.Assets.getLibrary(libraryName);
+	if(library != null) return library.isLocal(symbolName,type);
+	return false;
+};
+openfl.Assets.isValidBitmapData = function(bitmapData) {
+	return bitmapData != null;
+	return true;
+};
+openfl.Assets.isValidSound = function(sound) {
+	return true;
+};
+openfl.Assets.list = function(type) {
+	return lime.Assets.list(type);
+};
+openfl.Assets.loadBitmapData = function(id,handler,useCache) {
+	if(useCache == null) useCache = true;
+	if(useCache && openfl.Assets.cache.get_enabled() && openfl.Assets.cache.hasBitmapData(id)) {
+		var bitmapData = openfl.Assets.cache.getBitmapData(id);
+		if(openfl.Assets.isValidBitmapData(bitmapData)) {
+			handler(bitmapData);
+			return;
+		}
+	}
+	lime.Assets.loadImage(id,function(image) {
+		if(image != null) {
+			var bitmapData1 = openfl.display.BitmapData.fromImage(image);
+			if(useCache && openfl.Assets.cache.get_enabled()) openfl.Assets.cache.setBitmapData(id,bitmapData1);
+			handler(bitmapData1);
+		}
+	},false);
+};
+openfl.Assets.loadBytes = function(id,handler) {
+	var libraryName = id.substring(0,id.indexOf(":"));
+	var symbolName;
+	var pos = id.indexOf(":") + 1;
+	symbolName = HxOverrides.substr(id,pos,null);
+	var library = openfl.Assets.getLibrary(libraryName);
+	if(library != null) {
+		if(library.exists(symbolName,"BINARY")) {
+			library.loadBytes(symbolName,handler);
+			return;
+		} else haxe.Log.trace("[openfl.Assets] There is no String or ByteArray asset with an ID of \"" + id + "\"",{ fileName : "Assets.hx", lineNumber : 546, className : "openfl.Assets", methodName : "loadBytes"});
+	} else haxe.Log.trace("[openfl.Assets] There is no asset library named \"" + libraryName + "\"",{ fileName : "Assets.hx", lineNumber : 552, className : "openfl.Assets", methodName : "loadBytes"});
+	handler(null);
+};
+openfl.Assets.loadFont = function(id,handler,useCache) {
+	if(useCache == null) useCache = true;
+	if(useCache && openfl.Assets.cache.get_enabled() && openfl.Assets.cache.hasFont(id)) {
+		handler(openfl.Assets.cache.getFont(id));
+		return;
+	}
+	var libraryName = id.substring(0,id.indexOf(":"));
+	var symbolName;
+	var pos = id.indexOf(":") + 1;
+	symbolName = HxOverrides.substr(id,pos,null);
+	var library = openfl.Assets.getLibrary(libraryName);
+	if(library != null) {
+		if(library.exists(symbolName,"FONT")) {
+			library.loadFont(symbolName,function(limeFont) {
+				var font = openfl.text.Font.__fromLimeFont(limeFont);
+				if(useCache && openfl.Assets.cache.get_enabled()) openfl.Assets.cache.setFont(id,font);
+				handler(font);
+			});
+			return;
+		} else haxe.Log.trace("[openfl.Assets] There is no Font asset with an ID of \"" + id + "\"",{ fileName : "Assets.hx", lineNumber : 611, className : "openfl.Assets", methodName : "loadFont"});
+	} else haxe.Log.trace("[openfl.Assets] There is no asset library named \"" + libraryName + "\"",{ fileName : "Assets.hx", lineNumber : 617, className : "openfl.Assets", methodName : "loadFont"});
+	handler(null);
+};
+openfl.Assets.loadLibrary = function(name,handler) {
+	lime.Assets.loadLibrary(name,handler);
+};
+openfl.Assets.loadMusic = function(id,handler,useCache) {
+	if(useCache == null) useCache = true;
+	handler(openfl.Assets.getMusic(id,useCache));
+};
+openfl.Assets.loadMovieClip = function(id,handler) {
+	var libraryName = id.substring(0,id.indexOf(":"));
+	var symbolName;
+	var pos = id.indexOf(":") + 1;
+	symbolName = HxOverrides.substr(id,pos,null);
+	var library = openfl.Assets.getLibrary(libraryName);
+	if(library != null) {
+		if(library.exists(symbolName,"MOVIE_CLIP")) {
+			library.loadMovieClip(symbolName,handler);
+			return;
+		} else haxe.Log.trace("[openfl.Assets] There is no MovieClip asset with an ID of \"" + id + "\"",{ fileName : "Assets.hx", lineNumber : 695, className : "openfl.Assets", methodName : "loadMovieClip"});
+	} else haxe.Log.trace("[openfl.Assets] There is no asset library named \"" + libraryName + "\"",{ fileName : "Assets.hx", lineNumber : 701, className : "openfl.Assets", methodName : "loadMovieClip"});
+	handler(null);
+};
+openfl.Assets.loadSound = function(id,handler,useCache) {
+	if(useCache == null) useCache = true;
+	handler(openfl.Assets.getSound(id,useCache));
+};
+openfl.Assets.loadText = function(id,handler) {
+	lime.Assets.loadText(id,handler);
+};
+openfl.Assets.registerLibrary = function(name,library) {
+	lime.Assets.registerLibrary(name,library);
+};
+openfl.Assets.removeEventListener = function(type,listener,capture) {
+	if(capture == null) capture = false;
+	openfl.Assets.dispatcher.removeEventListener(type,listener,capture);
+};
+openfl.Assets.resolveClass = function(name) {
+	return Type.resolveClass(name);
+};
+openfl.Assets.resolveEnum = function(name) {
+	var value = Type.resolveEnum(name);
+	return value;
+};
+openfl.Assets.unloadLibrary = function(name) {
+	lime.Assets.unloadLibrary(name);
+};
+openfl.Assets.library_onEvent = function(library,type) {
+	if(type == "change") {
+		openfl.Assets.cache.clear();
+		openfl.Assets.dispatchEvent(new openfl.events.Event(openfl.events.Event.CHANGE));
+	}
+};
+openfl.AssetLibrary = function() {
+	lime.AssetLibrary.call(this);
+};
+$hxClasses["openfl.AssetLibrary"] = openfl.AssetLibrary;
+openfl.AssetLibrary.__name__ = ["openfl","AssetLibrary"];
+openfl.AssetLibrary.__super__ = lime.AssetLibrary;
+openfl.AssetLibrary.prototype = $extend(lime.AssetLibrary.prototype,{
+	getMovieClip: function(id) {
+		return null;
+	}
+	,getMusic: function(id) {
+		return this.getSound(id);
+	}
+	,getSound: function(id) {
+		return null;
+	}
+	,loadMovieClip: function(id,handler) {
+		handler(this.getMovieClip(id));
+	}
+	,loadMusic: function(id,handler) {
+		handler(this.getMusic(id));
+	}
+	,loadSound: function(id,handler) {
+		handler(this.getSound(id));
+	}
+	,__class__: openfl.AssetLibrary
+});
+openfl._Assets = {};
+openfl._Assets.AssetType_Impl_ = function() { };
+$hxClasses["openfl._Assets.AssetType_Impl_"] = openfl._Assets.AssetType_Impl_;
+openfl._Assets.AssetType_Impl_.__name__ = ["openfl","_Assets","AssetType_Impl_"];
 openfl.display.MovieClip = function() {
 	openfl.display.Sprite.call(this);
 	this.__currentFrame = 0;
@@ -23695,6 +24379,12 @@ if(window.createjs != null) createjs.Sound.alternateExtensions = ["ogg","mp3","w
 openfl.display.DisplayObject.__instanceCount = 0;
 openfl.display.DisplayObject.__worldRenderDirty = 0;
 openfl.display.DisplayObject.__worldTransformDirty = 0;
+Main.MAIN_MENU_SCREEN = "main menu screen";
+Main.CHAR_SELECT_SCREEN = "char select screen";
+Main.CONTACT_SCREEN = "contact screen";
+Main.LEVEL_SELECT_SCREEN = "level select screen";
+Main.OPTIONS_SCREEN = "options screen";
+Main.GAME_SCREEN = "game screen";
 haxe.ds.ObjectMap.count = 0;
 js.Boot.__toStr = {}.toString;
 lime.Assets.cache = new lime.AssetCache();
@@ -24514,6 +25204,16 @@ lime.utils.ByteArray.lime_byte_array_overwrite_file = lime.system.System.load("l
 lime.utils.ByteArray.lime_byte_array_read_file = lime.system.System.load("lime","lime_byte_array_read_file",1);
 lime.utils.ByteArray.lime_lzma_decode = lime.system.System.load("lime","lime_lzma_decode",1);
 lime.utils.ByteArray.lime_lzma_encode = lime.system.System.load("lime","lime_lzma_encode",1);
+openfl.Assets.cache = new openfl.AssetCache();
+openfl.Assets.dispatcher = new openfl.events.EventDispatcher();
+openfl._Assets.AssetType_Impl_.BINARY = "BINARY";
+openfl._Assets.AssetType_Impl_.FONT = "FONT";
+openfl._Assets.AssetType_Impl_.IMAGE = "IMAGE";
+openfl._Assets.AssetType_Impl_.MOVIE_CLIP = "MOVIE_CLIP";
+openfl._Assets.AssetType_Impl_.MUSIC = "MUSIC";
+openfl._Assets.AssetType_Impl_.SOUND = "SOUND";
+openfl._Assets.AssetType_Impl_.TEMPLATE = "TEMPLATE";
+openfl._Assets.AssetType_Impl_.TEXT = "TEXT";
 openfl.display.LoaderInfo.__rootURL = window.document.URL;
 openfl.system.ApplicationDomain.currentDomain = new openfl.system.ApplicationDomain(null);
 openfl.geom.Matrix.__identity = new openfl.geom.Matrix();

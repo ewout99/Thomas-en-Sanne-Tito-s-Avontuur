@@ -34,6 +34,42 @@ class ApplicationMain {
 		var types = [];
 		
 		
+		urls.push ("img/Background.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/bottombutton.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/bottombuttonhover.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/Button.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/ButtonHover.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/middlebutton.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/middlebuttonhover.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/topbutton.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/topbuttonhover.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
 		
 		if (config.assetsPrefix != null) {
 			
@@ -102,7 +138,7 @@ class ApplicationMain {
 			file: "ThomasenSanneTitosAvontuur",
 			fps: Std.int (60),
 			fullscreen: false,
-			height: Std.int (480),
+			height: Std.int (720),
 			orientation: "",
 			packageName: "ThomasenSanneTitosAvontuur",
 			resizable: true,
@@ -110,13 +146,13 @@ class ApplicationMain {
 			title: "Thomas-en-Sanne-Tito-s-Avontuur",
 			version: "1.0.0",
 			vsync: false,
-			width: Std.int (800),
+			width: Std.int (1280),
 			
 		}
 		
 		#if (js && html5)
 		#if (munit || utest)
-		openfl.Lib.embed (null, 800, 480, "000000");
+		openfl.Lib.embed (null, 1280, 720, "000000");
 		#end
 		#else
 		create ();

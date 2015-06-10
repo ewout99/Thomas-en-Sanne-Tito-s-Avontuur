@@ -1,8 +1,8 @@
 package ;
 
-import flash.display.Sprite;
-import flash.events.Event;
-import flash.Lib;
+import openfl.display.Sprite;
+import openfl.events.Event;
+import openfl.Lib;
 
 /**
  * ...
@@ -12,41 +12,94 @@ import flash.Lib;
 class Main extends Sprite 
 {
 	var inited:Bool;
-
-	/* ENTRY POINT */
-	// testing github
-	// still testing github
+	public var soundvolume:Float = 1;
+	public var musicvolume:Float = 1;
+	// var menu:MainMenu = new MainMenu ();
+	// var levelselect:LevelSelect = new LevelSelect ();
+	// var contact:Contact = new Contact ();
+	var music:Music = new Music();
+	var sound:Sound = new Sound();
+	// var charSelect:CharachterSelect = new CharachterSelect();
+	// var options:Options = new Options();
+	public static inline var MAIN_MENU_SCREEN:String = "main menu screen";
+	public static inline var CHAR_SELECT_SCREEN:String = "char select screen";
+	public static inline var CONTACT_SCREEN:String = "contact screen";
+	public static inline var LEVEL_SELECT_SCREEN:String = "level select screen";
+	public static inline var OPTIONS_SCREEN:String = "options screen";
+	public static inline var GAME_SCREEN:String = "game screen";
+	
+	public var currentChar:Int = 0;
+	public var currentLevel:Int = 0;
+	
+	var currentScreen:Sprite;
+	public static var instance:Main;
 	
 	
 	function resize(e) 
 	{
 		if (!inited) init();
 		// else (resize or orientation change)
-
 	}
 	
 	function init() 
 	{
 		if (inited) return;
 		inited = true;
-
 		// (your code here)
-		
-		// Stage:
-		// stage.stageWidth x stage.stageHeight @ stage.dpiScale
-		
-		// Assets:
-		// nme.Assets.getBitmapData("img/assetname.jpg");
+		instance = this;
+		switchScreen (Main.MAIN_MENU_SCREEN);
+		// createmenu ();
+		addChild (sound);
+		addChild (music);
 	}
-
-	/* SETUP */
-
+	
+	/**
+	 * 
+	 * Singleton design pattern.
+	 */
+	public static function getInstance():Main
+	{
+		return instance;
+	}
+	/**
+	 * Remove current screen
+	 * Switch to requested screen
+	 */
+	public function switchScreen (toScreen:String)
+	{
+		if ( currentScreen != null )
+		{
+			removeChild (currentScreen);
+			
+		}
+		switch ( toScreen)
+		{
+			case Main.MAIN_MENU_SCREEN:
+				currentScreen = new MainMenu();
+			case Main.CONTACT_SCREEN:
+				currentScreen = new Contact();
+			case Main.CHAR_SELECT_SCREEN:
+				currentScreen = new CharachterSelect();
+			case Main.LEVEL_SELECT_SCREEN:
+				currentScreen = new LevelSelect();
+			case Main.OPTIONS_SCREEN:
+				currentScreen = new Options();
+			case Main.GAME_SCREEN:
+				currentScreen = new Game();
+		}
+		
+		addChild (currentScreen);
+	}
+	
+	
+	
 	public function new() 
 	{
 		super();	
 		addEventListener(Event.ADDED_TO_STAGE, added);
 	}
 
+	
 	function added(e) 
 	{
 		removeEventListener(Event.ADDED_TO_STAGE, added);
