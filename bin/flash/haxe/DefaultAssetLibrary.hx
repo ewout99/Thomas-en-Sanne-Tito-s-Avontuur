@@ -63,6 +63,38 @@ class DefaultAssetLibrary extends AssetLibrary {
 		type.set ("img/topbutton.png", AssetType.IMAGE);
 		className.set ("img/topbuttonhover.png", __ASSET__img_topbuttonhover_png);
 		type.set ("img/topbuttonhover.png", AssetType.IMAGE);
+		className.set ("audio/Buttonclick.mp3", __ASSET__audio_buttonclick_mp3);
+		type.set ("audio/Buttonclick.mp3", AssetType.MUSIC);
+		className.set ("audio/Clock.mp3", __ASSET__audio_clock_mp3);
+		type.set ("audio/Clock.mp3", AssetType.MUSIC);
+		className.set ("audio/Closedoor.mp3", __ASSET__audio_closedoor_mp3);
+		type.set ("audio/Closedoor.mp3", AssetType.MUSIC);
+		className.set ("audio/Closedrawer.mp3", __ASSET__audio_closedrawer_mp3);
+		type.set ("audio/Closedrawer.mp3", AssetType.MUSIC);
+		className.set ("audio/Coin.mp3", __ASSET__audio_coin_mp3);
+		type.set ("audio/Coin.mp3", AssetType.MUSIC);
+		className.set ("audio/Hintpopup.mp3", __ASSET__audio_hintpopup_mp3);
+		type.set ("audio/Hintpopup.mp3", AssetType.MUSIC);
+		className.set ("audio/Huh.mp3", __ASSET__audio_huh_mp3);
+		type.set ("audio/Huh.mp3", AssetType.MUSIC);
+		className.set ("audio/Objectfound.mp3", __ASSET__audio_objectfound_mp3);
+		type.set ("audio/Objectfound.mp3", AssetType.MUSIC);
+		className.set ("audio/Objectfound2.mp3", __ASSET__audio_objectfound2_mp3);
+		type.set ("audio/Objectfound2.mp3", AssetType.MUSIC);
+		className.set ("audio/Objectivecomplete.mp3", __ASSET__audio_objectivecomplete_mp3);
+		type.set ("audio/Objectivecomplete.mp3", AssetType.MUSIC);
+		className.set ("audio/Opendoor.mp3", __ASSET__audio_opendoor_mp3);
+		type.set ("audio/Opendoor.mp3", AssetType.MUSIC);
+		className.set ("audio/Opendrawer.mp3", __ASSET__audio_opendrawer_mp3);
+		type.set ("audio/Opendrawer.mp3", AssetType.MUSIC);
+		className.set ("audio/Papers.mp3", __ASSET__audio_papers_mp3);
+		type.set ("audio/Papers.mp3", AssetType.MUSIC);
+		className.set ("music/GameMusic.mp3", __ASSET__music_gamemusic_mp3);
+		type.set ("music/GameMusic.mp3", AssetType.MUSIC);
+		className.set ("music/Menu.mp3", __ASSET__music_menu_mp3);
+		type.set ("music/Menu.mp3", AssetType.MUSIC);
+		className.set ("music/Winning.mp3", __ASSET__music_winning_mp3);
+		type.set ("music/Winning.mp3", AssetType.MUSIC);
 		
 		
 		#elseif html5
@@ -104,6 +136,70 @@ class DefaultAssetLibrary extends AssetLibrary {
 		path.set (id, id);
 		
 		type.set (id, AssetType.IMAGE);
+		id = "audio/Buttonclick.mp3";
+		path.set (id, id);
+		
+		type.set (id, AssetType.MUSIC);
+		id = "audio/Clock.mp3";
+		path.set (id, id);
+		
+		type.set (id, AssetType.MUSIC);
+		id = "audio/Closedoor.mp3";
+		path.set (id, id);
+		
+		type.set (id, AssetType.MUSIC);
+		id = "audio/Closedrawer.mp3";
+		path.set (id, id);
+		
+		type.set (id, AssetType.MUSIC);
+		id = "audio/Coin.mp3";
+		path.set (id, id);
+		
+		type.set (id, AssetType.MUSIC);
+		id = "audio/Hintpopup.mp3";
+		path.set (id, id);
+		
+		type.set (id, AssetType.MUSIC);
+		id = "audio/Huh.mp3";
+		path.set (id, id);
+		
+		type.set (id, AssetType.MUSIC);
+		id = "audio/Objectfound.mp3";
+		path.set (id, id);
+		
+		type.set (id, AssetType.MUSIC);
+		id = "audio/Objectfound2.mp3";
+		path.set (id, id);
+		
+		type.set (id, AssetType.MUSIC);
+		id = "audio/Objectivecomplete.mp3";
+		path.set (id, id);
+		
+		type.set (id, AssetType.MUSIC);
+		id = "audio/Opendoor.mp3";
+		path.set (id, id);
+		
+		type.set (id, AssetType.MUSIC);
+		id = "audio/Opendrawer.mp3";
+		path.set (id, id);
+		
+		type.set (id, AssetType.MUSIC);
+		id = "audio/Papers.mp3";
+		path.set (id, id);
+		
+		type.set (id, AssetType.MUSIC);
+		id = "music/GameMusic.mp3";
+		path.set (id, id);
+		
+		type.set (id, AssetType.MUSIC);
+		id = "music/Menu.mp3";
+		path.set (id, id);
+		
+		type.set (id, AssetType.MUSIC);
+		id = "music/Winning.mp3";
+		path.set (id, id);
+		
+		type.set (id, AssetType.MUSIC);
 		
 		
 		var assetsPrefix = ApplicationMain.config.assetsPrefix;
@@ -116,6 +212,22 @@ class DefaultAssetLibrary extends AssetLibrary {
 		#else
 		
 		#if openfl
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		
 		
@@ -159,6 +271,54 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		className.set ("img/topbuttonhover.png", __ASSET__img_topbuttonhover_png);
 		type.set ("img/topbuttonhover.png", AssetType.IMAGE);
+		
+		className.set ("audio/Buttonclick.mp3", __ASSET__audio_buttonclick_mp3);
+		type.set ("audio/Buttonclick.mp3", AssetType.MUSIC);
+		
+		className.set ("audio/Clock.mp3", __ASSET__audio_clock_mp3);
+		type.set ("audio/Clock.mp3", AssetType.MUSIC);
+		
+		className.set ("audio/Closedoor.mp3", __ASSET__audio_closedoor_mp3);
+		type.set ("audio/Closedoor.mp3", AssetType.MUSIC);
+		
+		className.set ("audio/Closedrawer.mp3", __ASSET__audio_closedrawer_mp3);
+		type.set ("audio/Closedrawer.mp3", AssetType.MUSIC);
+		
+		className.set ("audio/Coin.mp3", __ASSET__audio_coin_mp3);
+		type.set ("audio/Coin.mp3", AssetType.MUSIC);
+		
+		className.set ("audio/Hintpopup.mp3", __ASSET__audio_hintpopup_mp3);
+		type.set ("audio/Hintpopup.mp3", AssetType.MUSIC);
+		
+		className.set ("audio/Huh.mp3", __ASSET__audio_huh_mp3);
+		type.set ("audio/Huh.mp3", AssetType.MUSIC);
+		
+		className.set ("audio/Objectfound.mp3", __ASSET__audio_objectfound_mp3);
+		type.set ("audio/Objectfound.mp3", AssetType.MUSIC);
+		
+		className.set ("audio/Objectfound2.mp3", __ASSET__audio_objectfound2_mp3);
+		type.set ("audio/Objectfound2.mp3", AssetType.MUSIC);
+		
+		className.set ("audio/Objectivecomplete.mp3", __ASSET__audio_objectivecomplete_mp3);
+		type.set ("audio/Objectivecomplete.mp3", AssetType.MUSIC);
+		
+		className.set ("audio/Opendoor.mp3", __ASSET__audio_opendoor_mp3);
+		type.set ("audio/Opendoor.mp3", AssetType.MUSIC);
+		
+		className.set ("audio/Opendrawer.mp3", __ASSET__audio_opendrawer_mp3);
+		type.set ("audio/Opendrawer.mp3", AssetType.MUSIC);
+		
+		className.set ("audio/Papers.mp3", __ASSET__audio_papers_mp3);
+		type.set ("audio/Papers.mp3", AssetType.MUSIC);
+		
+		className.set ("music/GameMusic.mp3", __ASSET__music_gamemusic_mp3);
+		type.set ("music/GameMusic.mp3", AssetType.MUSIC);
+		
+		className.set ("music/Menu.mp3", __ASSET__music_menu_mp3);
+		type.set ("music/Menu.mp3", AssetType.MUSIC);
+		
+		className.set ("music/Winning.mp3", __ASSET__music_winning_mp3);
+		type.set ("music/Winning.mp3", AssetType.MUSIC);
 		
 		
 		if (useManifest) {
@@ -769,9 +929,41 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:keep @:bind #if display private #end class __ASSET__img_middlebuttonhover_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__img_topbutton_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__img_topbuttonhover_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__audio_buttonclick_mp3 extends flash.media.Sound { }
+@:keep @:bind #if display private #end class __ASSET__audio_clock_mp3 extends flash.media.Sound { }
+@:keep @:bind #if display private #end class __ASSET__audio_closedoor_mp3 extends flash.media.Sound { }
+@:keep @:bind #if display private #end class __ASSET__audio_closedrawer_mp3 extends flash.media.Sound { }
+@:keep @:bind #if display private #end class __ASSET__audio_coin_mp3 extends flash.media.Sound { }
+@:keep @:bind #if display private #end class __ASSET__audio_hintpopup_mp3 extends flash.media.Sound { }
+@:keep @:bind #if display private #end class __ASSET__audio_huh_mp3 extends flash.media.Sound { }
+@:keep @:bind #if display private #end class __ASSET__audio_objectfound_mp3 extends flash.media.Sound { }
+@:keep @:bind #if display private #end class __ASSET__audio_objectfound2_mp3 extends flash.media.Sound { }
+@:keep @:bind #if display private #end class __ASSET__audio_objectivecomplete_mp3 extends flash.media.Sound { }
+@:keep @:bind #if display private #end class __ASSET__audio_opendoor_mp3 extends flash.media.Sound { }
+@:keep @:bind #if display private #end class __ASSET__audio_opendrawer_mp3 extends flash.media.Sound { }
+@:keep @:bind #if display private #end class __ASSET__audio_papers_mp3 extends flash.media.Sound { }
+@:keep @:bind #if display private #end class __ASSET__music_gamemusic_mp3 extends flash.media.Sound { }
+@:keep @:bind #if display private #end class __ASSET__music_menu_mp3 extends flash.media.Sound { }
+@:keep @:bind #if display private #end class __ASSET__music_winning_mp3 extends flash.media.Sound { }
 
 
 #elseif html5
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -800,6 +992,22 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:image("assets/img/middlebuttonhover.png") #if display private #end class __ASSET__img_middlebuttonhover_png extends lime.graphics.Image {}
 @:image("assets/img/topbutton.png") #if display private #end class __ASSET__img_topbutton_png extends lime.graphics.Image {}
 @:image("assets/img/topbuttonhover.png") #if display private #end class __ASSET__img_topbuttonhover_png extends lime.graphics.Image {}
+@:file("assets/audio/Buttonclick.mp3") #if display private #end class __ASSET__audio_buttonclick_mp3 extends lime.utils.ByteArray {}
+@:file("assets/audio/Clock.mp3") #if display private #end class __ASSET__audio_clock_mp3 extends lime.utils.ByteArray {}
+@:file("assets/audio/Closedoor.mp3") #if display private #end class __ASSET__audio_closedoor_mp3 extends lime.utils.ByteArray {}
+@:file("assets/audio/Closedrawer.mp3") #if display private #end class __ASSET__audio_closedrawer_mp3 extends lime.utils.ByteArray {}
+@:file("assets/audio/Coin.mp3") #if display private #end class __ASSET__audio_coin_mp3 extends lime.utils.ByteArray {}
+@:file("assets/audio/Hintpopup.mp3") #if display private #end class __ASSET__audio_hintpopup_mp3 extends lime.utils.ByteArray {}
+@:file("assets/audio/Huh.mp3") #if display private #end class __ASSET__audio_huh_mp3 extends lime.utils.ByteArray {}
+@:file("assets/audio/Objectfound.mp3") #if display private #end class __ASSET__audio_objectfound_mp3 extends lime.utils.ByteArray {}
+@:file("assets/audio/Objectfound2.mp3") #if display private #end class __ASSET__audio_objectfound2_mp3 extends lime.utils.ByteArray {}
+@:file("assets/audio/Objectivecomplete.mp3") #if display private #end class __ASSET__audio_objectivecomplete_mp3 extends lime.utils.ByteArray {}
+@:file("assets/audio/Opendoor.mp3") #if display private #end class __ASSET__audio_opendoor_mp3 extends lime.utils.ByteArray {}
+@:file("assets/audio/Opendrawer.mp3") #if display private #end class __ASSET__audio_opendrawer_mp3 extends lime.utils.ByteArray {}
+@:file("assets/audio/Papers.mp3") #if display private #end class __ASSET__audio_papers_mp3 extends lime.utils.ByteArray {}
+@:file("assets/music/GameMusic.mp3") #if display private #end class __ASSET__music_gamemusic_mp3 extends lime.utils.ByteArray {}
+@:file("assets/music/Menu.mp3") #if display private #end class __ASSET__music_menu_mp3 extends lime.utils.ByteArray {}
+@:file("assets/music/Winning.mp3") #if display private #end class __ASSET__music_winning_mp3 extends lime.utils.ByteArray {}
 
 
 

@@ -1,14 +1,13 @@
 package;
 
-import flash.display.Sprite;
-import flash.events.Event;
+import openfl.display.Sprite;
+import openfl.events.Event;
 import haxe.Timer;
-import flash.Lib;
-import flash.media.SoundChannel;
-import flash.media.SoundTransform;
+import openfl.Lib;
+import openfl.media.SoundChannel;
+import openfl.media.SoundTransform;
 import openfl.display.Sprite;
 import openfl.Assets;
-import openfl.Assets.loadSound;
 import openfl.Assets.loadSound;
 
 /**
@@ -25,13 +24,13 @@ class Music extends Sprite
 
 	// Importing all songs
 	
-	var GameMusic = Assets.getSound("audio/music/GameMusic.mp3");
-	var Menu = Assets.getSound("audio/music/Menu.mp3");
-	var Winning = Assets.getSound("audio/music/Winning.mp3");
+	var GameMusic = Assets.getSound("music/GameMusic.mp3");
+	var Menu = Assets.getSound("music/Menu.mp3");
+	var Winning = Assets.getSound("music/Winning.mp3");
 	
 	// variables for music volume and a soundchannel
 	
-	var musicVolume: Float;
+	var musicVolume:Float;
 	var soundChannel:SoundChannel;
 	
 	public function new() 
@@ -44,7 +43,7 @@ class Music extends Sprite
 	
 	public function updateMusicVolume (input:Float)
 	{
-		this.musicVolume = input ;
+		this.musicVolume += input ;
 	}
 	
 	// function to stop all music
@@ -78,6 +77,7 @@ class Music extends Sprite
 	public function mainMenuMusic ()
 	
 	{
+		trace("playing music");
 		soundChannel = Menu.play();
 		soundChannel.soundTransform = new SoundTransform(musicVolume);
 		soundChannel.addEventListener(Event.SOUND_COMPLETE, mainMenuMusicRepeat );

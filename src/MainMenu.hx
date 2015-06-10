@@ -53,6 +53,7 @@ class MainMenu extends Sprite
 	// Draws the menu to show buttons
 	function drawmenu() 
 	{
+		Main.getInstance().music.mainMenuMusic();
 		addChild(start);
 		addChild(levelSelect);
 		addChild(options);
@@ -102,7 +103,7 @@ class MainMenu extends Sprite
 		if (event.currentTarget == exit)
 			{
 				trace ("Exit");	
-				
+				Main.getInstance().exit();
 			}
 		
 	

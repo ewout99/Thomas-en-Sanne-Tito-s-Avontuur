@@ -102,7 +102,6 @@ class ApplicationMain {
 			file: "ThomasenSanneTitosAvontuur",
 			fps: Std.int (60),
 			fullscreen: false,
-			hardware: true,
 			height: Std.int (720),
 			orientation: "",
 			packageName: "ThomasenSanneTitosAvontuur",

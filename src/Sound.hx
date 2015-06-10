@@ -2,6 +2,7 @@ package;
 
 import openfl.display.Sprite;
 import openfl.events.Event;
+import haxe.Timer;
 import openfl.Lib;
 import openfl.media.SoundChannel;
 import openfl.media.SoundTransform;
@@ -62,7 +63,7 @@ class Sound extends Sprite
 	
 	public function updateSoundVolume (input:Float)
 	{
-		this.soundVolume = input ;
+		this.soundVolume += input ;
 	}
 
 	

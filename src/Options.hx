@@ -61,19 +61,19 @@ class Options extends Sprite
 	{
 		if (e.currentTarget == increaseMusic)
 		{
-			Main.getInstance().musicvolume += 0.1;
+			Main.getInstance().music.updateMusicVolume (0.1);
 		}
 		if (e.currentTarget == decreaseMusic)
 		{
-			Main.getInstance().musicvolume -= 0.1;
+			Main.getInstance().music.updateMusicVolume (- 0.1);
 		}
 		if (e.currentTarget == increaseSound)
 		{
-			Main.getInstance().soundvolume += 0.1;
+			Main.getInstance().sound.updateSoundVolume (0.1);
 		}
 		if (e.currentTarget == decreaseSound)
 		{
-			Main.getInstance().soundvolume -= 0.1;
+			Main.getInstance().sound.updateSoundVolume(-0.1);
 		}
 	}
 	

@@ -3,6 +3,7 @@ package ;
 import openfl.display.Sprite;
 import openfl.events.Event;
 import openfl.Lib;
+import openfl.system.System;
 
 /**
  * ...
@@ -12,13 +13,11 @@ import openfl.Lib;
 class Main extends Sprite 
 {
 	var inited:Bool;
-	public var soundvolume:Float = 1;
-	public var musicvolume:Float = 1;
 	// var menu:MainMenu = new MainMenu ();
 	// var levelselect:LevelSelect = new LevelSelect ();
 	// var contact:Contact = new Contact ();
-	var music:Music = new Music();
-	var sound:Sound = new Sound();
+	public var music:Music = new Music();
+	public var sound:Sound = new Sound();
 	// var charSelect:CharachterSelect = new CharachterSelect();
 	// var options:Options = new Options();
 	public static inline var MAIN_MENU_SCREEN:String = "main menu screen";
@@ -115,7 +114,12 @@ class Main extends Sprite
 	{
 		// static entry point
 		Lib.current.stage.align = flash.display.StageAlign.TOP_LEFT;
-		Lib.current.stage.scaleMode = flash.display.StageScaleMode.NO_SCALE;
+		Lib.current.stage.scaleMode = flash.display.StageScaleMode.EXACT_FIT;
 		Lib.current.addChild(new Main());
+	}
+	
+	public function exit()
+	{
+		System.exit(0);
 	}
 }
