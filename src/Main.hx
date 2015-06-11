@@ -13,13 +13,9 @@ import openfl.system.System;
 class Main extends Sprite 
 {
 	var inited:Bool;
-	// var menu:MainMenu = new MainMenu ();
-	// var levelselect:LevelSelect = new LevelSelect ();
-	// var contact:Contact = new Contact ();
 	public var music:Music = new Music();
 	public var sound:Sound = new Sound();
-	// var charSelect:CharachterSelect = new CharachterSelect();
-	// var options:Options = new Options();
+	
 	public static inline var MAIN_MENU_SCREEN:String = "main menu screen";
 	public static inline var CHAR_SELECT_SCREEN:String = "char select screen";
 	public static inline var CONTACT_SCREEN:String = "contact screen";

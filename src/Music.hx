@@ -41,9 +41,20 @@ class Music extends Sprite
 	
 	// function to adjust the volume in this class, gets the musicvolume float as a input.
 	
-	public function updateMusicVolume (input:Float)
+	public function updateMusicVolume (input:Float, inputDirection:String)
 	{
-		this.musicVolume += input ;
+		if (inputDirection == "up")
+		{ 
+			this.musicVolume += input ;
+			stopMusic();
+			mainMenuMusic();
+		}
+		if ( inputDirection == "down")
+		{
+			this.musicVolume -= input ;
+			stopMusic();
+			mainMenuMusic();
+		}	
 	}
 	
 	// function to stop all music

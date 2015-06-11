@@ -27,7 +27,6 @@ class Sound extends Sprite
 	var closedoor = Assets.getSound("audio/Closedoor.mp3");
 	var closedrawer = Assets.getSound("audio/Closedrawer.mp3");
 	var coin = Assets.getSound("audio/Coin.mp3");
-	var click = Assets.getSound("audio/Click3.wav");
 	var hintpopup = Assets.getSound("audio/Hintpopup.mp3");
 	var huh = Assets.getSound("audio/Huh.mp3");
 	var objectivecomplete = Assets.getSound("audio/Objectivecomplete.mp3");
@@ -50,22 +49,29 @@ class Sound extends Sprite
 		this.soundVolume = 1 ; // default sound volume
 	}
 	
-	// Function that gets called with a string input, this will choose the sound it will play and activate functions acourdinly.
-	// When there is only one sound it will play directly form this function.
-	
-
-	//public function testingSound ()
-	//{
-		//channel = beep.play( 0, 0, new SoundTransform(soundVolume ) );
-	//}
-	
-	// function to adjust the volume in this class, gets the soundvolume float as a input.
-	
-	public function updateSoundVolume (input:Float)
+	public function playSound(input:String)
 	{
-		this.soundVolume += input ;
+		switch(input)
+		{
+			case ("click"):
+				channel = buttonclick.play();
+				channel.soundTransform = new SoundTransform(soundVolume);
+		}
 	}
-
+	
+	//function to adjust the volume in this class, gets the soundvolume float as a input.
+	
+	public function updateSoundVolume (input:Float, inputDirection:String)
+	{
+		if (inputDirection == "up")
+		{ 
+			this.soundVolume += input ;
+		}
+		if ( inputDirection == "down")
+		{
+			this.soundVolume -= input ;
+		}	
+	}
 	
 
 	

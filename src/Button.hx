@@ -3,6 +3,7 @@ package ;
 import openfl.display.Bitmap;
 import openfl.display.Sprite;
 import openfl.Assets;
+import openfl.events.Event;
 import openfl.events.MouseEvent;
 import openfl.Lib;
 import openfl.text.TextField;
@@ -41,6 +42,7 @@ class Button extends Sprite
 		draw();
 		addEventListener(MouseEvent.MOUSE_OVER, OnMouseOver);
 		addEventListener(MouseEvent.MOUSE_OUT, OnMouseOut);
+		addEventListener(MouseEvent.CLICK, playSound);
 	}
 	
 	// The draw function draws the inital button 
@@ -62,11 +64,17 @@ class Button extends Sprite
 	
 	// When the mouse hover away from the button the child thats is called in the draw funtion is recalled//
 	
-	function OnMouseOut(e:MouseEvent) {
+	function OnMouseOut(e:MouseEvent) 
+	{
 		removeChildren();
 		addChild(mainiamge);
 		addChild(buttonText);
 	}
-
+	
+	function playSound (event:MouseEvent)
+	{
+		Main.getInstance().sound.playSound("click");
+		trace ("Click");
+	}
 	
 }
