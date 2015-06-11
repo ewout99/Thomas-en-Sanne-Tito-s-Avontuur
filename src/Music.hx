@@ -23,11 +23,16 @@ class Music extends Sprite
 {
 
 	// Importing all songs
-	
+	#if flash
 	var GameMusic = Assets.getSound("music/GameMusic.mp3");
 	var Menu = Assets.getSound("music/Menu.mp3");
 	var Winning = Assets.getSound("music/Winning.mp3");
-	
+	#elseif html5
+	var GameMusic = Assets.getSound("music/GameMusic.ogg");
+	var Menu = Assets.getSound("music/Menu.ogg");
+	var Winning = Assets.getSound("music/Winning.ogg");
+	#end
+
 	// variables for music volume and a soundchannel
 	
 	var musicVolume:Float;

@@ -63,6 +63,38 @@ class DefaultAssetLibrary extends AssetLibrary {
 		type.set ("img/topbutton.png", AssetType.IMAGE);
 		path.set ("img/topbuttonhover.png", "img/topbuttonhover.png");
 		type.set ("img/topbuttonhover.png", AssetType.IMAGE);
+		path.set ("audio/Buttonclick.mp3", "audio/Buttonclick.mp3");
+		type.set ("audio/Buttonclick.mp3", AssetType.MUSIC);
+		path.set ("audio/Clock.mp3", "audio/Clock.mp3");
+		type.set ("audio/Clock.mp3", AssetType.MUSIC);
+		path.set ("audio/Closedoor.mp3", "audio/Closedoor.mp3");
+		type.set ("audio/Closedoor.mp3", AssetType.MUSIC);
+		path.set ("audio/Closedrawer.mp3", "audio/Closedrawer.mp3");
+		type.set ("audio/Closedrawer.mp3", AssetType.MUSIC);
+		path.set ("audio/Coin.mp3", "audio/Coin.mp3");
+		type.set ("audio/Coin.mp3", AssetType.MUSIC);
+		path.set ("audio/Hintpopup.mp3", "audio/Hintpopup.mp3");
+		type.set ("audio/Hintpopup.mp3", AssetType.MUSIC);
+		path.set ("audio/Huh.mp3", "audio/Huh.mp3");
+		type.set ("audio/Huh.mp3", AssetType.MUSIC);
+		path.set ("audio/Objectfound.mp3", "audio/Objectfound.mp3");
+		type.set ("audio/Objectfound.mp3", AssetType.MUSIC);
+		path.set ("audio/Objectfound2.mp3", "audio/Objectfound2.mp3");
+		type.set ("audio/Objectfound2.mp3", AssetType.MUSIC);
+		path.set ("audio/Objectivecomplete.mp3", "audio/Objectivecomplete.mp3");
+		type.set ("audio/Objectivecomplete.mp3", AssetType.MUSIC);
+		path.set ("audio/Opendoor.mp3", "audio/Opendoor.mp3");
+		type.set ("audio/Opendoor.mp3", AssetType.MUSIC);
+		path.set ("audio/Opendrawer.mp3", "audio/Opendrawer.mp3");
+		type.set ("audio/Opendrawer.mp3", AssetType.MUSIC);
+		path.set ("audio/Papers.mp3", "audio/Papers.mp3");
+		type.set ("audio/Papers.mp3", AssetType.MUSIC);
+		path.set ("music/GameMusic.mp3", "music/GameMusic.mp3");
+		type.set ("music/GameMusic.mp3", AssetType.MUSIC);
+		path.set ("music/Menu.mp3", "music/Menu.mp3");
+		type.set ("music/Menu.mp3", AssetType.MUSIC);
+		path.set ("music/Winning.mp3", "music/Winning.mp3");
+		type.set ("music/Winning.mp3", AssetType.MUSIC);
 		
 		
 		#elseif html5
@@ -95,6 +127,54 @@ class DefaultAssetLibrary extends AssetLibrary {
 		id = "img/topbuttonhover.png";
 		path.set (id, id);
 		type.set (id, AssetType.IMAGE);
+		id = "audio/Buttonclick.mp3";
+		path.set (id, id);
+		type.set (id, AssetType.MUSIC);
+		id = "audio/Clock.mp3";
+		path.set (id, id);
+		type.set (id, AssetType.MUSIC);
+		id = "audio/Closedoor.mp3";
+		path.set (id, id);
+		type.set (id, AssetType.MUSIC);
+		id = "audio/Closedrawer.mp3";
+		path.set (id, id);
+		type.set (id, AssetType.MUSIC);
+		id = "audio/Coin.mp3";
+		path.set (id, id);
+		type.set (id, AssetType.MUSIC);
+		id = "audio/Hintpopup.mp3";
+		path.set (id, id);
+		type.set (id, AssetType.MUSIC);
+		id = "audio/Huh.mp3";
+		path.set (id, id);
+		type.set (id, AssetType.MUSIC);
+		id = "audio/Objectfound.mp3";
+		path.set (id, id);
+		type.set (id, AssetType.MUSIC);
+		id = "audio/Objectfound2.mp3";
+		path.set (id, id);
+		type.set (id, AssetType.MUSIC);
+		id = "audio/Objectivecomplete.mp3";
+		path.set (id, id);
+		type.set (id, AssetType.MUSIC);
+		id = "audio/Opendoor.mp3";
+		path.set (id, id);
+		type.set (id, AssetType.MUSIC);
+		id = "audio/Opendrawer.mp3";
+		path.set (id, id);
+		type.set (id, AssetType.MUSIC);
+		id = "audio/Papers.mp3";
+		path.set (id, id);
+		type.set (id, AssetType.MUSIC);
+		id = "music/GameMusic.mp3";
+		path.set (id, id);
+		type.set (id, AssetType.MUSIC);
+		id = "music/Menu.mp3";
+		path.set (id, id);
+		type.set (id, AssetType.MUSIC);
+		id = "music/Winning.mp3";
+		path.set (id, id);
+		type.set (id, AssetType.MUSIC);
 		
 		
 		var assetsPrefix = ApplicationMain.config.assetsPrefix;
@@ -118,11 +198,43 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		
 		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		#end
 		
 		#if (windows || mac || linux)
 		
 		var useManifest = false;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
 		useManifest = true;
 		useManifest = true;
 		useManifest = true;
@@ -744,7 +856,39 @@ class DefaultAssetLibrary extends AssetLibrary {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #elseif html5
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

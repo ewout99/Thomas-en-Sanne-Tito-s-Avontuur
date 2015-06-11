@@ -74,60 +74,124 @@ class ApplicationMain {
 		types.push (lime.Assets.AssetType.MUSIC);
 		
 		
+		urls.push ("audio/Buttonclick.ogg");
+		types.push (lime.Assets.AssetType.SOUND);
+		
+		
 		urls.push ("audio/Clock.mp3");
 		types.push (lime.Assets.AssetType.MUSIC);
+		
+		
+		urls.push ("audio/Clock.ogg");
+		types.push (lime.Assets.AssetType.SOUND);
 		
 		
 		urls.push ("audio/Closedoor.mp3");
 		types.push (lime.Assets.AssetType.MUSIC);
 		
 		
+		urls.push ("audio/Closedoor.ogg");
+		types.push (lime.Assets.AssetType.SOUND);
+		
+		
 		urls.push ("audio/Closedrawer.mp3");
 		types.push (lime.Assets.AssetType.MUSIC);
+		
+		
+		urls.push ("audio/Closedrawer.ogg");
+		types.push (lime.Assets.AssetType.SOUND);
 		
 		
 		urls.push ("audio/Coin.mp3");
 		types.push (lime.Assets.AssetType.MUSIC);
 		
 		
+		urls.push ("audio/Coin.ogg");
+		types.push (lime.Assets.AssetType.SOUND);
+		
+		
 		urls.push ("audio/Hintpopup.mp3");
 		types.push (lime.Assets.AssetType.MUSIC);
+		
+		
+		urls.push ("audio/Hintpopup.ogg");
+		types.push (lime.Assets.AssetType.SOUND);
 		
 		
 		urls.push ("audio/Huh.mp3");
 		types.push (lime.Assets.AssetType.MUSIC);
 		
 		
+		urls.push ("audio/Huh.ogg");
+		types.push (lime.Assets.AssetType.SOUND);
+		
+		
+		urls.push ("audio/Menu.ogg");
+		types.push (lime.Assets.AssetType.SOUND);
+		
+		
 		urls.push ("audio/Objectfound.mp3");
 		types.push (lime.Assets.AssetType.MUSIC);
+		
+		
+		urls.push ("audio/Objectfound.ogg");
+		types.push (lime.Assets.AssetType.SOUND);
 		
 		
 		urls.push ("audio/Objectfound2.mp3");
 		types.push (lime.Assets.AssetType.MUSIC);
 		
 		
+		urls.push ("audio/Objectfound2.ogg");
+		types.push (lime.Assets.AssetType.SOUND);
+		
+		
 		urls.push ("audio/Objectivecomplete.mp3");
 		types.push (lime.Assets.AssetType.MUSIC);
+		
+		
+		urls.push ("audio/Objectivecomplete.ogg");
+		types.push (lime.Assets.AssetType.SOUND);
 		
 		
 		urls.push ("audio/Opendoor.mp3");
 		types.push (lime.Assets.AssetType.MUSIC);
 		
 		
+		urls.push ("audio/Opendoor.ogg");
+		types.push (lime.Assets.AssetType.SOUND);
+		
+		
 		urls.push ("audio/Opendrawer.mp3");
 		types.push (lime.Assets.AssetType.MUSIC);
+		
+		
+		urls.push ("audio/Opendrawer.ogg");
+		types.push (lime.Assets.AssetType.SOUND);
 		
 		
 		urls.push ("audio/Papers.mp3");
 		types.push (lime.Assets.AssetType.MUSIC);
 		
 		
+		urls.push ("audio/Papers.ogg");
+		types.push (lime.Assets.AssetType.SOUND);
+		
+		
 		urls.push ("music/GameMusic.mp3");
 		types.push (lime.Assets.AssetType.MUSIC);
 		
 		
+		urls.push ("music/GameMusic.ogg");
+		types.push (lime.Assets.AssetType.SOUND);
+		
+		
 		urls.push ("music/Menu.mp3");
 		types.push (lime.Assets.AssetType.MUSIC);
+		
+		
+		urls.push ("music/Menu.ogg");
+		types.push (lime.Assets.AssetType.SOUND);
 		
 		
 		urls.push ("music/Winning.mp3");
