@@ -6,7 +6,6 @@ import haxe.Timer;
 import openfl.Lib;
 import openfl.media.SoundChannel;
 import openfl.media.SoundTransform;
-import openfl.display.Sprite;
 import openfl.Assets;
 import openfl.Assets.loadSound;
 

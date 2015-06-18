@@ -1,8 +1,10 @@
 package ;
 import openfl.display.Sprite;
+import openfl.display.Bitmap;
 import openfl.events.Event;
 import openfl.events.MouseEvent;
 import openfl.Lib;
+import openfl.Assets;
 /**
  * Options screen
  * Change volumes etc.
@@ -23,7 +25,13 @@ class Options extends Sprite
 	public function new() 
 	{
 		super();
+		drawbackground();
 		drawButton();
+	}
+	private	function drawbackground()
+	{
+		var background = new Bitmap(Assets.getBitmapData("img/Optionsbackground.png"));
+		addChildAt (background, 0);
 	}
 	
 	// Draws all buttons and adds eventlistner to make the buttons usefull

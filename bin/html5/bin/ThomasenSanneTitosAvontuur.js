@@ -36,9 +36,17 @@ ApplicationMain.create = function() {
 	types.push("IMAGE");
 	urls.push("img/ButtonHover.png");
 	types.push("IMAGE");
+	urls.push("img/Contactbackground.png");
+	types.push("IMAGE");
+	urls.push("img/Levelkiezen.png");
+	types.push("IMAGE");
+	urls.push("img/Menubackground.png");
+	types.push("IMAGE");
 	urls.push("img/middlebutton.png");
 	types.push("IMAGE");
 	urls.push("img/middlebuttonhover.png");
+	types.push("IMAGE");
+	urls.push("img/Optionsbackground.png");
 	types.push("IMAGE");
 	urls.push("img/topbutton.png");
 	types.push("IMAGE");
@@ -1303,13 +1311,18 @@ var Contact = function() {
 	this.X = openfl.Lib.current.stage.stageWidth;
 	this.returnButton = new Button("Main Menu","img/middlebutton.png","img/middlebuttonhover.png");
 	openfl.display.Sprite.call(this);
+	this.drawbackground();
 	this.drawButton();
 };
 $hxClasses["Contact"] = Contact;
 Contact.__name__ = ["Contact"];
 Contact.__super__ = openfl.display.Sprite;
 Contact.prototype = $extend(openfl.display.Sprite.prototype,{
-	drawButton: function() {
+	drawbackground: function() {
+		var background = new openfl.display.Bitmap(openfl.Assets.getBitmapData("img/Contactbackground.png"));
+		this.addChildAt(background,0);
+	}
+	,drawButton: function() {
 		this.returnButton.set_x(this.X / 2 - this.returnButton.get_width() / 2);
 		this.returnButton.set_y(this.Y * 3 / 4 - this.returnButton.get_height() / 2);
 		this.addChild(this.returnButton);
@@ -1398,10 +1411,22 @@ var DefaultAssetLibrary = function() {
 	id = "img/ButtonHover.png";
 	this.path.set(id,id);
 	this.type.set(id,"IMAGE");
+	id = "img/Contactbackground.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
+	id = "img/Levelkiezen.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
+	id = "img/Menubackground.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
 	id = "img/middlebutton.png";
 	this.path.set(id,id);
 	this.type.set(id,"IMAGE");
 	id = "img/middlebuttonhover.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
+	id = "img/Optionsbackground.png";
 	this.path.set(id,id);
 	this.type.set(id,"IMAGE");
 	id = "img/topbutton.png";
@@ -1719,13 +1744,18 @@ var LevelSelect = function() {
 	this.levelOne = new Button("Level 1","img/middlebutton.png","img/middlebuttonhover.png");
 	this.returnButton = new Button("Main Menu","img/middlebutton.png","img/middlebuttonhover.png");
 	openfl.display.Sprite.call(this);
+	this.drawbackground();
 	this.drawButton();
 };
 $hxClasses["LevelSelect"] = LevelSelect;
 LevelSelect.__name__ = ["LevelSelect"];
 LevelSelect.__super__ = openfl.display.Sprite;
 LevelSelect.prototype = $extend(openfl.display.Sprite.prototype,{
-	drawButton: function() {
+	drawbackground: function() {
+		var background = new openfl.display.Bitmap(openfl.Assets.getBitmapData("img/Contactbackground.png"));
+		this.addChildAt(background,0);
+	}
+	,drawButton: function() {
 		this.levelOne.set_x(this.X / 2 - this.levelOne.get_width() / 2);
 		this.levelOne.set_y(this.Y / 4 - this.levelOne.get_height() / 2);
 		this.addChild(this.levelOne);
@@ -1742,12 +1772,12 @@ LevelSelect.prototype = $extend(openfl.display.Sprite.prototype,{
 	,back: function(e) {
 		if(e.currentTarget == this.levelOne) {
 			Main.getInstance().currentLevel = 1;
-			haxe.Log.trace(Main.getInstance().currentLevel,{ fileName : "LevelSelect.hx", lineNumber : 49, className : "LevelSelect", methodName : "back"});
+			haxe.Log.trace(Main.getInstance().currentLevel,{ fileName : "LevelSelect.hx", lineNumber : 58, className : "LevelSelect", methodName : "back"});
 			Main.getInstance().switchScreen("main menu screen");
 		}
 		if(e.currentTarget == this.levelTwo) {
 			Main.getInstance().currentLevel = 2;
-			haxe.Log.trace(Main.getInstance().currentLevel,{ fileName : "LevelSelect.hx", lineNumber : 56, className : "LevelSelect", methodName : "back"});
+			haxe.Log.trace(Main.getInstance().currentLevel,{ fileName : "LevelSelect.hx", lineNumber : 65, className : "LevelSelect", methodName : "back"});
 			Main.getInstance().switchScreen("main menu screen");
 		}
 		if(e.currentTarget == this.returnButton) Main.getInstance().switchScreen("main menu screen");
@@ -1775,7 +1805,7 @@ MainMenu.prototype = $extend(openfl.display.Sprite.prototype,{
 		this.drawmenu();
 	}
 	,drawbackground: function() {
-		var background = new openfl.display.Bitmap(openfl.Assets.getBitmapData("img/Background.png"));
+		var background = new openfl.display.Bitmap(openfl.Assets.getBitmapData("img/Menubackground.png"));
 		this.addChildAt(background,0);
 	}
 	,drawmenu: function() {
@@ -1857,7 +1887,7 @@ Music.prototype = $extend(openfl.display.Sprite.prototype,{
 		this.soundChannel.addEventListener(openfl.events.Event.SOUND_COMPLETE,$bind(this,this.gameMusicRepeat));
 	}
 	,mainMenuMusic: function() {
-		haxe.Log.trace("playing music",{ fileName : "Music.hx", lineNumber : 96, className : "Music", methodName : "mainMenuMusic"});
+		haxe.Log.trace("playing music",{ fileName : "Music.hx", lineNumber : 95, className : "Music", methodName : "mainMenuMusic"});
 		this.soundChannel = this.Menu.play();
 		this.soundChannel.set_soundTransform(new openfl.media.SoundTransform(this.musicVolume));
 		this.soundChannel.addEventListener(openfl.events.Event.SOUND_COMPLETE,$bind(this,this.mainMenuMusicRepeat));
@@ -1933,13 +1963,18 @@ var Options = function() {
 	this.increaseSound = new Button("+ Sound","img/middlebutton.png","img/middlebuttonhover.png");
 	this.returnButton = new Button("Main Menu","img/middlebutton.png","img/middlebuttonhover.png");
 	openfl.display.Sprite.call(this);
+	this.drawbackground();
 	this.drawButton();
 };
 $hxClasses["Options"] = Options;
 Options.__name__ = ["Options"];
 Options.__super__ = openfl.display.Sprite;
 Options.prototype = $extend(openfl.display.Sprite.prototype,{
-	drawButton: function() {
+	drawbackground: function() {
+		var background = new openfl.display.Bitmap(openfl.Assets.getBitmapData("img/Optionsbackground.png"));
+		this.addChildAt(background,0);
+	}
+	,drawButton: function() {
 		this.increaseSound.set_x(600);
 		this.increaseSound.set_y(50);
 		this.increaseSound.addEventListener(openfl.events.MouseEvent.CLICK,$bind(this,this.editSound));

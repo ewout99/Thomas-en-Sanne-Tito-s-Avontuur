@@ -46,7 +46,7 @@ class MainMenu extends Sprite
 	// Draws the Background img
 	function drawbackground()
 	{
-		var background = new Bitmap(Assets.getBitmapData("img/Background.png"));
+		var background = new Bitmap(Assets.getBitmapData("img/Menubackground.png"));
 		addChildAt (background, 0);
 	}
 	

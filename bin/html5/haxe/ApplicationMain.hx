@@ -54,11 +54,27 @@ class ApplicationMain {
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
+		urls.push ("img/Contactbackground.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/Levelkiezen.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/Menubackground.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
 		urls.push ("img/middlebutton.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
 		urls.push ("img/middlebuttonhover.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/Optionsbackground.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
