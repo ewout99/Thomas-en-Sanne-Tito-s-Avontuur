@@ -51,6 +51,8 @@ class Main extends Sprite
 		// createmenu ();
 		addChild (sound);
 		addChild (music);
+		
+		trace("Stuff");
 	}
 	
 	/**

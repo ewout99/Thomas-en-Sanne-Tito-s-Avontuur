@@ -45,6 +45,8 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		#if flash
 		
+		className.set ("img/Back.png", __ASSET__img_back_png);
+		type.set ("img/Back.png", AssetType.IMAGE);
 		className.set ("img/Background.png", __ASSET__img_background_png);
 		type.set ("img/Background.png", AssetType.IMAGE);
 		className.set ("img/bottombutton.png", __ASSET__img_bottombutton_png);
@@ -55,10 +57,26 @@ class DefaultAssetLibrary extends AssetLibrary {
 		type.set ("img/Button.png", AssetType.IMAGE);
 		className.set ("img/ButtonHover.png", __ASSET__img_buttonhover_png);
 		type.set ("img/ButtonHover.png", AssetType.IMAGE);
+		className.set ("img/Front.png", __ASSET__img_front_png);
+		type.set ("img/Front.png", AssetType.IMAGE);
+		className.set ("img/Left Back.png", __ASSET__img_left_back_png);
+		type.set ("img/Left Back.png", AssetType.IMAGE);
+		className.set ("img/left Front.png", __ASSET__img_left_front_png);
+		type.set ("img/left Front.png", AssetType.IMAGE);
 		className.set ("img/middlebutton.png", __ASSET__img_middlebutton_png);
 		type.set ("img/middlebutton.png", AssetType.IMAGE);
 		className.set ("img/middlebuttonhover.png", __ASSET__img_middlebuttonhover_png);
 		type.set ("img/middlebuttonhover.png", AssetType.IMAGE);
+		className.set ("img/Right Back.png", __ASSET__img_right_back_png);
+		type.set ("img/Right Back.png", AssetType.IMAGE);
+		className.set ("img/Right Front.png", __ASSET__img_right_front_png);
+		type.set ("img/Right Front.png", AssetType.IMAGE);
+		className.set ("img/Side Left.png", __ASSET__img_side_left_png);
+		type.set ("img/Side Left.png", AssetType.IMAGE);
+		className.set ("img/Side Right.png", __ASSET__img_side_right_png);
+		type.set ("img/Side Right.png", AssetType.IMAGE);
+		className.set ("img/tom_tilesheet.png", __ASSET__img_tom_tilesheet_png);
+		type.set ("img/tom_tilesheet.png", AssetType.IMAGE);
 		className.set ("img/topbutton.png", __ASSET__img_topbutton_png);
 		type.set ("img/topbutton.png", AssetType.IMAGE);
 		className.set ("img/topbuttonhover.png", __ASSET__img_topbuttonhover_png);
@@ -68,6 +86,10 @@ class DefaultAssetLibrary extends AssetLibrary {
 		#elseif html5
 		
 		var id;
+		id = "img/Back.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
 		id = "img/Background.png";
 		path.set (id, id);
 		
@@ -88,11 +110,43 @@ class DefaultAssetLibrary extends AssetLibrary {
 		path.set (id, id);
 		
 		type.set (id, AssetType.IMAGE);
+		id = "img/Front.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "img/Left Back.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "img/left Front.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
 		id = "img/middlebutton.png";
 		path.set (id, id);
 		
 		type.set (id, AssetType.IMAGE);
 		id = "img/middlebuttonhover.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "img/Right Back.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "img/Right Front.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "img/Side Left.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "img/Side Right.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "img/tom_tilesheet.png";
 		path.set (id, id);
 		
 		type.set (id, AssetType.IMAGE);
@@ -127,11 +181,23 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		
 		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		#end
 		
 		#if (windows || mac || linux)
 		
 		var useManifest = false;
+		
+		className.set ("img/Back.png", __ASSET__img_back_png);
+		type.set ("img/Back.png", AssetType.IMAGE);
 		
 		className.set ("img/Background.png", __ASSET__img_background_png);
 		type.set ("img/Background.png", AssetType.IMAGE);
@@ -148,11 +214,35 @@ class DefaultAssetLibrary extends AssetLibrary {
 		className.set ("img/ButtonHover.png", __ASSET__img_buttonhover_png);
 		type.set ("img/ButtonHover.png", AssetType.IMAGE);
 		
+		className.set ("img/Front.png", __ASSET__img_front_png);
+		type.set ("img/Front.png", AssetType.IMAGE);
+		
+		className.set ("img/Left Back.png", __ASSET__img_left_back_png);
+		type.set ("img/Left Back.png", AssetType.IMAGE);
+		
+		className.set ("img/left Front.png", __ASSET__img_left_front_png);
+		type.set ("img/left Front.png", AssetType.IMAGE);
+		
 		className.set ("img/middlebutton.png", __ASSET__img_middlebutton_png);
 		type.set ("img/middlebutton.png", AssetType.IMAGE);
 		
 		className.set ("img/middlebuttonhover.png", __ASSET__img_middlebuttonhover_png);
 		type.set ("img/middlebuttonhover.png", AssetType.IMAGE);
+		
+		className.set ("img/Right Back.png", __ASSET__img_right_back_png);
+		type.set ("img/Right Back.png", AssetType.IMAGE);
+		
+		className.set ("img/Right Front.png", __ASSET__img_right_front_png);
+		type.set ("img/Right Front.png", AssetType.IMAGE);
+		
+		className.set ("img/Side Left.png", __ASSET__img_side_left_png);
+		type.set ("img/Side Left.png", AssetType.IMAGE);
+		
+		className.set ("img/Side Right.png", __ASSET__img_side_right_png);
+		type.set ("img/Side Right.png", AssetType.IMAGE);
+		
+		className.set ("img/tom_tilesheet.png", __ASSET__img_tom_tilesheet_png);
+		type.set ("img/tom_tilesheet.png", AssetType.IMAGE);
 		
 		className.set ("img/topbutton.png", __ASSET__img_topbutton_png);
 		type.set ("img/topbutton.png", AssetType.IMAGE);
@@ -760,18 +850,36 @@ class DefaultAssetLibrary extends AssetLibrary {
 #if !display
 #if flash
 
+@:keep @:bind #if display private #end class __ASSET__img_back_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__img_background_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__img_bottombutton_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__img_bottombuttonhover_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__img_button_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__img_buttonhover_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_front_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_left_back_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_left_front_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__img_middlebutton_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__img_middlebuttonhover_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_right_back_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_right_front_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_side_left_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_side_right_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_tom_tilesheet_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__img_topbutton_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__img_topbuttonhover_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 
 
 #elseif html5
+
+
+
+
+
+
+
+
+
 
 
 
@@ -791,13 +899,22 @@ class DefaultAssetLibrary extends AssetLibrary {
 #if (windows || mac || linux)
 
 
+@:image("assets/img/Back.png") #if display private #end class __ASSET__img_back_png extends lime.graphics.Image {}
 @:image("assets/img/Background.png") #if display private #end class __ASSET__img_background_png extends lime.graphics.Image {}
 @:image("assets/img/bottombutton.png") #if display private #end class __ASSET__img_bottombutton_png extends lime.graphics.Image {}
 @:image("assets/img/bottombuttonhover.png") #if display private #end class __ASSET__img_bottombuttonhover_png extends lime.graphics.Image {}
 @:image("assets/img/Button.png") #if display private #end class __ASSET__img_button_png extends lime.graphics.Image {}
 @:image("assets/img/ButtonHover.png") #if display private #end class __ASSET__img_buttonhover_png extends lime.graphics.Image {}
+@:image("assets/img/Front.png") #if display private #end class __ASSET__img_front_png extends lime.graphics.Image {}
+@:image("assets/img/Left Back.png") #if display private #end class __ASSET__img_left_back_png extends lime.graphics.Image {}
+@:image("assets/img/left Front.png") #if display private #end class __ASSET__img_left_front_png extends lime.graphics.Image {}
 @:image("assets/img/middlebutton.png") #if display private #end class __ASSET__img_middlebutton_png extends lime.graphics.Image {}
 @:image("assets/img/middlebuttonhover.png") #if display private #end class __ASSET__img_middlebuttonhover_png extends lime.graphics.Image {}
+@:image("assets/img/Right Back.png") #if display private #end class __ASSET__img_right_back_png extends lime.graphics.Image {}
+@:image("assets/img/Right Front.png") #if display private #end class __ASSET__img_right_front_png extends lime.graphics.Image {}
+@:image("assets/img/Side Left.png") #if display private #end class __ASSET__img_side_left_png extends lime.graphics.Image {}
+@:image("assets/img/Side Right.png") #if display private #end class __ASSET__img_side_right_png extends lime.graphics.Image {}
+@:image("assets/img/tom_tilesheet.png") #if display private #end class __ASSET__img_tom_tilesheet_png extends lime.graphics.Image {}
 @:image("assets/img/topbutton.png") #if display private #end class __ASSET__img_topbutton_png extends lime.graphics.Image {}
 @:image("assets/img/topbuttonhover.png") #if display private #end class __ASSET__img_topbuttonhover_png extends lime.graphics.Image {}
 

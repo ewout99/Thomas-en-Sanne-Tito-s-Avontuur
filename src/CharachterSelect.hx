@@ -49,6 +49,8 @@ class CharachterSelect extends Sprite
 			trace (Main.getInstance().currentChar);
 			Main.getInstance().switchScreen(Main.GAME_SCREEN);
 			
+			trace ("Thomas selected");
+			
 		}
 		if (e.currentTarget == charSanne)
 		{
@@ -56,6 +58,8 @@ class CharachterSelect extends Sprite
 			Main.getInstance().currentChar = 2;
 			trace (Main.getInstance().currentChar);
 			Main.getInstance().switchScreen(Main.GAME_SCREEN);
+			
+			trace ("Sanne selected");
 		}
 	}
 	

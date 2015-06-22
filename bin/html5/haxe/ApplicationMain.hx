@@ -62,6 +62,42 @@ class ApplicationMain {
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
+		urls.push ("img/thomas/back.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/thomas/front.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/thomas/old/leftback.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/thomas/old/leftfront.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/thomas/old/rightback.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/thomas/old/rightfront.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/thomas/old/tiles.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/thomas/sideleft.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/thomas/sideright.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
 		urls.push ("img/topbutton.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		
@@ -138,6 +174,7 @@ class ApplicationMain {
 			file: "ThomasenSanneTitosAvontuur",
 			fps: Std.int (60),
 			fullscreen: false,
+			hardware: true,
 			height: Std.int (720),
 			orientation: "",
 			packageName: "ThomasenSanneTitosAvontuur",

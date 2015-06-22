@@ -59,6 +59,24 @@ class DefaultAssetLibrary extends AssetLibrary {
 		type.set ("img/middlebutton.png", AssetType.IMAGE);
 		className.set ("img/middlebuttonhover.png", __ASSET__img_middlebuttonhover_png);
 		type.set ("img/middlebuttonhover.png", AssetType.IMAGE);
+		className.set ("img/thomas/back.png", __ASSET__img_thomas_back_png);
+		type.set ("img/thomas/back.png", AssetType.IMAGE);
+		className.set ("img/thomas/front.png", __ASSET__img_thomas_front_png);
+		type.set ("img/thomas/front.png", AssetType.IMAGE);
+		className.set ("img/thomas/old/leftback.png", __ASSET__img_thomas_old_leftback_png);
+		type.set ("img/thomas/old/leftback.png", AssetType.IMAGE);
+		className.set ("img/thomas/old/leftfront.png", __ASSET__img_thomas_old_leftfront_png);
+		type.set ("img/thomas/old/leftfront.png", AssetType.IMAGE);
+		className.set ("img/thomas/old/rightback.png", __ASSET__img_thomas_old_rightback_png);
+		type.set ("img/thomas/old/rightback.png", AssetType.IMAGE);
+		className.set ("img/thomas/old/rightfront.png", __ASSET__img_thomas_old_rightfront_png);
+		type.set ("img/thomas/old/rightfront.png", AssetType.IMAGE);
+		className.set ("img/thomas/old/tiles.png", __ASSET__img_thomas_old_tiles_png);
+		type.set ("img/thomas/old/tiles.png", AssetType.IMAGE);
+		className.set ("img/thomas/sideleft.png", __ASSET__img_thomas_sideleft_png);
+		type.set ("img/thomas/sideleft.png", AssetType.IMAGE);
+		className.set ("img/thomas/sideright.png", __ASSET__img_thomas_sideright_png);
+		type.set ("img/thomas/sideright.png", AssetType.IMAGE);
 		className.set ("img/topbutton.png", __ASSET__img_topbutton_png);
 		type.set ("img/topbutton.png", AssetType.IMAGE);
 		className.set ("img/topbuttonhover.png", __ASSET__img_topbuttonhover_png);
@@ -96,6 +114,42 @@ class DefaultAssetLibrary extends AssetLibrary {
 		path.set (id, id);
 		
 		type.set (id, AssetType.IMAGE);
+		id = "img/thomas/back.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "img/thomas/front.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "img/thomas/old/leftback.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "img/thomas/old/leftfront.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "img/thomas/old/rightback.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "img/thomas/old/rightfront.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "img/thomas/old/tiles.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "img/thomas/sideleft.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "img/thomas/sideright.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
 		id = "img/topbutton.png";
 		path.set (id, id);
 		
@@ -116,6 +170,15 @@ class DefaultAssetLibrary extends AssetLibrary {
 		#else
 		
 		#if openfl
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		
 		
@@ -153,6 +216,33 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		className.set ("img/middlebuttonhover.png", __ASSET__img_middlebuttonhover_png);
 		type.set ("img/middlebuttonhover.png", AssetType.IMAGE);
+		
+		className.set ("img/thomas/back.png", __ASSET__img_thomas_back_png);
+		type.set ("img/thomas/back.png", AssetType.IMAGE);
+		
+		className.set ("img/thomas/front.png", __ASSET__img_thomas_front_png);
+		type.set ("img/thomas/front.png", AssetType.IMAGE);
+		
+		className.set ("img/thomas/old/leftback.png", __ASSET__img_thomas_old_leftback_png);
+		type.set ("img/thomas/old/leftback.png", AssetType.IMAGE);
+		
+		className.set ("img/thomas/old/leftfront.png", __ASSET__img_thomas_old_leftfront_png);
+		type.set ("img/thomas/old/leftfront.png", AssetType.IMAGE);
+		
+		className.set ("img/thomas/old/rightback.png", __ASSET__img_thomas_old_rightback_png);
+		type.set ("img/thomas/old/rightback.png", AssetType.IMAGE);
+		
+		className.set ("img/thomas/old/rightfront.png", __ASSET__img_thomas_old_rightfront_png);
+		type.set ("img/thomas/old/rightfront.png", AssetType.IMAGE);
+		
+		className.set ("img/thomas/old/tiles.png", __ASSET__img_thomas_old_tiles_png);
+		type.set ("img/thomas/old/tiles.png", AssetType.IMAGE);
+		
+		className.set ("img/thomas/sideleft.png", __ASSET__img_thomas_sideleft_png);
+		type.set ("img/thomas/sideleft.png", AssetType.IMAGE);
+		
+		className.set ("img/thomas/sideright.png", __ASSET__img_thomas_sideright_png);
+		type.set ("img/thomas/sideright.png", AssetType.IMAGE);
 		
 		className.set ("img/topbutton.png", __ASSET__img_topbutton_png);
 		type.set ("img/topbutton.png", AssetType.IMAGE);
@@ -767,11 +857,29 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:keep @:bind #if display private #end class __ASSET__img_buttonhover_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__img_middlebutton_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__img_middlebuttonhover_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_thomas_back_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_thomas_front_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_thomas_old_leftback_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_thomas_old_leftfront_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_thomas_old_rightback_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_thomas_old_rightfront_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_thomas_old_tiles_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_thomas_sideleft_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_thomas_sideright_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__img_topbutton_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__img_topbuttonhover_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 
 
 #elseif html5
+
+
+
+
+
+
+
+
+
 
 
 
@@ -798,6 +906,15 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:image("assets/img/ButtonHover.png") #if display private #end class __ASSET__img_buttonhover_png extends lime.graphics.Image {}
 @:image("assets/img/middlebutton.png") #if display private #end class __ASSET__img_middlebutton_png extends lime.graphics.Image {}
 @:image("assets/img/middlebuttonhover.png") #if display private #end class __ASSET__img_middlebuttonhover_png extends lime.graphics.Image {}
+@:image("assets/img/thomas/back.png") #if display private #end class __ASSET__img_thomas_back_png extends lime.graphics.Image {}
+@:image("assets/img/thomas/front.png") #if display private #end class __ASSET__img_thomas_front_png extends lime.graphics.Image {}
+@:image("assets/img/thomas/old/leftback.png") #if display private #end class __ASSET__img_thomas_old_leftback_png extends lime.graphics.Image {}
+@:image("assets/img/thomas/old/leftfront.png") #if display private #end class __ASSET__img_thomas_old_leftfront_png extends lime.graphics.Image {}
+@:image("assets/img/thomas/old/rightback.png") #if display private #end class __ASSET__img_thomas_old_rightback_png extends lime.graphics.Image {}
+@:image("assets/img/thomas/old/rightfront.png") #if display private #end class __ASSET__img_thomas_old_rightfront_png extends lime.graphics.Image {}
+@:image("assets/img/thomas/old/tiles.png") #if display private #end class __ASSET__img_thomas_old_tiles_png extends lime.graphics.Image {}
+@:image("assets/img/thomas/sideleft.png") #if display private #end class __ASSET__img_thomas_sideleft_png extends lime.graphics.Image {}
+@:image("assets/img/thomas/sideright.png") #if display private #end class __ASSET__img_thomas_sideright_png extends lime.graphics.Image {}
 @:image("assets/img/topbutton.png") #if display private #end class __ASSET__img_topbutton_png extends lime.graphics.Image {}
 @:image("assets/img/topbuttonhover.png") #if display private #end class __ASSET__img_topbuttonhover_png extends lime.graphics.Image {}
 

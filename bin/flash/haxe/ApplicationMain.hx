@@ -34,6 +34,10 @@ class ApplicationMain {
 		var types = [];
 		
 		
+		urls.push ("img/Back.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
 		urls.push ("img/Background.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		
@@ -54,11 +58,43 @@ class ApplicationMain {
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
+		urls.push ("img/Front.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/Left Back.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/left Front.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
 		urls.push ("img/middlebutton.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
 		urls.push ("img/middlebuttonhover.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/Right Back.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/Right Front.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/Side Left.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/Side Right.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/tom_tilesheet.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
@@ -138,6 +174,7 @@ class ApplicationMain {
 			file: "ThomasenSanneTitosAvontuur",
 			fps: Std.int (60),
 			fullscreen: false,
+			hardware: true,
 			height: Std.int (720),
 			orientation: "",
 			packageName: "ThomasenSanneTitosAvontuur",
