@@ -75,8 +75,10 @@ class Sound extends Sprite
 		switch(input)
 		{
 			case ("click"):
+				#if html
 				channel = buttonclick.play();
 				channel.soundTransform = new SoundTransform(soundVolume);
+				#end
 		}
 	}
 	

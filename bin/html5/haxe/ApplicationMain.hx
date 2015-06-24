@@ -298,6 +298,10 @@ class ApplicationMain {
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
+		urls.push ("img/Victorybackground.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
 		urls.push ("audio/Buttonclick.mp3");
 		types.push (lime.Assets.AssetType.MUSIC);
 		

@@ -12,20 +12,29 @@ import openfl.Assets;
 
 class Level extends Sprite
 {
-		
+	var levelcoll:Bitmap = new Bitmap (Assets.getBitmapData("img/level/collision.png"));
+	var levelback:Bitmap = new Bitmap (Assets.getBitmapData("img/level/floorplan.png"));
+	var levelwall:Bitmap = new Bitmap (Assets.getBitmapData("img/level/floorwalls.png"));
+	
 	public function new() 
 	{
 		super ();
-		
-		trace ("level has been created");
-		
-		var levelcoll:Bitmap = new Bitmap (Assets.getBitmapData("img/level/collision.png"));
-		var levelback:Bitmap = new Bitmap (Assets.getBitmapData("img/level/floorplan.png"));
-		var levelwall:Bitmap = new Bitmap (Assets.getBitmapData("img/level/floorwalls.png"));
 		
 		addChild ( levelcoll );
 		addChild ( levelback );
 		addChild ( levelwall );
 	}
 	
+	public function transparencycheck (x:Int, y:Int)
+	{
+		var checkvalid:Bool = false;
+		
+		var checkcol:Int = levelwall.bitmapData.getPixel (x, y);
+		
+		trace (checkcol);
+		
+		
+		
+		return false;
+	}
 }
