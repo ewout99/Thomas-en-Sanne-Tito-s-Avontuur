@@ -67,6 +67,14 @@ class DefaultAssetLibrary extends AssetLibrary {
 		type.set ("img/middlebuttonhover.png", AssetType.IMAGE);
 		className.set ("img/Optionsbackground.png", __ASSET__img_optionsbackground_png);
 		type.set ("img/Optionsbackground.png", AssetType.IMAGE);
+		className.set ("img/speech bubble big left.png", __ASSET__img_speech_bubble_big_left_png);
+		type.set ("img/speech bubble big left.png", AssetType.IMAGE);
+		className.set ("img/speech bubble big right.png", __ASSET__img_speech_bubble_big_right_png);
+		type.set ("img/speech bubble big right.png", AssetType.IMAGE);
+		className.set ("img/speech bubble small left.png", __ASSET__img_speech_bubble_small_left_png);
+		type.set ("img/speech bubble small left.png", AssetType.IMAGE);
+		className.set ("img/Speech bubble small right.png", __ASSET__img_speech_bubble_small_right_png);
+		type.set ("img/Speech bubble small right.png", AssetType.IMAGE);
 		className.set ("img/topbutton.png", __ASSET__img_topbutton_png);
 		type.set ("img/topbutton.png", AssetType.IMAGE);
 		className.set ("img/topbuttonhover.png", __ASSET__img_topbuttonhover_png);
@@ -181,6 +189,22 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		type.set (id, AssetType.IMAGE);
 		id = "img/Optionsbackground.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "img/speech bubble big left.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "img/speech bubble big right.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "img/speech bubble small left.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "img/Speech bubble small right.png";
 		path.set (id, id);
 		
 		type.set (id, AssetType.IMAGE);
@@ -379,6 +403,10 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		
 		
+		
+		
+		
+		
 		#end
 		
 		#if (windows || mac || linux)
@@ -417,6 +445,18 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		className.set ("img/Optionsbackground.png", __ASSET__img_optionsbackground_png);
 		type.set ("img/Optionsbackground.png", AssetType.IMAGE);
+		
+		className.set ("img/speech bubble big left.png", __ASSET__img_speech_bubble_big_left_png);
+		type.set ("img/speech bubble big left.png", AssetType.IMAGE);
+		
+		className.set ("img/speech bubble big right.png", __ASSET__img_speech_bubble_big_right_png);
+		type.set ("img/speech bubble big right.png", AssetType.IMAGE);
+		
+		className.set ("img/speech bubble small left.png", __ASSET__img_speech_bubble_small_left_png);
+		type.set ("img/speech bubble small left.png", AssetType.IMAGE);
+		
+		className.set ("img/Speech bubble small right.png", __ASSET__img_speech_bubble_small_right_png);
+		type.set ("img/Speech bubble small right.png", AssetType.IMAGE);
 		
 		className.set ("img/topbutton.png", __ASSET__img_topbutton_png);
 		type.set ("img/topbutton.png", AssetType.IMAGE);
@@ -1131,6 +1171,10 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:keep @:bind #if display private #end class __ASSET__img_middlebutton_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__img_middlebuttonhover_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__img_optionsbackground_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_speech_bubble_big_left_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_speech_bubble_big_right_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_speech_bubble_small_left_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_speech_bubble_small_right_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__img_topbutton_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__img_topbuttonhover_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__audio_buttonclick_mp3 extends flash.media.Sound { }
@@ -1216,6 +1260,10 @@ class DefaultAssetLibrary extends AssetLibrary {
 
 
 
+
+
+
+
 #else
 
 
@@ -1234,6 +1282,10 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:image("assets/img/middlebutton.png") #if display private #end class __ASSET__img_middlebutton_png extends lime.graphics.Image {}
 @:image("assets/img/middlebuttonhover.png") #if display private #end class __ASSET__img_middlebuttonhover_png extends lime.graphics.Image {}
 @:image("assets/img/Optionsbackground.png") #if display private #end class __ASSET__img_optionsbackground_png extends lime.graphics.Image {}
+@:image("assets/img/speech bubble big left.png") #if display private #end class __ASSET__img_speech_bubble_big_left_png extends lime.graphics.Image {}
+@:image("assets/img/speech bubble big right.png") #if display private #end class __ASSET__img_speech_bubble_big_right_png extends lime.graphics.Image {}
+@:image("assets/img/speech bubble small left.png") #if display private #end class __ASSET__img_speech_bubble_small_left_png extends lime.graphics.Image {}
+@:image("assets/img/Speech bubble small right.png") #if display private #end class __ASSET__img_speech_bubble_small_right_png extends lime.graphics.Image {}
 @:image("assets/img/topbutton.png") #if display private #end class __ASSET__img_topbutton_png extends lime.graphics.Image {}
 @:image("assets/img/topbuttonhover.png") #if display private #end class __ASSET__img_topbuttonhover_png extends lime.graphics.Image {}
 @:file("assets/audio/Buttonclick.mp3") #if display private #end class __ASSET__audio_buttonclick_mp3 extends lime.utils.ByteArray {}

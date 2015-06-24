@@ -22,7 +22,7 @@ class Button extends Sprite
 	var mainiamge:Bitmap;
 	var mainImageHover:Bitmap; 
 	var buttonText:TextField;
-	var buttonTextFormat:TextFormat = new TextFormat("Arial", 24, 0xff00ff, true, false, false, null, null, TextFormatAlign.CENTER);
+	var buttonTextFormat:TextFormat = new TextFormat("Arial", 24, 000000, true, false, false, null, null, TextFormatAlign.CENTER);
 	
 	// public funtion new, this delcared that there are two images needed to initiate the the function HOVER// 
 	// The eventlisters checks if the funtion is actialy is being executed, if mouse over, the menu hovers and calls
