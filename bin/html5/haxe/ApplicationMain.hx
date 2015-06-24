@@ -70,7 +70,15 @@ class ApplicationMain {
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
+		urls.push ("img/level/floorplan2.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
 		urls.push ("img/level/floorwalls.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/level/floorwalls2.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		

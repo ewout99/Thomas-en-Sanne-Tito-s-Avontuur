@@ -63,8 +63,12 @@ class DefaultAssetLibrary extends AssetLibrary {
 		type.set ("img/level/collision.png", AssetType.IMAGE);
 		className.set ("img/level/floorplan.png", __ASSET__img_level_floorplan_png);
 		type.set ("img/level/floorplan.png", AssetType.IMAGE);
+		className.set ("img/level/floorplan2.png", __ASSET__img_level_floorplan2_png);
+		type.set ("img/level/floorplan2.png", AssetType.IMAGE);
 		className.set ("img/level/floorwalls.png", __ASSET__img_level_floorwalls_png);
 		type.set ("img/level/floorwalls.png", AssetType.IMAGE);
+		className.set ("img/level/floorwalls2.png", __ASSET__img_level_floorwalls2_png);
+		type.set ("img/level/floorwalls2.png", AssetType.IMAGE);
 		className.set ("img/Levelkiezen.png", __ASSET__img_levelkiezen_png);
 		type.set ("img/Levelkiezen.png", AssetType.IMAGE);
 		className.set ("img/marker_1.png", __ASSET__img_marker_1_png);
@@ -260,7 +264,15 @@ class DefaultAssetLibrary extends AssetLibrary {
 		path.set (id, id);
 		
 		type.set (id, AssetType.IMAGE);
+		id = "img/level/floorplan2.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
 		id = "img/level/floorwalls.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "img/level/floorwalls2.png";
 		path.set (id, id);
 		
 		type.set (id, AssetType.IMAGE);
@@ -673,6 +685,8 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		
 		
+		
+		
 		#end
 		
 		#if (windows || mac || linux)
@@ -706,8 +720,14 @@ class DefaultAssetLibrary extends AssetLibrary {
 		className.set ("img/level/floorplan.png", __ASSET__img_level_floorplan_png);
 		type.set ("img/level/floorplan.png", AssetType.IMAGE);
 		
+		className.set ("img/level/floorplan2.png", __ASSET__img_level_floorplan2_png);
+		type.set ("img/level/floorplan2.png", AssetType.IMAGE);
+		
 		className.set ("img/level/floorwalls.png", __ASSET__img_level_floorwalls_png);
 		type.set ("img/level/floorwalls.png", AssetType.IMAGE);
+		
+		className.set ("img/level/floorwalls2.png", __ASSET__img_level_floorwalls2_png);
+		type.set ("img/level/floorwalls2.png", AssetType.IMAGE);
 		
 		className.set ("img/Levelkiezen.png", __ASSET__img_levelkiezen_png);
 		type.set ("img/Levelkiezen.png", AssetType.IMAGE);
@@ -1549,7 +1569,9 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:keep @:bind #if display private #end class __ASSET__img_contactbackground_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__img_level_collision_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__img_level_floorplan_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_level_floorplan2_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__img_level_floorwalls_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_level_floorwalls2_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__img_levelkiezen_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__img_marker_1_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__img_marker_2_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
@@ -1720,6 +1742,8 @@ class DefaultAssetLibrary extends AssetLibrary {
 
 
 
+
+
 #else
 
 
@@ -1736,7 +1760,9 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:image("assets/img/Contactbackground.png") #if display private #end class __ASSET__img_contactbackground_png extends lime.graphics.Image {}
 @:image("assets/img/level/collision.png") #if display private #end class __ASSET__img_level_collision_png extends lime.graphics.Image {}
 @:image("assets/img/level/floorplan.png") #if display private #end class __ASSET__img_level_floorplan_png extends lime.graphics.Image {}
+@:image("assets/img/level/floorplan2.png") #if display private #end class __ASSET__img_level_floorplan2_png extends lime.graphics.Image {}
 @:image("assets/img/level/floorwalls.png") #if display private #end class __ASSET__img_level_floorwalls_png extends lime.graphics.Image {}
+@:image("assets/img/level/floorwalls2.png") #if display private #end class __ASSET__img_level_floorwalls2_png extends lime.graphics.Image {}
 @:image("assets/img/Levelkiezen.png") #if display private #end class __ASSET__img_levelkiezen_png extends lime.graphics.Image {}
 @:image("assets/img/marker_1.png") #if display private #end class __ASSET__img_marker_1_png extends lime.graphics.Image {}
 @:image("assets/img/marker_2.png") #if display private #end class __ASSET__img_marker_2_png extends lime.graphics.Image {}

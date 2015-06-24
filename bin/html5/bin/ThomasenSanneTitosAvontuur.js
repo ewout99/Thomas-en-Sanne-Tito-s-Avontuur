@@ -44,7 +44,11 @@ ApplicationMain.create = function() {
 	types.push("IMAGE");
 	urls.push("img/level/floorplan.png");
 	types.push("IMAGE");
+	urls.push("img/level/floorplan2.png");
+	types.push("IMAGE");
 	urls.push("img/level/floorwalls.png");
+	types.push("IMAGE");
+	urls.push("img/level/floorwalls2.png");
 	types.push("IMAGE");
 	urls.push("img/Levelkiezen.png");
 	types.push("IMAGE");
@@ -1534,7 +1538,13 @@ var DefaultAssetLibrary = function() {
 	id = "img/level/floorplan.png";
 	this.path.set(id,id);
 	this.type.set(id,"IMAGE");
+	id = "img/level/floorplan2.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
 	id = "img/level/floorwalls.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
+	id = "img/level/floorwalls2.png";
 	this.path.set(id,id);
 	this.type.set(id,"IMAGE");
 	id = "img/Levelkiezen.png";
@@ -2131,10 +2141,8 @@ var Level = function() {
 	haxe.Log.trace("level has been created",{ fileName : "Level.hx", lineNumber : 20, className : "Level", methodName : "new"});
 	var levelcoll = new openfl.display.Bitmap(openfl.Assets.getBitmapData("img/level/collision.png"));
 	var levelback = new openfl.display.Bitmap(openfl.Assets.getBitmapData("img/level/floorplan.png"));
-	var levelwall = new openfl.display.Bitmap(openfl.Assets.getBitmapData("img/level/floorwalls.png"));
 	this.addChild(levelcoll);
 	this.addChild(levelback);
-	this.addChild(levelwall);
 };
 $hxClasses["Level"] = Level;
 Level.__name__ = ["Level"];

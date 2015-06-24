@@ -21,11 +21,11 @@ class Level extends Sprite
 		
 		var levelcoll:Bitmap = new Bitmap (Assets.getBitmapData("img/level/collision.png"));
 		var levelback:Bitmap = new Bitmap (Assets.getBitmapData("img/level/floorplan.png"));
-		var levelwall:Bitmap = new Bitmap (Assets.getBitmapData("img/level/floorwalls.png"));
+		//var levelwall:Bitmap = new Bitmap (Assets.getBitmapData("img/level/floorwalls.png"));
 		
 		addChild ( levelcoll );
 		addChild ( levelback );
-		addChild ( levelwall );
+		//addChild ( levelwall );
 	}
 	
 }
