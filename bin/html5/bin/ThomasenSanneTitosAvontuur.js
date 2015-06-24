@@ -38,6 +38,8 @@ ApplicationMain.create = function() {
 	types.push("IMAGE");
 	urls.push("img/ButtonHover.png");
 	types.push("IMAGE");
+	urls.push("img/Characterbackground.png");
+	types.push("IMAGE");
 	urls.push("img/Contactbackground.png");
 	types.push("IMAGE");
 	urls.push("img/level/collision.png");
@@ -69,6 +71,8 @@ ApplicationMain.create = function() {
 	urls.push("img/middlebuttonhover.png");
 	types.push("IMAGE");
 	urls.push("img/Optionsbackground.png");
+	types.push("IMAGE");
+	urls.push("img/sanneicon.png");
 	types.push("IMAGE");
 	urls.push("img/speech bubble big left.png");
 	types.push("IMAGE");
@@ -136,6 +140,8 @@ ApplicationMain.create = function() {
 	types.push("IMAGE");
 	urls.push("img/thomas/right_4.png");
 	types.push("IMAGE");
+	urls.push("img/thomasicon.png");
+	types.push("IMAGE");
 	urls.push("img/topbutton.png");
 	types.push("IMAGE");
 	urls.push("img/topbuttonhover.png");
@@ -194,15 +200,27 @@ ApplicationMain.create = function() {
 	types.push("MUSIC");
 	urls.push("audio/Papers.ogg");
 	types.push("SOUND");
-	urls.push("music/GameMusic.mp3");
+	urls.push("music/gamemusic.mp3");
 	types.push("MUSIC");
-	urls.push("music/GameMusic.ogg");
-	types.push("SOUND");
-	urls.push("music/Menu.mp3");
+	urls.push("music/gamemusic.ogg");
 	types.push("MUSIC");
-	urls.push("music/Menu.ogg");
+	urls.push("music/menumusic.mp3");
+	types.push("MUSIC");
+	urls.push("music/menumusic.ogg");
 	types.push("SOUND");
-	urls.push("music/Winning.mp3");
+	urls.push("music/Old/GameMusic.mp3");
+	types.push("MUSIC");
+	urls.push("music/Old/GameMusic.ogg");
+	types.push("SOUND");
+	urls.push("music/Old/Menu.mp3");
+	types.push("MUSIC");
+	urls.push("music/Old/Menu.ogg");
+	types.push("SOUND");
+	urls.push("music/Old/Winning.mp3");
+	types.push("MUSIC");
+	urls.push("music/winningmusic.mp3");
+	types.push("MUSIC");
+	urls.push("music/winningmusic.ogg");
 	types.push("MUSIC");
 	if(ApplicationMain.config.assetsPrefix != null) {
 		var _g1 = 0;
@@ -1261,11 +1279,12 @@ Main.prototype = $extend(openfl_display_Sprite.prototype,{
 		Main.instance = this;
 		this.switchScreen("main menu screen");
 		this.addChild(this.sound);
-		this.addChild(this.music);
-		haxe_Log.trace("Stuff",{ fileName : "Main.hx", lineNumber : 50, className : "Main", methodName : "init"});
 	}
 	,switchScreen: function(toScreen) {
-		if(this.currentScreen != null) this.removeChild(this.currentScreen);
+		if(this.currentScreen != null) {
+			this.removeChild(this.currentScreen);
+			this.music.stopMusic();
+		}
 		switch(toScreen) {
 		case "main menu screen":
 			this.currentScreen = new MainMenu();
@@ -1284,7 +1303,6 @@ Main.prototype = $extend(openfl_display_Sprite.prototype,{
 			break;
 		case "game screen":
 			this.currentScreen = new Game();
-			this.music.stopMusic();
 			break;
 		}
 		this.addChild(this.currentScreen);
@@ -1354,38 +1372,63 @@ Button.prototype = $extend(openfl_display_Sprite.prototype,{
 var CharachterSelect = function() {
 	this.Y = openfl_Lib.current.stage.stageHeight;
 	this.X = openfl_Lib.current.stage.stageWidth;
+	this.returnButton = new Button("Main Menu","img/middlebutton.png","img/middlebuttonhover.png");
 	this.charSanne = new Button("Sanne","img/middlebutton.png","img/middlebuttonhover.png");
 	this.charThomas = new Button("Thomas","img/middlebutton.png","img/middlebuttonhover.png");
 	openfl_display_Sprite.call(this);
+	this.drawstuff();
 	this.drawButtons();
 };
 $hxClasses["CharachterSelect"] = CharachterSelect;
 CharachterSelect.__name__ = ["CharachterSelect"];
 CharachterSelect.__super__ = openfl_display_Sprite;
 CharachterSelect.prototype = $extend(openfl_display_Sprite.prototype,{
-	drawButtons: function() {
-		this.charThomas.set_x(200);
+	drawstuff: function() {
+		var background = new openfl_display_Bitmap(openfl_Assets.getBitmapData("img/Characterbackground.png"));
+		var thomas = new openfl_display_Bitmap(openfl_Assets.getBitmapData("img/thomasicon.png"));
+		var sanne = new openfl_display_Bitmap(openfl_Assets.getBitmapData("img/sanneicon.png"));
+		thomas.set_width(thomas.get_width() / 3);
+		thomas.set_height(thomas.get_height() / 3);
+		thomas.set_x(this.X / 2 - 230 - thomas.get_width() / 2);
+		thomas.set_y(this.Y / 2.5);
+		sanne.set_width(sanne.get_width() / 3);
+		sanne.set_height(sanne.get_height() / 3);
+		sanne.set_x(this.X / 2 + 235 - sanne.get_width() / 2);
+		sanne.set_y(this.Y / 2.5);
+		this.addChildAt(background,0);
+		this.addChild(thomas);
+		this.addChild(sanne);
+	}
+	,drawButtons: function() {
+		this.charThomas.set_x(this.X / 3 - this.charThomas.get_width() / 2);
 		this.charThomas.set_y(600);
-		this.charSanne.set_x(700);
+		this.charSanne.set_x(this.X / 3 * 2 - this.charSanne.get_width() / 2);
 		this.charSanne.set_y(600);
 		this.addChild(this.charSanne);
 		this.addChild(this.charThomas);
 		this.charSanne.addEventListener(openfl_events_MouseEvent.CLICK,$bind(this,this.charSelect));
 		this.charThomas.addEventListener(openfl_events_MouseEvent.CLICK,$bind(this,this.charSelect));
+		this.returnButton.set_x(this.X / 2 - this.returnButton.get_width() / 2);
+		this.returnButton.set_y(this.Y - 50);
+		this.addChild(this.returnButton);
+		this.returnButton.addEventListener(openfl_events_MouseEvent.CLICK,$bind(this,this.back));
 	}
 	,charSelect: function(e) {
 		if(e.currentTarget == this.charThomas) {
 			Main.getInstance().currentChar = 1;
-			haxe_Log.trace(Main.getInstance().currentChar,{ fileName : "CharachterSelect.hx", lineNumber : 49, className : "CharachterSelect", methodName : "charSelect"});
+			haxe_Log.trace(Main.getInstance().currentChar,{ fileName : "CharachterSelect.hx", lineNumber : 80, className : "CharachterSelect", methodName : "charSelect"});
 			Main.getInstance().switchScreen("game screen");
-			haxe_Log.trace("Thomas selected",{ fileName : "CharachterSelect.hx", lineNumber : 52, className : "CharachterSelect", methodName : "charSelect"});
+			haxe_Log.trace("Thomas selected",{ fileName : "CharachterSelect.hx", lineNumber : 83, className : "CharachterSelect", methodName : "charSelect"});
 		}
 		if(e.currentTarget == this.charSanne) {
 			Main.getInstance().currentChar = 2;
-			haxe_Log.trace(Main.getInstance().currentChar,{ fileName : "CharachterSelect.hx", lineNumber : 59, className : "CharachterSelect", methodName : "charSelect"});
+			haxe_Log.trace(Main.getInstance().currentChar,{ fileName : "CharachterSelect.hx", lineNumber : 90, className : "CharachterSelect", methodName : "charSelect"});
 			Main.getInstance().switchScreen("game screen");
-			haxe_Log.trace("Sanne selected",{ fileName : "CharachterSelect.hx", lineNumber : 62, className : "CharachterSelect", methodName : "charSelect"});
+			haxe_Log.trace("Sanne selected",{ fileName : "CharachterSelect.hx", lineNumber : 93, className : "CharachterSelect", methodName : "charSelect"});
 		}
+	}
+	,back: function(e) {
+		Main.getInstance().switchScreen("main menu screen");
 	}
 	,__class__: CharachterSelect
 });
@@ -1526,6 +1569,9 @@ var DefaultAssetLibrary = function() {
 	id = "img/ButtonHover.png";
 	this.path.set(id,id);
 	this.type.set(id,"IMAGE");
+	id = "img/Characterbackground.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
 	id = "img/Contactbackground.png";
 	this.path.set(id,id);
 	this.type.set(id,"IMAGE");
@@ -1572,6 +1618,9 @@ var DefaultAssetLibrary = function() {
 	this.path.set(id,id);
 	this.type.set(id,"IMAGE");
 	id = "img/Optionsbackground.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
+	id = "img/sanneicon.png";
 	this.path.set(id,id);
 	this.type.set(id,"IMAGE");
 	id = "img/speech bubble big left.png";
@@ -1673,6 +1722,9 @@ var DefaultAssetLibrary = function() {
 	id = "img/thomas/right_4.png";
 	this.path.set(id,id);
 	this.type.set(id,"IMAGE");
+	id = "img/thomasicon.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
 	id = "img/topbutton.png";
 	this.path.set(id,id);
 	this.type.set(id,"IMAGE");
@@ -1760,19 +1812,37 @@ var DefaultAssetLibrary = function() {
 	id = "audio/Papers.ogg";
 	this.path.set(id,id);
 	this.type.set(id,"SOUND");
-	id = "music/GameMusic.mp3";
+	id = "music/gamemusic.mp3";
 	this.path.set(id,id);
 	this.type.set(id,"MUSIC");
-	id = "music/GameMusic.ogg";
-	this.path.set(id,id);
-	this.type.set(id,"SOUND");
-	id = "music/Menu.mp3";
+	id = "music/gamemusic.ogg";
 	this.path.set(id,id);
 	this.type.set(id,"MUSIC");
-	id = "music/Menu.ogg";
+	id = "music/menumusic.mp3";
+	this.path.set(id,id);
+	this.type.set(id,"MUSIC");
+	id = "music/menumusic.ogg";
 	this.path.set(id,id);
 	this.type.set(id,"SOUND");
-	id = "music/Winning.mp3";
+	id = "music/Old/GameMusic.mp3";
+	this.path.set(id,id);
+	this.type.set(id,"MUSIC");
+	id = "music/Old/GameMusic.ogg";
+	this.path.set(id,id);
+	this.type.set(id,"SOUND");
+	id = "music/Old/Menu.mp3";
+	this.path.set(id,id);
+	this.type.set(id,"MUSIC");
+	id = "music/Old/Menu.ogg";
+	this.path.set(id,id);
+	this.type.set(id,"SOUND");
+	id = "music/Old/Winning.mp3";
+	this.path.set(id,id);
+	this.type.set(id,"MUSIC");
+	id = "music/winningmusic.mp3";
+	this.path.set(id,id);
+	this.type.set(id,"MUSIC");
+	id = "music/winningmusic.ogg";
 	this.path.set(id,id);
 	this.type.set(id,"MUSIC");
 	var assetsPrefix = ApplicationMain.config.assetsPrefix;
@@ -2140,8 +2210,10 @@ var Level = function() {
 	haxe_Log.trace("level has been created",{ fileName : "Level.hx", lineNumber : 20, className : "Level", methodName : "new"});
 	var levelcoll = new openfl_display_Bitmap(openfl_Assets.getBitmapData("img/level/collision.png"));
 	var levelback = new openfl_display_Bitmap(openfl_Assets.getBitmapData("img/level/floorplan.png"));
+	var levelwall = new openfl_display_Bitmap(openfl_Assets.getBitmapData("img/level/floorwalls.png"));
 	this.addChild(levelcoll);
 	this.addChild(levelback);
+	this.addChild(levelwall);
 };
 $hxClasses["Level"] = Level;
 Level.__name__ = ["Level"];
@@ -2236,15 +2308,15 @@ MainMenu.prototype = $extend(openfl_display_Sprite.prototype,{
 		this.addChild(this.contact);
 		this.addChild(this.exit);
 		this.start.set_x(this.X / 2 - this.start.get_width() / 2);
-		this.start.set_y(150);
+		this.start.set_y(250);
 		this.levelSelect.set_x(this.X / 2 - this.levelSelect.get_width() / 2);
-		this.levelSelect.set_y(250);
+		this.levelSelect.set_y(330);
 		this.options.set_x(this.X / 2 - this.options.get_width() / 2);
-		this.options.set_y(350);
+		this.options.set_y(410);
 		this.contact.set_x(this.X / 2 - this.contact.get_width() / 2);
-		this.contact.set_y(450);
+		this.contact.set_y(490);
 		this.exit.set_x(this.X / 2 - this.exit.get_width() / 2);
-		this.exit.set_y(550);
+		this.exit.set_y(570);
 		this.start.addEventListener(openfl_events_MouseEvent.CLICK,$bind(this,this.click));
 		this.levelSelect.addEventListener(openfl_events_MouseEvent.CLICK,$bind(this,this.click));
 		this.options.addEventListener(openfl_events_MouseEvent.CLICK,$bind(this,this.click));
@@ -2265,9 +2337,9 @@ MainMenu.prototype = $extend(openfl_display_Sprite.prototype,{
 });
 Math.__name__ = ["Math"];
 var Music = function() {
-	this.Winning = openfl_Assets.getSound("music/Winning.ogg");
-	this.Menu = openfl_Assets.getSound("music/Menu.ogg");
-	this.GameMusic = openfl_Assets.getSound("music/GameMusic.ogg");
+	this.Winning = openfl_Assets.getSound("music/winningmusic.ogg");
+	this.Menu = openfl_Assets.getSound("music/menumusic.ogg");
+	this.GameMusic = openfl_Assets.getSound("music/gamemusic.ogg");
 	openfl_display_Sprite.call(this);
 	this.musicVolume = 1;
 };
@@ -2301,7 +2373,7 @@ Music.prototype = $extend(openfl_display_Sprite.prototype,{
 		this.soundChannel.addEventListener(openfl_events_Event.SOUND_COMPLETE,$bind(this,this.gameMusicRepeat));
 	}
 	,mainMenuMusic: function() {
-		haxe_Log.trace("playing music",{ fileName : "Music.hx", lineNumber : 95, className : "Music", methodName : "mainMenuMusic"});
+		haxe_Log.trace("playing music",{ fileName : "Music.hx", lineNumber : 94, className : "Music", methodName : "mainMenuMusic"});
 		this.soundChannel = this.Menu.play();
 		this.soundChannel.set_soundTransform(new openfl_media_SoundTransform(this.musicVolume));
 		this.soundChannel.addEventListener(openfl_events_Event.SOUND_COMPLETE,$bind(this,this.mainMenuMusicRepeat));
@@ -2417,20 +2489,20 @@ Options.prototype = $extend(openfl_display_Sprite.prototype,{
 		this.addChildAt(background,0);
 	}
 	,drawButton: function() {
-		this.increaseSound.set_x(600);
-		this.increaseSound.set_y(50);
+		this.increaseSound.set_x(this.X / 3 * 2 - this.increaseSound.get_width() / 2);
+		this.increaseSound.set_y(250);
 		this.increaseSound.addEventListener(openfl_events_MouseEvent.CLICK,$bind(this,this.editSound));
 		this.addChild(this.increaseSound);
-		this.decreaseSound.set_x(100);
-		this.decreaseSound.set_y(50);
+		this.decreaseSound.set_x(this.X / 3 - this.decreaseSound.get_width() / 2);
+		this.decreaseSound.set_y(250);
 		this.decreaseSound.addEventListener(openfl_events_MouseEvent.CLICK,$bind(this,this.editSound));
 		this.addChild(this.decreaseSound);
-		this.increaseMusic.set_x(600);
-		this.increaseMusic.set_y(300);
+		this.increaseMusic.set_x(this.X / 3 * 2 - this.increaseMusic.get_width() / 2);
+		this.increaseMusic.set_y(350);
 		this.increaseMusic.addEventListener(openfl_events_MouseEvent.CLICK,$bind(this,this.editSound));
 		this.addChild(this.increaseMusic);
-		this.decreaseMusic.set_x(100);
-		this.decreaseMusic.set_y(300);
+		this.decreaseMusic.set_x(this.X / 3 - this.decreaseMusic.get_width() / 2);
+		this.decreaseMusic.set_y(350);
 		this.decreaseMusic.addEventListener(openfl_events_MouseEvent.CLICK,$bind(this,this.editSound));
 		this.addChild(this.decreaseMusic);
 		this.returnButton.set_x(this.X / 2 - this.returnButton.get_width() / 2);

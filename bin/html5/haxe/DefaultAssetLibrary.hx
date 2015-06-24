@@ -57,6 +57,8 @@ class DefaultAssetLibrary extends AssetLibrary {
 		type.set ("img/Button.png", AssetType.IMAGE);
 		className.set ("img/ButtonHover.png", __ASSET__img_buttonhover_png);
 		type.set ("img/ButtonHover.png", AssetType.IMAGE);
+		className.set ("img/Characterbackground.png", __ASSET__img_characterbackground_png);
+		type.set ("img/Characterbackground.png", AssetType.IMAGE);
 		className.set ("img/Contactbackground.png", __ASSET__img_contactbackground_png);
 		type.set ("img/Contactbackground.png", AssetType.IMAGE);
 		className.set ("img/level/collision.png", __ASSET__img_level_collision_png);
@@ -89,6 +91,8 @@ class DefaultAssetLibrary extends AssetLibrary {
 		type.set ("img/middlebuttonhover.png", AssetType.IMAGE);
 		className.set ("img/Optionsbackground.png", __ASSET__img_optionsbackground_png);
 		type.set ("img/Optionsbackground.png", AssetType.IMAGE);
+		className.set ("img/sanneicon.png", __ASSET__img_sanneicon_png);
+		type.set ("img/sanneicon.png", AssetType.IMAGE);
 		className.set ("img/speech bubble big left.png", __ASSET__img_speech_bubble_big_left_png);
 		type.set ("img/speech bubble big left.png", AssetType.IMAGE);
 		className.set ("img/speech bubble big right.png", __ASSET__img_speech_bubble_big_right_png);
@@ -155,6 +159,8 @@ class DefaultAssetLibrary extends AssetLibrary {
 		type.set ("img/thomas/right_3.png", AssetType.IMAGE);
 		className.set ("img/thomas/right_4.png", __ASSET__img_thomas_right_4_png);
 		type.set ("img/thomas/right_4.png", AssetType.IMAGE);
+		className.set ("img/thomasicon.png", __ASSET__img_thomasicon_png);
+		type.set ("img/thomasicon.png", AssetType.IMAGE);
 		className.set ("img/topbutton.png", __ASSET__img_topbutton_png);
 		type.set ("img/topbutton.png", AssetType.IMAGE);
 		className.set ("img/topbuttonhover.png", __ASSET__img_topbuttonhover_png);
@@ -213,16 +219,28 @@ class DefaultAssetLibrary extends AssetLibrary {
 		type.set ("audio/Papers.mp3", AssetType.MUSIC);
 		className.set ("audio/Papers.ogg", __ASSET__audio_papers_ogg);
 		type.set ("audio/Papers.ogg", AssetType.SOUND);
-		className.set ("music/GameMusic.mp3", __ASSET__music_gamemusic_mp3);
-		type.set ("music/GameMusic.mp3", AssetType.MUSIC);
-		className.set ("music/GameMusic.ogg", __ASSET__music_gamemusic_ogg);
-		type.set ("music/GameMusic.ogg", AssetType.SOUND);
-		className.set ("music/Menu.mp3", __ASSET__music_menu_mp3);
-		type.set ("music/Menu.mp3", AssetType.MUSIC);
-		className.set ("music/Menu.ogg", __ASSET__music_menu_ogg);
-		type.set ("music/Menu.ogg", AssetType.SOUND);
-		className.set ("music/Winning.mp3", __ASSET__music_winning_mp3);
-		type.set ("music/Winning.mp3", AssetType.MUSIC);
+		className.set ("music/gamemusic.mp3", __ASSET__music_gamemusic_mp3);
+		type.set ("music/gamemusic.mp3", AssetType.MUSIC);
+		className.set ("music/gamemusic.ogg", __ASSET__music_gamemusic_ogg);
+		type.set ("music/gamemusic.ogg", AssetType.MUSIC);
+		className.set ("music/menumusic.mp3", __ASSET__music_menumusic_mp3);
+		type.set ("music/menumusic.mp3", AssetType.MUSIC);
+		className.set ("music/menumusic.ogg", __ASSET__music_menumusic_ogg);
+		type.set ("music/menumusic.ogg", AssetType.SOUND);
+		className.set ("music/Old/GameMusic.mp3", __ASSET__music_old_gamemusic_mp3);
+		type.set ("music/Old/GameMusic.mp3", AssetType.MUSIC);
+		className.set ("music/Old/GameMusic.ogg", __ASSET__music_old_gamemusic_ogg);
+		type.set ("music/Old/GameMusic.ogg", AssetType.SOUND);
+		className.set ("music/Old/Menu.mp3", __ASSET__music_old_menu_mp3);
+		type.set ("music/Old/Menu.mp3", AssetType.MUSIC);
+		className.set ("music/Old/Menu.ogg", __ASSET__music_old_menu_ogg);
+		type.set ("music/Old/Menu.ogg", AssetType.SOUND);
+		className.set ("music/Old/Winning.mp3", __ASSET__music_old_winning_mp3);
+		type.set ("music/Old/Winning.mp3", AssetType.MUSIC);
+		className.set ("music/winningmusic.mp3", __ASSET__music_winningmusic_mp3);
+		type.set ("music/winningmusic.mp3", AssetType.MUSIC);
+		className.set ("music/winningmusic.ogg", __ASSET__music_winningmusic_ogg);
+		type.set ("music/winningmusic.ogg", AssetType.MUSIC);
 		
 		
 		#elseif html5
@@ -249,6 +267,10 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		type.set (id, AssetType.IMAGE);
 		id = "img/ButtonHover.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "img/Characterbackground.png";
 		path.set (id, id);
 		
 		type.set (id, AssetType.IMAGE);
@@ -313,6 +335,10 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		type.set (id, AssetType.IMAGE);
 		id = "img/Optionsbackground.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "img/sanneicon.png";
 		path.set (id, id);
 		
 		type.set (id, AssetType.IMAGE);
@@ -448,6 +474,10 @@ class DefaultAssetLibrary extends AssetLibrary {
 		path.set (id, id);
 		
 		type.set (id, AssetType.IMAGE);
+		id = "img/thomasicon.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
 		id = "img/topbutton.png";
 		path.set (id, id);
 		
@@ -564,23 +594,47 @@ class DefaultAssetLibrary extends AssetLibrary {
 		path.set (id, id);
 		
 		type.set (id, AssetType.SOUND);
-		id = "music/GameMusic.mp3";
+		id = "music/gamemusic.mp3";
 		path.set (id, id);
 		
 		type.set (id, AssetType.MUSIC);
-		id = "music/GameMusic.ogg";
-		path.set (id, id);
-		
-		type.set (id, AssetType.SOUND);
-		id = "music/Menu.mp3";
+		id = "music/gamemusic.ogg";
 		path.set (id, id);
 		
 		type.set (id, AssetType.MUSIC);
-		id = "music/Menu.ogg";
+		id = "music/menumusic.mp3";
+		path.set (id, id);
+		
+		type.set (id, AssetType.MUSIC);
+		id = "music/menumusic.ogg";
 		path.set (id, id);
 		
 		type.set (id, AssetType.SOUND);
-		id = "music/Winning.mp3";
+		id = "music/Old/GameMusic.mp3";
+		path.set (id, id);
+		
+		type.set (id, AssetType.MUSIC);
+		id = "music/Old/GameMusic.ogg";
+		path.set (id, id);
+		
+		type.set (id, AssetType.SOUND);
+		id = "music/Old/Menu.mp3";
+		path.set (id, id);
+		
+		type.set (id, AssetType.MUSIC);
+		id = "music/Old/Menu.ogg";
+		path.set (id, id);
+		
+		type.set (id, AssetType.SOUND);
+		id = "music/Old/Winning.mp3";
+		path.set (id, id);
+		
+		type.set (id, AssetType.MUSIC);
+		id = "music/winningmusic.mp3";
+		path.set (id, id);
+		
+		type.set (id, AssetType.MUSIC);
+		id = "music/winningmusic.ogg";
 		path.set (id, id);
 		
 		type.set (id, AssetType.MUSIC);
@@ -596,6 +650,15 @@ class DefaultAssetLibrary extends AssetLibrary {
 		#else
 		
 		#if openfl
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		
 		
@@ -711,6 +774,9 @@ class DefaultAssetLibrary extends AssetLibrary {
 		className.set ("img/ButtonHover.png", __ASSET__img_buttonhover_png);
 		type.set ("img/ButtonHover.png", AssetType.IMAGE);
 		
+		className.set ("img/Characterbackground.png", __ASSET__img_characterbackground_png);
+		type.set ("img/Characterbackground.png", AssetType.IMAGE);
+		
 		className.set ("img/Contactbackground.png", __ASSET__img_contactbackground_png);
 		type.set ("img/Contactbackground.png", AssetType.IMAGE);
 		
@@ -758,6 +824,9 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		className.set ("img/Optionsbackground.png", __ASSET__img_optionsbackground_png);
 		type.set ("img/Optionsbackground.png", AssetType.IMAGE);
+		
+		className.set ("img/sanneicon.png", __ASSET__img_sanneicon_png);
+		type.set ("img/sanneicon.png", AssetType.IMAGE);
 		
 		className.set ("img/speech bubble big left.png", __ASSET__img_speech_bubble_big_left_png);
 		type.set ("img/speech bubble big left.png", AssetType.IMAGE);
@@ -858,6 +927,9 @@ class DefaultAssetLibrary extends AssetLibrary {
 		className.set ("img/thomas/right_4.png", __ASSET__img_thomas_right_4_png);
 		type.set ("img/thomas/right_4.png", AssetType.IMAGE);
 		
+		className.set ("img/thomasicon.png", __ASSET__img_thomasicon_png);
+		type.set ("img/thomasicon.png", AssetType.IMAGE);
+		
 		className.set ("img/topbutton.png", __ASSET__img_topbutton_png);
 		type.set ("img/topbutton.png", AssetType.IMAGE);
 		
@@ -945,20 +1017,38 @@ class DefaultAssetLibrary extends AssetLibrary {
 		className.set ("audio/Papers.ogg", __ASSET__audio_papers_ogg);
 		type.set ("audio/Papers.ogg", AssetType.SOUND);
 		
-		className.set ("music/GameMusic.mp3", __ASSET__music_gamemusic_mp3);
-		type.set ("music/GameMusic.mp3", AssetType.MUSIC);
+		className.set ("music/gamemusic.mp3", __ASSET__music_gamemusic_mp3);
+		type.set ("music/gamemusic.mp3", AssetType.MUSIC);
 		
-		className.set ("music/GameMusic.ogg", __ASSET__music_gamemusic_ogg);
-		type.set ("music/GameMusic.ogg", AssetType.SOUND);
+		className.set ("music/gamemusic.ogg", __ASSET__music_gamemusic_ogg);
+		type.set ("music/gamemusic.ogg", AssetType.MUSIC);
 		
-		className.set ("music/Menu.mp3", __ASSET__music_menu_mp3);
-		type.set ("music/Menu.mp3", AssetType.MUSIC);
+		className.set ("music/menumusic.mp3", __ASSET__music_menumusic_mp3);
+		type.set ("music/menumusic.mp3", AssetType.MUSIC);
 		
-		className.set ("music/Menu.ogg", __ASSET__music_menu_ogg);
-		type.set ("music/Menu.ogg", AssetType.SOUND);
+		className.set ("music/menumusic.ogg", __ASSET__music_menumusic_ogg);
+		type.set ("music/menumusic.ogg", AssetType.SOUND);
 		
-		className.set ("music/Winning.mp3", __ASSET__music_winning_mp3);
-		type.set ("music/Winning.mp3", AssetType.MUSIC);
+		className.set ("music/Old/GameMusic.mp3", __ASSET__music_old_gamemusic_mp3);
+		type.set ("music/Old/GameMusic.mp3", AssetType.MUSIC);
+		
+		className.set ("music/Old/GameMusic.ogg", __ASSET__music_old_gamemusic_ogg);
+		type.set ("music/Old/GameMusic.ogg", AssetType.SOUND);
+		
+		className.set ("music/Old/Menu.mp3", __ASSET__music_old_menu_mp3);
+		type.set ("music/Old/Menu.mp3", AssetType.MUSIC);
+		
+		className.set ("music/Old/Menu.ogg", __ASSET__music_old_menu_ogg);
+		type.set ("music/Old/Menu.ogg", AssetType.SOUND);
+		
+		className.set ("music/Old/Winning.mp3", __ASSET__music_old_winning_mp3);
+		type.set ("music/Old/Winning.mp3", AssetType.MUSIC);
+		
+		className.set ("music/winningmusic.mp3", __ASSET__music_winningmusic_mp3);
+		type.set ("music/winningmusic.mp3", AssetType.MUSIC);
+		
+		className.set ("music/winningmusic.ogg", __ASSET__music_winningmusic_ogg);
+		type.set ("music/winningmusic.ogg", AssetType.MUSIC);
 		
 		
 		if (useManifest) {
@@ -1566,6 +1656,7 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:keep @:bind #if display private #end class __ASSET__img_bottombuttonhover_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__img_button_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__img_buttonhover_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_characterbackground_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__img_contactbackground_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__img_level_collision_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__img_level_floorplan_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
@@ -1582,6 +1673,7 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:keep @:bind #if display private #end class __ASSET__img_middlebutton_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__img_middlebuttonhover_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__img_optionsbackground_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_sanneicon_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__img_speech_bubble_big_left_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__img_speech_bubble_big_right_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__img_speech_bubble_small_left_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
@@ -1615,6 +1707,7 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:keep @:bind #if display private #end class __ASSET__img_thomas_right_2_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__img_thomas_right_3_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__img_thomas_right_4_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_thomasicon_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__img_topbutton_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__img_topbuttonhover_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__audio_buttonclick_mp3 extends null { }
@@ -1646,12 +1739,27 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:keep @:bind #if display private #end class __ASSET__audio_papers_ogg extends null { }
 @:keep @:bind #if display private #end class __ASSET__music_gamemusic_mp3 extends null { }
 @:keep @:bind #if display private #end class __ASSET__music_gamemusic_ogg extends null { }
-@:keep @:bind #if display private #end class __ASSET__music_menu_mp3 extends null { }
-@:keep @:bind #if display private #end class __ASSET__music_menu_ogg extends null { }
-@:keep @:bind #if display private #end class __ASSET__music_winning_mp3 extends null { }
+@:keep @:bind #if display private #end class __ASSET__music_menumusic_mp3 extends null { }
+@:keep @:bind #if display private #end class __ASSET__music_menumusic_ogg extends null { }
+@:keep @:bind #if display private #end class __ASSET__music_old_gamemusic_mp3 extends null { }
+@:keep @:bind #if display private #end class __ASSET__music_old_gamemusic_ogg extends null { }
+@:keep @:bind #if display private #end class __ASSET__music_old_menu_mp3 extends null { }
+@:keep @:bind #if display private #end class __ASSET__music_old_menu_ogg extends null { }
+@:keep @:bind #if display private #end class __ASSET__music_old_winning_mp3 extends null { }
+@:keep @:bind #if display private #end class __ASSET__music_winningmusic_mp3 extends null { }
+@:keep @:bind #if display private #end class __ASSET__music_winningmusic_ogg extends null { }
 
 
 #elseif html5
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1757,6 +1865,7 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:image("assets/img/bottombuttonhover.png") #if display private #end class __ASSET__img_bottombuttonhover_png extends lime.graphics.Image {}
 @:image("assets/img/Button.png") #if display private #end class __ASSET__img_button_png extends lime.graphics.Image {}
 @:image("assets/img/ButtonHover.png") #if display private #end class __ASSET__img_buttonhover_png extends lime.graphics.Image {}
+@:image("assets/img/Characterbackground.png") #if display private #end class __ASSET__img_characterbackground_png extends lime.graphics.Image {}
 @:image("assets/img/Contactbackground.png") #if display private #end class __ASSET__img_contactbackground_png extends lime.graphics.Image {}
 @:image("assets/img/level/collision.png") #if display private #end class __ASSET__img_level_collision_png extends lime.graphics.Image {}
 @:image("assets/img/level/floorplan.png") #if display private #end class __ASSET__img_level_floorplan_png extends lime.graphics.Image {}
@@ -1773,6 +1882,7 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:image("assets/img/middlebutton.png") #if display private #end class __ASSET__img_middlebutton_png extends lime.graphics.Image {}
 @:image("assets/img/middlebuttonhover.png") #if display private #end class __ASSET__img_middlebuttonhover_png extends lime.graphics.Image {}
 @:image("assets/img/Optionsbackground.png") #if display private #end class __ASSET__img_optionsbackground_png extends lime.graphics.Image {}
+@:image("assets/img/sanneicon.png") #if display private #end class __ASSET__img_sanneicon_png extends lime.graphics.Image {}
 @:image("assets/img/speech bubble big left.png") #if display private #end class __ASSET__img_speech_bubble_big_left_png extends lime.graphics.Image {}
 @:image("assets/img/speech bubble big right.png") #if display private #end class __ASSET__img_speech_bubble_big_right_png extends lime.graphics.Image {}
 @:image("assets/img/speech bubble small left.png") #if display private #end class __ASSET__img_speech_bubble_small_left_png extends lime.graphics.Image {}
@@ -1806,6 +1916,7 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:image("assets/img/thomas/right_2.png") #if display private #end class __ASSET__img_thomas_right_2_png extends lime.graphics.Image {}
 @:image("assets/img/thomas/right_3.png") #if display private #end class __ASSET__img_thomas_right_3_png extends lime.graphics.Image {}
 @:image("assets/img/thomas/right_4.png") #if display private #end class __ASSET__img_thomas_right_4_png extends lime.graphics.Image {}
+@:image("assets/img/thomasicon.png") #if display private #end class __ASSET__img_thomasicon_png extends lime.graphics.Image {}
 @:image("assets/img/topbutton.png") #if display private #end class __ASSET__img_topbutton_png extends lime.graphics.Image {}
 @:image("assets/img/topbuttonhover.png") #if display private #end class __ASSET__img_topbuttonhover_png extends lime.graphics.Image {}
 @:file("assets/audio/Buttonclick.mp3") #if display private #end class __ASSET__audio_buttonclick_mp3 extends lime.utils.ByteArray {}
@@ -1835,11 +1946,17 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:file("assets/audio/Opendrawer.ogg") #if display private #end class __ASSET__audio_opendrawer_ogg extends lime.utils.ByteArray {}
 @:file("assets/audio/Papers.mp3") #if display private #end class __ASSET__audio_papers_mp3 extends lime.utils.ByteArray {}
 @:file("assets/audio/Papers.ogg") #if display private #end class __ASSET__audio_papers_ogg extends lime.utils.ByteArray {}
-@:file("assets/music/GameMusic.mp3") #if display private #end class __ASSET__music_gamemusic_mp3 extends lime.utils.ByteArray {}
-@:file("assets/music/GameMusic.ogg") #if display private #end class __ASSET__music_gamemusic_ogg extends lime.utils.ByteArray {}
-@:file("assets/music/Menu.mp3") #if display private #end class __ASSET__music_menu_mp3 extends lime.utils.ByteArray {}
-@:file("assets/music/Menu.ogg") #if display private #end class __ASSET__music_menu_ogg extends lime.utils.ByteArray {}
-@:file("assets/music/Winning.mp3") #if display private #end class __ASSET__music_winning_mp3 extends lime.utils.ByteArray {}
+@:file("assets/music/gamemusic.mp3") #if display private #end class __ASSET__music_gamemusic_mp3 extends lime.utils.ByteArray {}
+@:file("assets/music/gamemusic.ogg") #if display private #end class __ASSET__music_gamemusic_ogg extends lime.utils.ByteArray {}
+@:file("assets/music/menumusic.mp3") #if display private #end class __ASSET__music_menumusic_mp3 extends lime.utils.ByteArray {}
+@:file("assets/music/menumusic.ogg") #if display private #end class __ASSET__music_menumusic_ogg extends lime.utils.ByteArray {}
+@:file("assets/music/Old/GameMusic.mp3") #if display private #end class __ASSET__music_old_gamemusic_mp3 extends lime.utils.ByteArray {}
+@:file("assets/music/Old/GameMusic.ogg") #if display private #end class __ASSET__music_old_gamemusic_ogg extends lime.utils.ByteArray {}
+@:file("assets/music/Old/Menu.mp3") #if display private #end class __ASSET__music_old_menu_mp3 extends lime.utils.ByteArray {}
+@:file("assets/music/Old/Menu.ogg") #if display private #end class __ASSET__music_old_menu_ogg extends lime.utils.ByteArray {}
+@:file("assets/music/Old/Winning.mp3") #if display private #end class __ASSET__music_old_winning_mp3 extends lime.utils.ByteArray {}
+@:file("assets/music/winningmusic.mp3") #if display private #end class __ASSET__music_winningmusic_mp3 extends lime.utils.ByteArray {}
+@:file("assets/music/winningmusic.ogg") #if display private #end class __ASSET__music_winningmusic_ogg extends lime.utils.ByteArray {}
 
 
 

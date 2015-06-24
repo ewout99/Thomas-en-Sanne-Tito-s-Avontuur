@@ -41,7 +41,7 @@ class MainMenu extends Sprite
         function init (event:Event)
         {
                 removeEventListener ( Event.ADDED_TO_STAGE, init);
-                drawbackground();
+                drawbackground ();
                 drawmenu ();
                 
                 //Test the chat bubble.
@@ -77,15 +77,15 @@ class MainMenu extends Sprite
                 
                 
                 start.x = ( X / 2 - start.width / 2);
-                start.y = 150;
+                start.y = 250;
                 levelSelect.x = ( X / 2 - levelSelect.width / 2);
-                levelSelect.y = 250;
+                levelSelect.y = 330;
                 options.x = (X / 2 - options.width / 2);
-                options.y = 350;
+                options.y = 410;
                 contact.x = (X / 2 - contact.width / 2);
-                contact.y =        450;
+                contact.y = 490;
                 exit.x = ( X / 2 - exit.width / 2);
-                exit.y = 550;
+                exit.y = 570;
 
                 
                 start.addEventListener(MouseEvent.CLICK, click);

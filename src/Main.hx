@@ -40,35 +40,36 @@ class Main extends Sprite
 	{
 		if (inited) return;
 		inited = true;
-		// (your code here)
 		instance = this;
 		switchScreen (Main.MAIN_MENU_SCREEN);
-		// createmenu ();
 		addChild (sound);
-		addChild (music);
-		
-		trace("Stuff");
+		//addChild (music);
 	}
 	
 	/**
 	 * 
 	 * Singleton design pattern.
 	 */
+	
 	public static function getInstance():Main
 	{
 		return instance;
 	}
+	
 	/**
 	 * Remove current screen
 	 * Switch to requested screen
 	 */
+	
 	public function switchScreen (toScreen:String)
 	{
 		if ( currentScreen != null )
 		{
 			removeChild (currentScreen);
 			
+			music.stopMusic ();
 		}
+		
 		switch ( toScreen)
 		{
 			case Main.MAIN_MENU_SCREEN:
@@ -83,9 +84,7 @@ class Main extends Sprite
 				currentScreen = new Options();
 			case Main.GAME_SCREEN:
 				currentScreen = new Game();
-				music.stopMusic();
 		}
-		
 		addChild (currentScreen);
 	}
 	

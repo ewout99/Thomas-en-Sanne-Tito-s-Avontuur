@@ -58,6 +58,10 @@ class ApplicationMain {
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
+		urls.push ("img/Characterbackground.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
 		urls.push ("img/Contactbackground.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		
@@ -119,6 +123,10 @@ class ApplicationMain {
 		
 		
 		urls.push ("img/Optionsbackground.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/sanneicon.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
@@ -254,6 +262,10 @@ class ApplicationMain {
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
+		urls.push ("img/thomasicon.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
 		urls.push ("img/topbutton.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		
@@ -370,23 +382,47 @@ class ApplicationMain {
 		types.push (lime.Assets.AssetType.SOUND);
 		
 		
-		urls.push ("music/GameMusic.mp3");
+		urls.push ("music/gamemusic.mp3");
 		types.push (lime.Assets.AssetType.MUSIC);
 		
 		
-		urls.push ("music/GameMusic.ogg");
-		types.push (lime.Assets.AssetType.SOUND);
-		
-		
-		urls.push ("music/Menu.mp3");
+		urls.push ("music/gamemusic.ogg");
 		types.push (lime.Assets.AssetType.MUSIC);
 		
 		
-		urls.push ("music/Menu.ogg");
+		urls.push ("music/menumusic.mp3");
+		types.push (lime.Assets.AssetType.MUSIC);
+		
+		
+		urls.push ("music/menumusic.ogg");
 		types.push (lime.Assets.AssetType.SOUND);
 		
 		
-		urls.push ("music/Winning.mp3");
+		urls.push ("music/Old/GameMusic.mp3");
+		types.push (lime.Assets.AssetType.MUSIC);
+		
+		
+		urls.push ("music/Old/GameMusic.ogg");
+		types.push (lime.Assets.AssetType.SOUND);
+		
+		
+		urls.push ("music/Old/Menu.mp3");
+		types.push (lime.Assets.AssetType.MUSIC);
+		
+		
+		urls.push ("music/Old/Menu.ogg");
+		types.push (lime.Assets.AssetType.SOUND);
+		
+		
+		urls.push ("music/Old/Winning.mp3");
+		types.push (lime.Assets.AssetType.MUSIC);
+		
+		
+		urls.push ("music/winningmusic.mp3");
+		types.push (lime.Assets.AssetType.MUSIC);
+		
+		
+		urls.push ("music/winningmusic.ogg");
 		types.push (lime.Assets.AssetType.MUSIC);
 		
 		

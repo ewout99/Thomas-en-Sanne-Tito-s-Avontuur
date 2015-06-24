@@ -20,16 +20,15 @@ import openfl.Assets.loadSound;
  */
 class Music extends Sprite 
 {
-
 	// Importing all songs
 	#if flash
-	var GameMusic = Assets.getSound("music/GameMusic.mp3");
-	var Menu = Assets.getSound("music/Menu.mp3");
-	var Winning = Assets.getSound("music/Winning.mp3");
+	var GameMusic = Assets.getSound("music/gamemusic.mp3");
+	var Menu = Assets.getSound("music/menumusic.mp3");
+	var Winning = Assets.getSound("music/winningmusic.mp3");
 	#elseif html5
-	var GameMusic = Assets.getSound("music/GameMusic.ogg");
-	var Menu = Assets.getSound("music/Menu.ogg");
-	var Winning = Assets.getSound("music/Winning.ogg");
+	var GameMusic = Assets.getSound("music/gamemusic.ogg");
+	var Menu = Assets.getSound("music/menumusic.ogg");
+	var Winning = Assets.getSound("music/winningmusic.ogg");
 	#end
 
 	// variables for music volume and a soundchannel

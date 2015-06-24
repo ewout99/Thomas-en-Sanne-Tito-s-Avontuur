@@ -28,6 +28,7 @@ class Options extends Sprite
 		drawbackground();
 		drawButton();
 	}
+	
 	private	function drawbackground()
 	{
 		var background = new Bitmap(Assets.getBitmapData("img/Optionsbackground.png"));
@@ -38,25 +39,27 @@ class Options extends Sprite
 	function drawButton ()
 	{
 		// Sound Buttons
-		increaseSound.x = 600;
-		increaseSound.y = 50;
+		increaseSound.x = X / 3 * 2 - increaseSound.width / 2;
+		increaseSound.y = 250;
 		increaseSound.addEventListener(MouseEvent.CLICK, editSound);
 		addChild(increaseSound);
 		
-		decreaseSound.x = 100;
-		decreaseSound.y = 50;
+		decreaseSound.x = X / 3 - decreaseSound.width / 2;
+		decreaseSound.y = 250;
 		decreaseSound.addEventListener(MouseEvent.CLICK, editSound);
 		addChild(decreaseSound);
+		
 		// Music Buttons
-		increaseMusic.x = 600;
-		increaseMusic.y = 300;
+		increaseMusic.x = X / 3 * 2 - increaseMusic.width / 2;
+		increaseMusic.y = 350;
 		increaseMusic.addEventListener(MouseEvent.CLICK, editSound);
 		addChild(increaseMusic);
 		
-		decreaseMusic.x = 100;
-		decreaseMusic.y = 300;
+		decreaseMusic.x = X / 3 - decreaseMusic.width / 2;
+		decreaseMusic.y = 350;
 		decreaseMusic.addEventListener(MouseEvent.CLICK, editSound);
 		addChild(decreaseMusic);
+		
 		// Return Button
 		returnButton.x = (X / 2 - returnButton.width /2 );
 		returnButton.y = (Y * 3/ 4 - returnButton.height /2 );
