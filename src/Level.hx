@@ -31,9 +31,9 @@ class Level extends Sprite
 		
 		var checkcol:Int = levelwall.bitmapData.getPixel (x, y);
 		
-		trace (checkcol);
+		trace (x + "   " + y + "   " + checkcol);
 		
-		
+		if (checkcol == 16777215 &&
 		
 		return false;
 	}

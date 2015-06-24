@@ -61,6 +61,10 @@ class DefaultAssetLibrary extends AssetLibrary {
 		type.set ("img/Characterbackground.png", AssetType.IMAGE);
 		path.set ("img/Contactbackground.png", "img/Contactbackground.png");
 		type.set ("img/Contactbackground.png", AssetType.IMAGE);
+		path.set ("img/Hint.png", "img/Hint.png");
+		type.set ("img/Hint.png", AssetType.IMAGE);
+		path.set ("img/Hinthover.png", "img/Hinthover.png");
+		type.set ("img/Hinthover.png", AssetType.IMAGE);
 		path.set ("img/level/collision.png", "img/level/collision.png");
 		type.set ("img/level/collision.png", AssetType.IMAGE);
 		path.set ("img/level/floorplan.png", "img/level/floorplan.png");
@@ -89,8 +93,44 @@ class DefaultAssetLibrary extends AssetLibrary {
 		type.set ("img/middlebutton.png", AssetType.IMAGE);
 		path.set ("img/middlebuttonhover.png", "img/middlebuttonhover.png");
 		type.set ("img/middlebuttonhover.png", AssetType.IMAGE);
+		path.set ("img/Objectives.png", "img/Objectives.png");
+		type.set ("img/Objectives.png", AssetType.IMAGE);
+		path.set ("img/optionbutton.png", "img/optionbutton.png");
+		type.set ("img/optionbutton.png", AssetType.IMAGE);
 		path.set ("img/Optionsbackground.png", "img/Optionsbackground.png");
 		type.set ("img/Optionsbackground.png", AssetType.IMAGE);
+		path.set ("img/sanne/back_1.png", "img/sanne/back_1.png");
+		type.set ("img/sanne/back_1.png", AssetType.IMAGE);
+		path.set ("img/sanne/back_2.png", "img/sanne/back_2.png");
+		type.set ("img/sanne/back_2.png", AssetType.IMAGE);
+		path.set ("img/sanne/back_3.png", "img/sanne/back_3.png");
+		type.set ("img/sanne/back_3.png", AssetType.IMAGE);
+		path.set ("img/sanne/back_4.png", "img/sanne/back_4.png");
+		type.set ("img/sanne/back_4.png", AssetType.IMAGE);
+		path.set ("img/sanne/front_1.png", "img/sanne/front_1.png");
+		type.set ("img/sanne/front_1.png", AssetType.IMAGE);
+		path.set ("img/sanne/front_2.png", "img/sanne/front_2.png");
+		type.set ("img/sanne/front_2.png", AssetType.IMAGE);
+		path.set ("img/sanne/front_3.png", "img/sanne/front_3.png");
+		type.set ("img/sanne/front_3.png", AssetType.IMAGE);
+		path.set ("img/sanne/front_4.png", "img/sanne/front_4.png");
+		type.set ("img/sanne/front_4.png", AssetType.IMAGE);
+		path.set ("img/sanne/left_1.png", "img/sanne/left_1.png");
+		type.set ("img/sanne/left_1.png", AssetType.IMAGE);
+		path.set ("img/sanne/left_2.png", "img/sanne/left_2.png");
+		type.set ("img/sanne/left_2.png", AssetType.IMAGE);
+		path.set ("img/sanne/left_3.png", "img/sanne/left_3.png");
+		type.set ("img/sanne/left_3.png", AssetType.IMAGE);
+		path.set ("img/sanne/left_4.png", "img/sanne/left_4.png");
+		type.set ("img/sanne/left_4.png", AssetType.IMAGE);
+		path.set ("img/sanne/right_1.png", "img/sanne/right_1.png");
+		type.set ("img/sanne/right_1.png", AssetType.IMAGE);
+		path.set ("img/sanne/right_2.png", "img/sanne/right_2.png");
+		type.set ("img/sanne/right_2.png", AssetType.IMAGE);
+		path.set ("img/sanne/right_3.png", "img/sanne/right_3.png");
+		type.set ("img/sanne/right_3.png", AssetType.IMAGE);
+		path.set ("img/sanne/right_4.png", "img/sanne/right_4.png");
+		type.set ("img/sanne/right_4.png", AssetType.IMAGE);
 		path.set ("img/sanneicon.png", "img/sanneicon.png");
 		type.set ("img/sanneicon.png", AssetType.IMAGE);
 		path.set ("img/speech bubble big left.png", "img/speech bubble big left.png");
@@ -272,6 +312,12 @@ class DefaultAssetLibrary extends AssetLibrary {
 		id = "img/Contactbackground.png";
 		path.set (id, id);
 		type.set (id, AssetType.IMAGE);
+		id = "img/Hint.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "img/Hinthover.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
 		id = "img/level/collision.png";
 		path.set (id, id);
 		type.set (id, AssetType.IMAGE);
@@ -314,7 +360,61 @@ class DefaultAssetLibrary extends AssetLibrary {
 		id = "img/middlebuttonhover.png";
 		path.set (id, id);
 		type.set (id, AssetType.IMAGE);
+		id = "img/Objectives.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "img/optionbutton.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
 		id = "img/Optionsbackground.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "img/sanne/back_1.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "img/sanne/back_2.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "img/sanne/back_3.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "img/sanne/back_4.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "img/sanne/front_1.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "img/sanne/front_2.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "img/sanne/front_3.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "img/sanne/front_4.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "img/sanne/left_1.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "img/sanne/left_2.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "img/sanne/left_3.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "img/sanne/left_4.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "img/sanne/right_1.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "img/sanne/right_2.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "img/sanne/right_3.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "img/sanne/right_4.png";
 		path.set (id, id);
 		type.set (id, AssetType.IMAGE);
 		id = "img/sanneicon.png";
@@ -658,11 +758,51 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		
 		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		#end
 		
 		#if (windows || mac || linux)
 		
 		var useManifest = false;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
 		useManifest = true;
 		useManifest = true;
 		useManifest = true;
@@ -1464,7 +1604,47 @@ class DefaultAssetLibrary extends AssetLibrary {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #elseif html5
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

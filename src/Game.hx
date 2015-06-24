@@ -81,16 +81,11 @@ class Game extends Sprite
 	
 	function updatescene ()
 	{
-		var blockedup:Bool = false;
-		var blockeddown:Bool = false;
-		var blockedright:Bool = false;
-		var blockedleft:Bool = false;
-		
-		collcheck ();
-		
 		if (activekey == 87)
 		{
-			if (blockedup == false)
+			var blocked:Bool = collcheck (0,10);
+			
+			if (blocked == false)
 			{
 				scroll (3, "Y");
 			
@@ -100,23 +95,38 @@ class Game extends Sprite
 		
 		else if (activekey == 65)
 		{
-			scroll (3, "X");
+			var blocked:Bool = collcheck (10,0);
 			
-			player.animate ("left_");
+			if (blocked == false)
+			{
+				scroll (3, "X");
+			
+				player.animate ("left_");
+			}
 		}
 		
 		else if (activekey == 83)
 		{
-			scroll (-3, "Y");
+			var blocked:Bool = collcheck (0, -10);
 			
-			player.animate ("front_");
+			if (blocked == false)
+			{
+				scroll (-3, "Y");
+				
+				player.animate ("front_");
+			}
 		}
 		
 		else if (activekey == 68)
 		{
-			scroll (-3, "X");
+			var blocked:Bool = collcheck (-10, 0);
 			
-			player.animate ("right_");
+			if (blocked == false)
+			{
+				scroll (-3, "X");
+				
+				player.animate ("right_");
+			}
 		}
 	}
 	
@@ -278,7 +288,10 @@ class Game extends Sprite
 	
 	function collcheck ()
 	{
-		var transparent:Bool = level.transparencycheck (Std.int (player.x), Std.int(player.y));
+		var chartruex:Int = Std.int(level.x * -1) + 608;
+		var chartruey:Int = Std.int(level.y * -1) + 328;
+		
+		var transparent:Bool = level.transparencycheck (chartruex, chartruey);
 	}
 
 	//====================================================================//

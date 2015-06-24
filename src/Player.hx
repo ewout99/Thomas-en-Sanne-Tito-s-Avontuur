@@ -25,6 +25,7 @@ class Player extends Sprite
 	public var activeKey:Int = 0;
 	var animationtimer:Timer;
 	var lastpath:String = "front_";
+	var charType2:String = "thomas";
 	
 	public function new()
 	{
@@ -32,12 +33,20 @@ class Player extends Sprite
 		
 		trace("player has been created");
 		
+		if (charType == 1)
+		{
+			charType2 = "thomas";
+		}
+		else if (charType == 2)
+		{
+			charType2 = "sanne";
+		}
+		
 		updategraphic ("front_1");
 	}
 	
 	public function animate ( path:String )
 	{
-		//trace ("Animate Function Called");
 		
 		animationtimer = new Timer (100);
 		
@@ -67,7 +76,7 @@ class Player extends Sprite
 	
 	function updategraphic (path:String)
 	{
-		var data:BitmapData = Assets.getBitmapData ("img/thomas/" + path + ".png");
+		var data:BitmapData = Assets.getBitmapData ("img/" + charType2 + "/" + path + ".png");
 	
 		removeChild (character);
 		character = new Bitmap (data);
