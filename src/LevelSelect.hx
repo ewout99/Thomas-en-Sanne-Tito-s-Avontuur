@@ -2,7 +2,9 @@ package ;
 import openfl.display.Sprite;
 import openfl.events.Event;
 import openfl.events.MouseEvent;
+import openfl.display.Bitmap;
 import openfl.Lib;
+import openfl.Assets;
 
 /**
  * Abilit to start any level
@@ -20,7 +22,14 @@ class LevelSelect extends Sprite
 	public function new() 
 	{
 		super();
+		drawbackground();
 		drawButton();
+	}
+		
+	private	function drawbackground()
+	{
+		var background = new Bitmap(Assets.getBitmapData("img/Contactbackground.png"));
+		addChildAt (background, 0);
 	}
 	
 	function drawButton ()

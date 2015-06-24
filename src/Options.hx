@@ -1,8 +1,10 @@
 package ;
 import openfl.display.Sprite;
+import openfl.display.Bitmap;
 import openfl.events.Event;
 import openfl.events.MouseEvent;
 import openfl.Lib;
+import openfl.Assets;
 /**
  * Options screen
  * Change volumes etc.
@@ -23,7 +25,13 @@ class Options extends Sprite
 	public function new() 
 	{
 		super();
+		drawbackground();
 		drawButton();
+	}
+	private	function drawbackground()
+	{
+		var background = new Bitmap(Assets.getBitmapData("img/Optionsbackground.png"));
+		addChildAt (background, 0);
 	}
 	
 	// Draws all buttons and adds eventlistner to make the buttons usefull
@@ -61,19 +69,19 @@ class Options extends Sprite
 	{
 		if (e.currentTarget == increaseMusic)
 		{
-			Main.getInstance().musicvolume += 0.1;
+			Main.getInstance().music.updateMusicVolume (0.2, "up");
 		}
 		if (e.currentTarget == decreaseMusic)
 		{
-			Main.getInstance().musicvolume -= 0.1;
+			Main.getInstance().music.updateMusicVolume (0.2,"down");
 		}
 		if (e.currentTarget == increaseSound)
 		{
-			Main.getInstance().soundvolume += 0.1;
+			Main.getInstance().sound.updateSoundVolume (0.2, "up");
 		}
 		if (e.currentTarget == decreaseSound)
 		{
-			Main.getInstance().soundvolume -= 0.1;
+			Main.getInstance().sound.updateSoundVolume(0.2, "down");
 		}
 	}
 	

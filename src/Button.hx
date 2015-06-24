@@ -3,6 +3,7 @@ package ;
 import openfl.display.Bitmap;
 import openfl.display.Sprite;
 import openfl.Assets;
+import openfl.events.Event;
 import openfl.events.MouseEvent;
 import openfl.Lib;
 import openfl.text.TextField;
@@ -21,7 +22,7 @@ class Button extends Sprite
 	var mainiamge:Bitmap;
 	var mainImageHover:Bitmap; 
 	var buttonText:TextField;
-	var buttonTextFormat:TextFormat = new TextFormat("Arial", 24, 0xff00ff, true, false, false, null, null, TextFormatAlign.CENTER);
+	var buttonTextFormat:TextFormat = new TextFormat("Arial", 24, 0xffffff, true, false, false, null, null, TextFormatAlign.CENTER);
 	
 	// public funtion new, this delcared that there are two images needed to initiate the the function HOVER// 
 	// The eventlisters checks if the funtion is actialy is being executed, if mouse over, the menu hovers and calls
@@ -35,11 +36,13 @@ class Button extends Sprite
 		buttonText.selectable = false;
 		mainiamge = new Bitmap(Assets.getBitmapData(image));
 		mainImageHover = new Bitmap(Assets.getBitmapData(imageHover));
+		buttonText.width = 300;
 		buttonText.x = ( mainiamge.x + ( mainiamge.width - buttonText.width) / 2);
 		buttonText.y = (mainiamge.y + ( mainiamge.width - mainiamge.width) / 2 );
 		draw();
 		addEventListener(MouseEvent.MOUSE_OVER, OnMouseOver);
 		addEventListener(MouseEvent.MOUSE_OUT, OnMouseOut);
+		addEventListener(MouseEvent.CLICK, playSound);
 	}
 	
 	// The draw function draws the inital button 
@@ -61,11 +64,17 @@ class Button extends Sprite
 	
 	// When the mouse hover away from the button the child thats is called in the draw funtion is recalled//
 	
-	function OnMouseOut(e:MouseEvent) {
+	function OnMouseOut(e:MouseEvent) 
+	{
 		removeChildren();
 		addChild(mainiamge);
 		addChild(buttonText);
 	}
-
+	
+	function playSound (event:MouseEvent)
+	{
+		Main.getInstance().sound.playSound("click");
+		trace ("Click");
+	}
 	
 }
