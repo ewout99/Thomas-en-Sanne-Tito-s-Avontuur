@@ -64,7 +64,9 @@ class Music extends Sprite
 	
 	public function stopMusic ()
 	{
+		#if html
 		soundChannel.stop();
+		#end
 	}
 	
 	// starts the ingame music (currently not implemented due to not having statisfactory music)
@@ -72,18 +74,22 @@ class Music extends Sprite
 	public function gameMusic ()
 	
 	{
+		#if html
 		soundChannel = GameMusic.play();
 		soundChannel.soundTransform = new SoundTransform(musicVolume);
 		soundChannel.addEventListener(Event.SOUND_COMPLETE, gameMusicRepeat );
+		#end
 	}
 	
 	// repeats the ingame song
 	
 	function gameMusicRepeat (event:Event)
 	{
+		#if html
 		soundChannel = GameMusic.play();
 		soundChannel.soundTransform = new SoundTransform(musicVolume);
 		soundChannel.addEventListener(Event.SOUND_COMPLETE, gameMusicRepeat );
+		#end
 	}
 	
 	// starts the menu music
@@ -91,19 +97,22 @@ class Music extends Sprite
 	public function mainMenuMusic ()
 	
 	{
+		#if html
 		trace("playing music");
 		soundChannel = Menu.play();
 		soundChannel.soundTransform = new SoundTransform(musicVolume);
 		soundChannel.addEventListener(Event.SOUND_COMPLETE, mainMenuMusicRepeat );
+		#end
 	}
 	
 	// repeats the menu music
 	
 	function mainMenuMusicRepeat (event:Event)
 	{
+		#if html
 		soundChannel = Menu.play();
 		soundChannel.soundTransform = new SoundTransform(musicVolume);
 		soundChannel.addEventListener(Event.SOUND_COMPLETE, gameMusicRepeat );
-		
+		#end
 	}
 }
