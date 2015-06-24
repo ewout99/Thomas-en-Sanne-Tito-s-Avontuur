@@ -31,6 +31,12 @@ class Game extends Sprite
 		createplayer ();
 	}
 	
+	//====================================================================//
+	//                                                                    //
+	//                             Key Presses                            //
+	//                                                                    //
+	//====================================================================//
+	
 	//Makes player sprite adjust to pressed keys
 	function keypress (event:KeyboardEvent)
 	{
@@ -133,6 +139,12 @@ class Game extends Sprite
 			listenpress ();
 		}
 	}
+
+	//====================================================================//
+	//                                                                    //
+	//                         Initializing Stuff                         //
+	//                                                                    //
+	//====================================================================//
 	
 	//Adds the character to the stage and positions him
 	function createplayer ()
@@ -160,6 +172,12 @@ class Game extends Sprite
 		level.width = level.width * 1.5;
 		level.height = level.height * 1.5;
 	}
+
+	//====================================================================//
+	//                                                                    //
+	//                         Technical Functions                        //
+	//                                                                    //
+	//====================================================================//
 	
 	function scroll (dir:Int, axis:String)
 	{
@@ -236,11 +254,12 @@ class Game extends Sprite
 		
 		return closest;
 	}
-	
-	function checkcollision (dir:Int, axis:String)
-	{
-		
-	}
+
+	//====================================================================//
+	//                                                                    //
+	//                           Adding Items                             //
+	//                                                                    //
+	//====================================================================//
 	
 	function dirtyitemcreate ()
 	{
@@ -285,4 +304,10 @@ class Game extends Sprite
 			addChild ( item );
 		}
 	}
+	
+	//====================================================================//
+	//                                                                    //
+	//                           Mission Stuff                            //
+	//                                                                    //
+	//====================================================================//
 }
