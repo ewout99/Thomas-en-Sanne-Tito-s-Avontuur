@@ -18,17 +18,27 @@ class Game extends Sprite
 	var ui:UI;
 	var levelx:Int = Lib.current.stage.stageWidth;
 	var levely:Int = Lib.current.stage.stageHeight;
-	var activekey:Int = 0;
 	var activestage = Lib.current.stage;
 	var itemarray = new Array<Objects> ();
-	var missiontarget:String = "000";
+	var missiontarget:Int = 0;
+	var updatetimer:Timer;
+	
+	//keystates
+	var key_w:Bool = false;
+	var key_a:Bool = false;
+	var key_s:Bool = false;
+	var key_d:Bool = false;
+	var key_e:Bool = false;
+	var key_esc:Bool = false;
+	var key_space:Bool = false;
 
 	public function new() 
 	{
 		super();
 		
+		init ();
+		
 		createlevel ();
-		listenpress ();
 		dirtyitemcreate ();
 		createplayer ();
 		createUI();
@@ -41,125 +51,44 @@ class Game extends Sprite
 	//====================================================================//
 	
 	//Makes player sprite adjust to pressed keys
+	
 	function keypress (event:KeyboardEvent)
 	{
-		if (event.keyCode == 87)
+		switch ( event.keyCode)
 		{
-			listenrelease (event.keyCode);
-		}
-		
-		else if (event.keyCode == 65)
-		{
-			listenrelease (event.keyCode);
-		}
-		
-		else if (event.keyCode == 83)
-		{
-			listenrelease (event.keyCode);
-		}
-		
-		else if (event.keyCode == 68)
-		{
-			listenrelease (event.keyCode);
-		}
-		
-		else if (event.keyCode == 69)
-		{
-			var returnedobject = checkvalid ();
-			
-			if ( returnedobject.itemid != 0 )
-			{
-				trace (returnedobject.iteminteracttext);
-			}
-			
-			else
-			{
-				trace ("no valid item in range");
-			}
+			case 87: key_w = true;
+			case 65: key_a = true;
+			case 83: key_s = true;
+			case 68: key_d = true;
+			case 69: interact();
 		}
 	}
 	
-	function updatescene ()
-	{
-		if (activekey == 87)
-		{
-			var blocked:Bool = collcheck (0,10);
-			
-			if (blocked == false)
-			{
-				scroll (3, "Y");
-			
-				player.animate ("back_");
-			}
-		}
-		
-		else if (activekey == 65)
-		{
-			var blocked:Bool = collcheck (10,0);
-			
-			if (blocked == false)
-			{
-				scroll (3, "X");
-			
-				player.animate ("left_");
-			}
-		}
-		
-		else if (activekey == 83)
-		{
-			var blocked:Bool = collcheck (0, -10);
-			
-			if (blocked == false)
-			{
-				scroll (-3, "Y");
-				
-				player.animate ("front_");
-			}
-		}
-		
-		else if (activekey == 68)
-		{
-			var blocked:Bool = collcheck (-10, 0);
-			
-			if (blocked == false)
-			{
-				scroll (-3, "X");
-				
-				player.animate ("right_");
-			}
-		}
-	}
-	
-	//Adds eventlistener to stage
-	function listenpress ()
-	{
-		Lib.current.stage.addEventListener(KeyboardEvent.KEY_DOWN, keypress);
-	}
-	
-	//Removes keypress listener and adds key release listener
-	function listenrelease (keyCode:Int)
-	{
-		Lib.current.stage.removeEventListener(KeyboardEvent.KEY_DOWN, keypress);
-		
-		activekey = keyCode;
-		
-		Lib.current.stage.addEventListener(KeyboardEvent.KEY_UP, keyrelease);
-		
-		updatescene ();
-	}
-	
-	//Removes key release listener and resets the active key
 	function keyrelease (event:KeyboardEvent)
 	{
-		if (activekey == event.keyCode)
+		switch ( event.keyCode )
 		{
-			Lib.current.stage.removeEventListener(KeyboardEvent.KEY_UP, keyrelease);
-			
-			activekey = 0;
-			
-			player.stopanimation();
-			
-			listenpress ();
+			case 87: key_w = false;
+			case 65: key_a = false;
+			case 83: key_s = false;
+			case 68: key_d = false;
+		}
+		
+		player.stopanimation ();
+	}
+	
+	function interact ()
+	{
+		var returnedobject = checkvalid ();
+		
+		if ( returnedobject.itemid != 0 )
+		{
+			trace (returnedobject.iteminteracttext);
+		}
+		
+		else
+		{
+			trace ("no valid item in range");
 		}
 	}
 
@@ -168,6 +97,21 @@ class Game extends Sprite
 	//                         Initializing Stuff                         //
 	//                                                                    //
 	//====================================================================//
+	
+	function init ()
+	{
+		updatetimer = new Timer (40);
+		updatetimer.run = function ()
+		{
+			update ();
+		}
+		
+		//Listen for keypresses, set keypress states for update function
+		
+		Lib.current.stage.addEventListener ( KeyboardEvent.KEY_DOWN, keypress );
+		
+		Lib.current.stage.addEventListener ( KeyboardEvent.KEY_UP, keyrelease );
+	}
 	
 	//Adds the character to the stage and positions him
 	function createplayer ()
@@ -210,37 +154,107 @@ class Game extends Sprite
 	//                                                                    //
 	//====================================================================//
 	
-	function scroll (dir:Int, axis:String)
+	function update ()
 	{
-		var scrollclock:Timer = new Timer (30);
+		var truex:Int = Std.int(level.x * -1) + 608;
+		var truey:Int = Std.int(level.y * -1) + 328;
 		
-		scrollclock.run = function ()
+		if ( key_w == true )
 		{
-			//checkcollision (dir, axis);
+			var w_truey:Int = truey - 5;
+			var blocked = level.transparencycheck ( truex, w_truey );
 			
-			if (axis == "X")
+			if ( blocked == false && key_s == false )
 			{
-				level.x = level.x + 3 * dir;
-				
-				for (item in itemarray)
+				if ( key_a == true || key_d == true )
 				{
-					item.x = item.x + 3 * dir;
+					movelevel ( "y", -2 );
+				}
+				
+				else
+				{
+					movelevel ( "y", -3 );
 				}
 			}
+		}
+		
+		if ( key_a == true )
+		{
+			var a_truex:Int = truex - 5;
+			var blocked = level.transparencycheck ( a_truex, truey );
 			
-			else if (axis == "Y")
+			if ( blocked == false && key_d == false )
 			{
-				level.y = level.y + 3 * dir;
-				
-				for (item in itemarray)
+				if ( key_w == true || key_s == true )
 				{
-					item.y = item.y + 3 * dir;
+					movelevel ( "x", -2 );
+				}
+				
+				else
+				{
+					movelevel ( "x", -3 );
 				}
 			}
+		}
+		
+		if ( key_s == true )
+		{
+			var s_truey:Int = truey + 5;
+			var blocked = level.transparencycheck ( truex, s_truey );
 			
-			if (activekey == 0)
+			if ( blocked == false && key_w == false )
 			{
-				scrollclock.stop ();
+				if ( key_a == true || key_d == true )
+				{
+					movelevel ( "y", 2 );
+				}
+				
+				else
+				{
+					movelevel ( "y", 3 );
+				}
+			}
+		}
+		
+		if ( key_d == true )
+		{
+			var d_truex:Int = truex + 5;
+			var blocked = level.transparencycheck ( d_truex, truey );
+			
+			if ( blocked == false && key_a == false )
+			{
+				if ( key_w == true || key_s == true )
+				{
+					movelevel ( "x", 2 );
+				}
+				
+				else
+				{
+					movelevel ( "x", 3 );
+				}
+			}
+		}
+	}
+	
+	function movelevel (axis:String, speed:Int)
+	{
+		if (axis == "x")
+		{
+			level.x = level.x - speed;
+		
+			for (item in itemarray)
+			{
+				item.x = item.x - speed;
+			}
+		}
+		
+		if ( axis == "y" )
+		{
+			level.y = level.y - speed;
+			
+			for (item in itemarray)
+			{
+				item.y = item.y - speed;
 			}
 		}
 	}
@@ -284,14 +298,6 @@ class Game extends Sprite
 		}
 		
 		return closest;
-	}
-	
-	function collcheck ()
-	{
-		var chartruex:Int = Std.int(level.x * -1) + 608;
-		var chartruey:Int = Std.int(level.y * -1) + 328;
-		
-		var transparent:Bool = level.transparencycheck (chartruex, chartruey);
 	}
 
 	//====================================================================//

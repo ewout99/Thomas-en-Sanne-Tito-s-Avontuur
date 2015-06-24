@@ -99,6 +99,12 @@ class DefaultAssetLibrary extends AssetLibrary {
 		type.set ("img/optionbutton.png", AssetType.IMAGE);
 		path.set ("img/Optionsbackground.png", "img/Optionsbackground.png");
 		type.set ("img/Optionsbackground.png", AssetType.IMAGE);
+		path.set ("img/Progressbarpiece.png", "img/Progressbarpiece.png");
+		type.set ("img/Progressbarpiece.png", AssetType.IMAGE);
+		path.set ("img/Progressie.png", "img/Progressie.png");
+		type.set ("img/Progressie.png", AssetType.IMAGE);
+		path.set ("img/Progressie_2.png", "img/Progressie_2.png");
+		type.set ("img/Progressie_2.png", AssetType.IMAGE);
 		path.set ("img/sanne/back_1.png", "img/sanne/back_1.png");
 		type.set ("img/sanne/back_1.png", AssetType.IMAGE);
 		path.set ("img/sanne/back_2.png", "img/sanne/back_2.png");
@@ -367,6 +373,15 @@ class DefaultAssetLibrary extends AssetLibrary {
 		path.set (id, id);
 		type.set (id, AssetType.IMAGE);
 		id = "img/Optionsbackground.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "img/Progressbarpiece.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "img/Progressie.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "img/Progressie_2.png";
 		path.set (id, id);
 		type.set (id, AssetType.IMAGE);
 		id = "img/sanne/back_1.png";
@@ -778,11 +793,17 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		
 		
+		
+		
+		
 		#end
 		
 		#if (windows || mac || linux)
 		
 		var useManifest = false;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
 		useManifest = true;
 		useManifest = true;
 		useManifest = true;
@@ -1624,7 +1645,13 @@ class DefaultAssetLibrary extends AssetLibrary {
 
 
 
+
+
+
 #elseif html5
+
+
+
 
 
 

@@ -15,28 +15,25 @@ import openfl.Lib;
 
 class Player extends Sprite
 {
-	var stageY:Int = Lib.current.stage.stageHeight;
-	var stageX:Int = Lib.current.stage.stageWidth;
-	var tilesheet:Tilesheet;
-	var currentImg:Int = 0;
-	var frameCount:Int;
-	var charType:Int = Main.getInstance().currentChar;
-	var character:Bitmap;
-	public var activeKey:Int = 0;
-	var animationtimer:Timer;
+	//var stageY:Int = Lib.current.stage.stageHeight;
+	//var stageX:Int = Lib.current.stage.stageWidth;
+	//public var activeKey:Int = 0;
+	var animationtimer:Timer = new Timer (100);
 	var lastpath:String = "front_";
-	var charType2:String = "thomas";
+	
+	var character:Bitmap;
+	var charType:Int = Main.getInstance().currentChar;
+	var charType2:String = "none";
 	
 	public function new()
 	{
 		super();
 		
-		trace("player has been created");
-		
 		if (charType == 1)
 		{
 			charType2 = "thomas";
 		}
+		
 		else if (charType == 2)
 		{
 			charType2 = "sanne";
@@ -47,9 +44,6 @@ class Player extends Sprite
 	
 	public function animate ( path:String )
 	{
-		
-		animationtimer = new Timer (100);
-		
 		lastpath = path;
 		
 		var animationcounter = 1;
@@ -77,7 +71,7 @@ class Player extends Sprite
 	function updategraphic (path:String)
 	{
 		var data:BitmapData = Assets.getBitmapData ("img/" + charType2 + "/" + path + ".png");
-	
+	 
 		removeChild (character);
 		character = new Bitmap (data);
 		character.x = character.x - character.width / 2;

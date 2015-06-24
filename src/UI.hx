@@ -28,21 +28,29 @@ class UI extends Sprite
 	private function drawUI ()
 	{
 		var objectives = new Bitmap(Assets.getBitmapData("img/Objectives.png"));
+		objectives.width = objectives.width / 1.2;
+		objectives.height = objectives.height / 1.2;
 		objectives.x = 10;
 		objectives.y = (UIy / 2 - objectives.height /2) ;
 		addChild(objectives);
 		
-		var proggersie = new Bitmap (Assets.getBitmapData("img/Proggersie.png"));
-		proggersie.x = (UIx / 2 ) - ( proggersie.width / 2);
-		proggersie.y = 10;
-		addChild(proggersie);
+		var progressie = new Bitmap (Assets.getBitmapData("img/Progressie.png"));
+		progressie.width = progressie.width;
+		progressie.height = progressie.height;
+		progressie.x = (UIx / 2 ) - ( progressie.width / 2);
+		progressie.y = 10;
+		addChild(progressie);
 		
 		var option = new Bitmap(Assets.getBitmapData("img/optionbutton.png"));
+		option.width = option.width / 1.5;
+		option.height = option.height / 1.5;
 		option.x = (UIx - option.width - 25);
 		option.y = 25;
 		addChild(option);
 		option.addEventListener(MouseEvent.CLICK, backMenu); 
 		
+		hint.width = hint.width / 2;
+		hint.height = hint.height / 2;
 		hint.x = ( UIx - hint.width - 10);
 		hint.y = ( UIy - hint.height - 10);
 		addChild(hint);
@@ -56,10 +64,10 @@ class UI extends Sprite
 	{
 		for ( i in 0 ... progress)
 		{
-			var progressVisual = new Bitmap(Assets.getBitmapData("img/Progressbarpiece.png"));
+			/*var progressVisual = new Bitmap(Assets.getBitmapData("img/Progressbarpiece.png"));
 			progressVisual.y = 20;
 			progressVisual.x = 305 + i * 67;
-			addChild(progressVisual);
+			addChild(progressVisual);*/
 		}
 	}
 	

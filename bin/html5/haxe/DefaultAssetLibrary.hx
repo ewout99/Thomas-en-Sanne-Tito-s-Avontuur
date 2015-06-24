@@ -99,10 +99,44 @@ class DefaultAssetLibrary extends AssetLibrary {
 		type.set ("img/optionbutton.png", AssetType.IMAGE);
 		className.set ("img/Optionsbackground.png", __ASSET__img_optionsbackground_png);
 		type.set ("img/Optionsbackground.png", AssetType.IMAGE);
-		className.set ("img/Proggersie.png", __ASSET__img_proggersie_png);
-		type.set ("img/Proggersie.png", AssetType.IMAGE);
 		className.set ("img/Progressbarpiece.png", __ASSET__img_progressbarpiece_png);
 		type.set ("img/Progressbarpiece.png", AssetType.IMAGE);
+		className.set ("img/Progressie.png", __ASSET__img_progressie_png);
+		type.set ("img/Progressie.png", AssetType.IMAGE);
+		className.set ("img/Progressie_2.png", __ASSET__img_progressie_2_png);
+		type.set ("img/Progressie_2.png", AssetType.IMAGE);
+		className.set ("img/sanne/back_1.png", __ASSET__img_sanne_back_1_png);
+		type.set ("img/sanne/back_1.png", AssetType.IMAGE);
+		className.set ("img/sanne/back_2.png", __ASSET__img_sanne_back_2_png);
+		type.set ("img/sanne/back_2.png", AssetType.IMAGE);
+		className.set ("img/sanne/back_3.png", __ASSET__img_sanne_back_3_png);
+		type.set ("img/sanne/back_3.png", AssetType.IMAGE);
+		className.set ("img/sanne/back_4.png", __ASSET__img_sanne_back_4_png);
+		type.set ("img/sanne/back_4.png", AssetType.IMAGE);
+		className.set ("img/sanne/front_1.png", __ASSET__img_sanne_front_1_png);
+		type.set ("img/sanne/front_1.png", AssetType.IMAGE);
+		className.set ("img/sanne/front_2.png", __ASSET__img_sanne_front_2_png);
+		type.set ("img/sanne/front_2.png", AssetType.IMAGE);
+		className.set ("img/sanne/front_3.png", __ASSET__img_sanne_front_3_png);
+		type.set ("img/sanne/front_3.png", AssetType.IMAGE);
+		className.set ("img/sanne/front_4.png", __ASSET__img_sanne_front_4_png);
+		type.set ("img/sanne/front_4.png", AssetType.IMAGE);
+		className.set ("img/sanne/left_1.png", __ASSET__img_sanne_left_1_png);
+		type.set ("img/sanne/left_1.png", AssetType.IMAGE);
+		className.set ("img/sanne/left_2.png", __ASSET__img_sanne_left_2_png);
+		type.set ("img/sanne/left_2.png", AssetType.IMAGE);
+		className.set ("img/sanne/left_3.png", __ASSET__img_sanne_left_3_png);
+		type.set ("img/sanne/left_3.png", AssetType.IMAGE);
+		className.set ("img/sanne/left_4.png", __ASSET__img_sanne_left_4_png);
+		type.set ("img/sanne/left_4.png", AssetType.IMAGE);
+		className.set ("img/sanne/right_1.png", __ASSET__img_sanne_right_1_png);
+		type.set ("img/sanne/right_1.png", AssetType.IMAGE);
+		className.set ("img/sanne/right_2.png", __ASSET__img_sanne_right_2_png);
+		type.set ("img/sanne/right_2.png", AssetType.IMAGE);
+		className.set ("img/sanne/right_3.png", __ASSET__img_sanne_right_3_png);
+		type.set ("img/sanne/right_3.png", AssetType.IMAGE);
+		className.set ("img/sanne/right_4.png", __ASSET__img_sanne_right_4_png);
+		type.set ("img/sanne/right_4.png", AssetType.IMAGE);
 		className.set ("img/sanneicon.png", __ASSET__img_sanneicon_png);
 		type.set ("img/sanneicon.png", AssetType.IMAGE);
 		className.set ("img/speech bubble big left.png", __ASSET__img_speech_bubble_big_left_png);
@@ -177,6 +211,8 @@ class DefaultAssetLibrary extends AssetLibrary {
 		type.set ("img/topbutton.png", AssetType.IMAGE);
 		className.set ("img/topbuttonhover.png", __ASSET__img_topbuttonhover_png);
 		type.set ("img/topbuttonhover.png", AssetType.IMAGE);
+		className.set ("img/Victorybackground.png", __ASSET__img_victorybackground_png);
+		type.set ("img/Victorybackground.png", AssetType.IMAGE);
 		className.set ("audio/Buttonclick.mp3", __ASSET__audio_buttonclick_mp3);
 		type.set ("audio/Buttonclick.mp3", AssetType.MUSIC);
 		className.set ("audio/Buttonclick.ogg", __ASSET__audio_buttonclick_ogg);
@@ -366,11 +402,79 @@ class DefaultAssetLibrary extends AssetLibrary {
 		path.set (id, id);
 		
 		type.set (id, AssetType.IMAGE);
-		id = "img/Proggersie.png";
+		id = "img/Progressbarpiece.png";
 		path.set (id, id);
 		
 		type.set (id, AssetType.IMAGE);
-		id = "img/Progressbarpiece.png";
+		id = "img/Progressie.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "img/Progressie_2.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "img/sanne/back_1.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "img/sanne/back_2.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "img/sanne/back_3.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "img/sanne/back_4.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "img/sanne/front_1.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "img/sanne/front_2.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "img/sanne/front_3.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "img/sanne/front_4.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "img/sanne/left_1.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "img/sanne/left_2.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "img/sanne/left_3.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "img/sanne/left_4.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "img/sanne/right_1.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "img/sanne/right_2.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "img/sanne/right_3.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "img/sanne/right_4.png";
 		path.set (id, id);
 		
 		type.set (id, AssetType.IMAGE);
@@ -519,6 +623,10 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		type.set (id, AssetType.IMAGE);
 		id = "img/topbuttonhover.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "img/Victorybackground.png";
 		path.set (id, id);
 		
 		type.set (id, AssetType.IMAGE);
@@ -792,6 +900,24 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		
 		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		#end
 		
 		#if (windows || mac || linux)
@@ -879,11 +1005,62 @@ class DefaultAssetLibrary extends AssetLibrary {
 		className.set ("img/Optionsbackground.png", __ASSET__img_optionsbackground_png);
 		type.set ("img/Optionsbackground.png", AssetType.IMAGE);
 		
-		className.set ("img/Proggersie.png", __ASSET__img_proggersie_png);
-		type.set ("img/Proggersie.png", AssetType.IMAGE);
-		
 		className.set ("img/Progressbarpiece.png", __ASSET__img_progressbarpiece_png);
 		type.set ("img/Progressbarpiece.png", AssetType.IMAGE);
+		
+		className.set ("img/Progressie.png", __ASSET__img_progressie_png);
+		type.set ("img/Progressie.png", AssetType.IMAGE);
+		
+		className.set ("img/Progressie_2.png", __ASSET__img_progressie_2_png);
+		type.set ("img/Progressie_2.png", AssetType.IMAGE);
+		
+		className.set ("img/sanne/back_1.png", __ASSET__img_sanne_back_1_png);
+		type.set ("img/sanne/back_1.png", AssetType.IMAGE);
+		
+		className.set ("img/sanne/back_2.png", __ASSET__img_sanne_back_2_png);
+		type.set ("img/sanne/back_2.png", AssetType.IMAGE);
+		
+		className.set ("img/sanne/back_3.png", __ASSET__img_sanne_back_3_png);
+		type.set ("img/sanne/back_3.png", AssetType.IMAGE);
+		
+		className.set ("img/sanne/back_4.png", __ASSET__img_sanne_back_4_png);
+		type.set ("img/sanne/back_4.png", AssetType.IMAGE);
+		
+		className.set ("img/sanne/front_1.png", __ASSET__img_sanne_front_1_png);
+		type.set ("img/sanne/front_1.png", AssetType.IMAGE);
+		
+		className.set ("img/sanne/front_2.png", __ASSET__img_sanne_front_2_png);
+		type.set ("img/sanne/front_2.png", AssetType.IMAGE);
+		
+		className.set ("img/sanne/front_3.png", __ASSET__img_sanne_front_3_png);
+		type.set ("img/sanne/front_3.png", AssetType.IMAGE);
+		
+		className.set ("img/sanne/front_4.png", __ASSET__img_sanne_front_4_png);
+		type.set ("img/sanne/front_4.png", AssetType.IMAGE);
+		
+		className.set ("img/sanne/left_1.png", __ASSET__img_sanne_left_1_png);
+		type.set ("img/sanne/left_1.png", AssetType.IMAGE);
+		
+		className.set ("img/sanne/left_2.png", __ASSET__img_sanne_left_2_png);
+		type.set ("img/sanne/left_2.png", AssetType.IMAGE);
+		
+		className.set ("img/sanne/left_3.png", __ASSET__img_sanne_left_3_png);
+		type.set ("img/sanne/left_3.png", AssetType.IMAGE);
+		
+		className.set ("img/sanne/left_4.png", __ASSET__img_sanne_left_4_png);
+		type.set ("img/sanne/left_4.png", AssetType.IMAGE);
+		
+		className.set ("img/sanne/right_1.png", __ASSET__img_sanne_right_1_png);
+		type.set ("img/sanne/right_1.png", AssetType.IMAGE);
+		
+		className.set ("img/sanne/right_2.png", __ASSET__img_sanne_right_2_png);
+		type.set ("img/sanne/right_2.png", AssetType.IMAGE);
+		
+		className.set ("img/sanne/right_3.png", __ASSET__img_sanne_right_3_png);
+		type.set ("img/sanne/right_3.png", AssetType.IMAGE);
+		
+		className.set ("img/sanne/right_4.png", __ASSET__img_sanne_right_4_png);
+		type.set ("img/sanne/right_4.png", AssetType.IMAGE);
 		
 		className.set ("img/sanneicon.png", __ASSET__img_sanneicon_png);
 		type.set ("img/sanneicon.png", AssetType.IMAGE);
@@ -995,6 +1172,9 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		className.set ("img/topbuttonhover.png", __ASSET__img_topbuttonhover_png);
 		type.set ("img/topbuttonhover.png", AssetType.IMAGE);
+		
+		className.set ("img/Victorybackground.png", __ASSET__img_victorybackground_png);
+		type.set ("img/Victorybackground.png", AssetType.IMAGE);
 		
 		className.set ("audio/Buttonclick.mp3", __ASSET__audio_buttonclick_mp3);
 		type.set ("audio/Buttonclick.mp3", AssetType.MUSIC);
@@ -1737,8 +1917,25 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:keep @:bind #if display private #end class __ASSET__img_objectives_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__img_optionbutton_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__img_optionsbackground_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
-@:keep @:bind #if display private #end class __ASSET__img_proggersie_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__img_progressbarpiece_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_progressie_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_progressie_2_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_sanne_back_1_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_sanne_back_2_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_sanne_back_3_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_sanne_back_4_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_sanne_front_1_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_sanne_front_2_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_sanne_front_3_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_sanne_front_4_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_sanne_left_1_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_sanne_left_2_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_sanne_left_3_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_sanne_left_4_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_sanne_right_1_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_sanne_right_2_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_sanne_right_3_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_sanne_right_4_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__img_sanneicon_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__img_speech_bubble_big_left_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__img_speech_bubble_big_right_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
@@ -1776,6 +1973,7 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:keep @:bind #if display private #end class __ASSET__img_thomasicon_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__img_topbutton_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__img_topbuttonhover_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_victorybackground_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__audio_buttonclick_mp3 extends null { }
 @:keep @:bind #if display private #end class __ASSET__audio_buttonclick_ogg extends null { }
 @:keep @:bind #if display private #end class __ASSET__audio_clock_mp3 extends null { }
@@ -1924,6 +2122,24 @@ class DefaultAssetLibrary extends AssetLibrary {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #else
 
 
@@ -1958,8 +2174,25 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:image("assets/img/Objectives.png") #if display private #end class __ASSET__img_objectives_png extends lime.graphics.Image {}
 @:image("assets/img/optionbutton.png") #if display private #end class __ASSET__img_optionbutton_png extends lime.graphics.Image {}
 @:image("assets/img/Optionsbackground.png") #if display private #end class __ASSET__img_optionsbackground_png extends lime.graphics.Image {}
-@:image("assets/img/Proggersie.png") #if display private #end class __ASSET__img_proggersie_png extends lime.graphics.Image {}
 @:image("assets/img/Progressbarpiece.png") #if display private #end class __ASSET__img_progressbarpiece_png extends lime.graphics.Image {}
+@:image("assets/img/Progressie.png") #if display private #end class __ASSET__img_progressie_png extends lime.graphics.Image {}
+@:image("assets/img/Progressie_2.png") #if display private #end class __ASSET__img_progressie_2_png extends lime.graphics.Image {}
+@:image("assets/img/sanne/back_1.png") #if display private #end class __ASSET__img_sanne_back_1_png extends lime.graphics.Image {}
+@:image("assets/img/sanne/back_2.png") #if display private #end class __ASSET__img_sanne_back_2_png extends lime.graphics.Image {}
+@:image("assets/img/sanne/back_3.png") #if display private #end class __ASSET__img_sanne_back_3_png extends lime.graphics.Image {}
+@:image("assets/img/sanne/back_4.png") #if display private #end class __ASSET__img_sanne_back_4_png extends lime.graphics.Image {}
+@:image("assets/img/sanne/front_1.png") #if display private #end class __ASSET__img_sanne_front_1_png extends lime.graphics.Image {}
+@:image("assets/img/sanne/front_2.png") #if display private #end class __ASSET__img_sanne_front_2_png extends lime.graphics.Image {}
+@:image("assets/img/sanne/front_3.png") #if display private #end class __ASSET__img_sanne_front_3_png extends lime.graphics.Image {}
+@:image("assets/img/sanne/front_4.png") #if display private #end class __ASSET__img_sanne_front_4_png extends lime.graphics.Image {}
+@:image("assets/img/sanne/left_1.png") #if display private #end class __ASSET__img_sanne_left_1_png extends lime.graphics.Image {}
+@:image("assets/img/sanne/left_2.png") #if display private #end class __ASSET__img_sanne_left_2_png extends lime.graphics.Image {}
+@:image("assets/img/sanne/left_3.png") #if display private #end class __ASSET__img_sanne_left_3_png extends lime.graphics.Image {}
+@:image("assets/img/sanne/left_4.png") #if display private #end class __ASSET__img_sanne_left_4_png extends lime.graphics.Image {}
+@:image("assets/img/sanne/right_1.png") #if display private #end class __ASSET__img_sanne_right_1_png extends lime.graphics.Image {}
+@:image("assets/img/sanne/right_2.png") #if display private #end class __ASSET__img_sanne_right_2_png extends lime.graphics.Image {}
+@:image("assets/img/sanne/right_3.png") #if display private #end class __ASSET__img_sanne_right_3_png extends lime.graphics.Image {}
+@:image("assets/img/sanne/right_4.png") #if display private #end class __ASSET__img_sanne_right_4_png extends lime.graphics.Image {}
 @:image("assets/img/sanneicon.png") #if display private #end class __ASSET__img_sanneicon_png extends lime.graphics.Image {}
 @:image("assets/img/speech bubble big left.png") #if display private #end class __ASSET__img_speech_bubble_big_left_png extends lime.graphics.Image {}
 @:image("assets/img/speech bubble big right.png") #if display private #end class __ASSET__img_speech_bubble_big_right_png extends lime.graphics.Image {}
@@ -1997,6 +2230,7 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:image("assets/img/thomasicon.png") #if display private #end class __ASSET__img_thomasicon_png extends lime.graphics.Image {}
 @:image("assets/img/topbutton.png") #if display private #end class __ASSET__img_topbutton_png extends lime.graphics.Image {}
 @:image("assets/img/topbuttonhover.png") #if display private #end class __ASSET__img_topbuttonhover_png extends lime.graphics.Image {}
+@:image("assets/img/Victorybackground.png") #if display private #end class __ASSET__img_victorybackground_png extends lime.graphics.Image {}
 @:file("assets/audio/Buttonclick.mp3") #if display private #end class __ASSET__audio_buttonclick_mp3 extends lime.utils.ByteArray {}
 @:file("assets/audio/Buttonclick.ogg") #if display private #end class __ASSET__audio_buttonclick_ogg extends lime.utils.ByteArray {}
 @:file("assets/audio/Clock.mp3") #if display private #end class __ASSET__audio_clock_mp3 extends lime.utils.ByteArray {}
