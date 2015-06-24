@@ -15,6 +15,7 @@ class Game extends Sprite
 {
 	var level:Level;
 	var player:Player;
+	var ui:UI;
 	var levelx:Int = Lib.current.stage.stageWidth;
 	var levely:Int = Lib.current.stage.stageHeight;
 	var activekey:Int = 0;
@@ -30,6 +31,7 @@ class Game extends Sprite
 		listenpress ();
 		dirtyitemcreate ();
 		createplayer ();
+		createUI();
 	}
 	
 	//====================================================================//
@@ -172,6 +174,14 @@ class Game extends Sprite
 		level.y = -600;
 		level.width = level.width * 1.5;
 		level.height = level.height * 1.5;
+	}
+	
+	// Adds UI to the game
+	function createUI ()
+	{
+		ui = new UI();
+		
+		addChild(ui);
 	}
 
 	//====================================================================//

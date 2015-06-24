@@ -61,6 +61,10 @@ class DefaultAssetLibrary extends AssetLibrary {
 		type.set ("img/Characterbackground.png", AssetType.IMAGE);
 		className.set ("img/Contactbackground.png", __ASSET__img_contactbackground_png);
 		type.set ("img/Contactbackground.png", AssetType.IMAGE);
+		className.set ("img/Hint.png", __ASSET__img_hint_png);
+		type.set ("img/Hint.png", AssetType.IMAGE);
+		className.set ("img/Hinthover.png", __ASSET__img_hinthover_png);
+		type.set ("img/Hinthover.png", AssetType.IMAGE);
 		className.set ("img/level/collision.png", __ASSET__img_level_collision_png);
 		type.set ("img/level/collision.png", AssetType.IMAGE);
 		className.set ("img/level/floorplan.png", __ASSET__img_level_floorplan_png);
@@ -89,8 +93,16 @@ class DefaultAssetLibrary extends AssetLibrary {
 		type.set ("img/middlebutton.png", AssetType.IMAGE);
 		className.set ("img/middlebuttonhover.png", __ASSET__img_middlebuttonhover_png);
 		type.set ("img/middlebuttonhover.png", AssetType.IMAGE);
+		className.set ("img/Objectives.png", __ASSET__img_objectives_png);
+		type.set ("img/Objectives.png", AssetType.IMAGE);
+		className.set ("img/optionbutton.png", __ASSET__img_optionbutton_png);
+		type.set ("img/optionbutton.png", AssetType.IMAGE);
 		className.set ("img/Optionsbackground.png", __ASSET__img_optionsbackground_png);
 		type.set ("img/Optionsbackground.png", AssetType.IMAGE);
+		className.set ("img/Proggersie.png", __ASSET__img_proggersie_png);
+		type.set ("img/Proggersie.png", AssetType.IMAGE);
+		className.set ("img/Progressbarpiece.png", __ASSET__img_progressbarpiece_png);
+		type.set ("img/Progressbarpiece.png", AssetType.IMAGE);
 		className.set ("img/sanneicon.png", __ASSET__img_sanneicon_png);
 		type.set ("img/sanneicon.png", AssetType.IMAGE);
 		className.set ("img/speech bubble big left.png", __ASSET__img_speech_bubble_big_left_png);
@@ -278,6 +290,14 @@ class DefaultAssetLibrary extends AssetLibrary {
 		path.set (id, id);
 		
 		type.set (id, AssetType.IMAGE);
+		id = "img/Hint.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "img/Hinthover.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
 		id = "img/level/collision.png";
 		path.set (id, id);
 		
@@ -334,7 +354,23 @@ class DefaultAssetLibrary extends AssetLibrary {
 		path.set (id, id);
 		
 		type.set (id, AssetType.IMAGE);
+		id = "img/Objectives.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "img/optionbutton.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
 		id = "img/Optionsbackground.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "img/Proggersie.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "img/Progressbarpiece.png";
 		path.set (id, id);
 		
 		type.set (id, AssetType.IMAGE);
@@ -750,6 +786,12 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		
 		
+		
+		
+		
+		
+		
+		
 		#end
 		
 		#if (windows || mac || linux)
@@ -779,6 +821,12 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		className.set ("img/Contactbackground.png", __ASSET__img_contactbackground_png);
 		type.set ("img/Contactbackground.png", AssetType.IMAGE);
+		
+		className.set ("img/Hint.png", __ASSET__img_hint_png);
+		type.set ("img/Hint.png", AssetType.IMAGE);
+		
+		className.set ("img/Hinthover.png", __ASSET__img_hinthover_png);
+		type.set ("img/Hinthover.png", AssetType.IMAGE);
 		
 		className.set ("img/level/collision.png", __ASSET__img_level_collision_png);
 		type.set ("img/level/collision.png", AssetType.IMAGE);
@@ -822,8 +870,20 @@ class DefaultAssetLibrary extends AssetLibrary {
 		className.set ("img/middlebuttonhover.png", __ASSET__img_middlebuttonhover_png);
 		type.set ("img/middlebuttonhover.png", AssetType.IMAGE);
 		
+		className.set ("img/Objectives.png", __ASSET__img_objectives_png);
+		type.set ("img/Objectives.png", AssetType.IMAGE);
+		
+		className.set ("img/optionbutton.png", __ASSET__img_optionbutton_png);
+		type.set ("img/optionbutton.png", AssetType.IMAGE);
+		
 		className.set ("img/Optionsbackground.png", __ASSET__img_optionsbackground_png);
 		type.set ("img/Optionsbackground.png", AssetType.IMAGE);
+		
+		className.set ("img/Proggersie.png", __ASSET__img_proggersie_png);
+		type.set ("img/Proggersie.png", AssetType.IMAGE);
+		
+		className.set ("img/Progressbarpiece.png", __ASSET__img_progressbarpiece_png);
+		type.set ("img/Progressbarpiece.png", AssetType.IMAGE);
 		
 		className.set ("img/sanneicon.png", __ASSET__img_sanneicon_png);
 		type.set ("img/sanneicon.png", AssetType.IMAGE);
@@ -1658,6 +1718,8 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:keep @:bind #if display private #end class __ASSET__img_buttonhover_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__img_characterbackground_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__img_contactbackground_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_hint_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_hinthover_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__img_level_collision_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__img_level_floorplan_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__img_level_floorplan2_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
@@ -1672,7 +1734,11 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:keep @:bind #if display private #end class __ASSET__img_menubackground_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__img_middlebutton_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__img_middlebuttonhover_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_objectives_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_optionbutton_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__img_optionsbackground_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_proggersie_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_progressbarpiece_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__img_sanneicon_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__img_speech_bubble_big_left_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__img_speech_bubble_big_right_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
@@ -1852,6 +1918,12 @@ class DefaultAssetLibrary extends AssetLibrary {
 
 
 
+
+
+
+
+
+
 #else
 
 
@@ -1867,6 +1939,8 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:image("assets/img/ButtonHover.png") #if display private #end class __ASSET__img_buttonhover_png extends lime.graphics.Image {}
 @:image("assets/img/Characterbackground.png") #if display private #end class __ASSET__img_characterbackground_png extends lime.graphics.Image {}
 @:image("assets/img/Contactbackground.png") #if display private #end class __ASSET__img_contactbackground_png extends lime.graphics.Image {}
+@:image("assets/img/Hint.png") #if display private #end class __ASSET__img_hint_png extends lime.graphics.Image {}
+@:image("assets/img/Hinthover.png") #if display private #end class __ASSET__img_hinthover_png extends lime.graphics.Image {}
 @:image("assets/img/level/collision.png") #if display private #end class __ASSET__img_level_collision_png extends lime.graphics.Image {}
 @:image("assets/img/level/floorplan.png") #if display private #end class __ASSET__img_level_floorplan_png extends lime.graphics.Image {}
 @:image("assets/img/level/floorplan2.png") #if display private #end class __ASSET__img_level_floorplan2_png extends lime.graphics.Image {}
@@ -1881,7 +1955,11 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:image("assets/img/Menubackground.png") #if display private #end class __ASSET__img_menubackground_png extends lime.graphics.Image {}
 @:image("assets/img/middlebutton.png") #if display private #end class __ASSET__img_middlebutton_png extends lime.graphics.Image {}
 @:image("assets/img/middlebuttonhover.png") #if display private #end class __ASSET__img_middlebuttonhover_png extends lime.graphics.Image {}
+@:image("assets/img/Objectives.png") #if display private #end class __ASSET__img_objectives_png extends lime.graphics.Image {}
+@:image("assets/img/optionbutton.png") #if display private #end class __ASSET__img_optionbutton_png extends lime.graphics.Image {}
 @:image("assets/img/Optionsbackground.png") #if display private #end class __ASSET__img_optionsbackground_png extends lime.graphics.Image {}
+@:image("assets/img/Proggersie.png") #if display private #end class __ASSET__img_proggersie_png extends lime.graphics.Image {}
+@:image("assets/img/Progressbarpiece.png") #if display private #end class __ASSET__img_progressbarpiece_png extends lime.graphics.Image {}
 @:image("assets/img/sanneicon.png") #if display private #end class __ASSET__img_sanneicon_png extends lime.graphics.Image {}
 @:image("assets/img/speech bubble big left.png") #if display private #end class __ASSET__img_speech_bubble_big_left_png extends lime.graphics.Image {}
 @:image("assets/img/speech bubble big right.png") #if display private #end class __ASSET__img_speech_bubble_big_right_png extends lime.graphics.Image {}
