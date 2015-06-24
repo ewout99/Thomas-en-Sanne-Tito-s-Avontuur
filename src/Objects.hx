@@ -11,12 +11,12 @@ import openfl.Assets;
  */
 class Objects extends Sprite
 {
-	public var itemid:String = "000";
+	public var itemid:Int = 0;
 	public var itemtype:String = "NONE";
 	public var iteminteracttext:String = "Er is hier weinig te vinden...";
 	var markerid:Int = 0;
 
-	public function new(id:String, type:String, text:String) 
+	public function new(id:Int, type:String, text:String) 
 	{
 		super ();
 		
@@ -26,7 +26,7 @@ class Objects extends Sprite
 		
 		namemarker ();
 		
-		if ( itemid != "none" )
+		if ( itemid != 0 )
 		{
 			var marker:Bitmap = new Bitmap (Assets.getBitmapData("img/marker_" + markerid + ".png"));
 			

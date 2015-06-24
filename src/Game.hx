@@ -65,7 +65,7 @@ class Game extends Sprite
 		{
 			var returnedobject = checkvalid ();
 			
-			if ( returnedobject.itemid != "none" )
+			if ( returnedobject.itemid != 0 )
 			{
 				trace (returnedobject.iteminteracttext);
 			}
@@ -79,30 +79,40 @@ class Game extends Sprite
 	
 	function updatescene ()
 	{
+		var blockedup:Bool = false;
+		var blockeddown:Bool = false;
+		var blockedright:Bool = false;
+		var blockedleft:Bool = false;
+		
+		collcheck ();
+		
 		if (activekey == 87)
 		{
-			scroll (1, "Y");
+			if (blockedup == false)
+			{
+				scroll (3, "Y");
 			
-			player.animate ("back_");
+				player.animate ("back_");
+			}
 		}
 		
 		else if (activekey == 65)
 		{
-			scroll (1, "X");
+			scroll (3, "X");
 			
 			player.animate ("left_");
 		}
 		
 		else if (activekey == 83)
 		{
-			scroll (-1, "Y");
+			scroll (-3, "Y");
 			
 			player.animate ("front_");
 		}
 		
 		else if (activekey == 68)
 		{
-			scroll (-1, "X");
+			scroll (-3, "X");
 			
 			player.animate ("right_");
 		}
@@ -217,7 +227,7 @@ class Game extends Sprite
 	
 	function checkvalid ()
 	{
-		var closest:Objects = new Objects ("none" , "none" , "none");
+		var closest:Objects = new Objects (0 , "none" , "none");
 		var closdifftot:Int = -1;
 		
 		for (item in itemarray)
@@ -255,6 +265,11 @@ class Game extends Sprite
 		
 		return closest;
 	}
+	
+	function collcheck ()
+	{
+		var transparent:Bool = level.transparencycheck (Std.int (player.x), Std.int(player.y));
+	}
 
 	//====================================================================//
 	//                                                                    //
@@ -265,37 +280,43 @@ class Game extends Sprite
 	function dirtyitemcreate ()
 	{
 		//define items type with either FURNITURE, NPC, PLANT, ITEM or OBJECTIVE
-		var item01:Objects = new Objects ("001" , "FURNITURE" , "Een redelijk normaal bureau.");
+		var item01:Objects = new Objects (1 , "FURNITURE" , "Een redelijk normaal bureau.");
 		item01.x = 870 * 1.5 - 400;
 		item01.y = 430 * 1.5 - 600;
 		itemarray.push ( item01 );
 		
-		var item02:Objects = new Objects ("002" , "FURNITURE" , "Een saaie tafel.");
+		var item02:Objects = new Objects (2 , "FURNITURE" , "Een saaie tafel.");
 		item02.x = 1025 * 1.5 - 400;
 		item02.y = 310 * 1.5 - 600;
 		itemarray.push ( item02 );
 		
-		var item03:Objects = new Objects ("003" , "FURNITURE" , "De stoel piept een beetje.");
+		var item03:Objects = new Objects (3 , "FURNITURE" , "De stoel piept een beetje.");
 		item03.x = 1150 * 1.5 - 400;
 		item03.y = 475 * 1.5 - 600;
 		itemarray.push ( item03 );
 		
-		var item04:Objects = new Objects ("004" , "FURNITURE" , "Allemaal lege laadjes.");
+		var item04:Objects = new Objects (4 , "FURNITURE" , "Allemaal lege laadjes.");
 		item04.x = 715 * 1.5 - 400;
 		item04.y = 485 * 1.5 - 600;
 		itemarray.push ( item04 );
 		
-		var item05:Objects = new Objects ("005" , "FURNITURE" , "Een tafel, niet erg bijzonder.");
+		var item05:Objects = new Objects (5 , "FURNITURE" , "Een tafel, niet erg bijzonder.");
 		item05.x = 1030 * 1.5 - 400;
 		item05.y = 625 * 1.5 - 600;
 		itemarray.push ( item05 );
 		
-		var item06:Objects = new Objects ("006" , "NPC" , "Bas bewaakt de ingang elke dag.");
+		var item06:Objects = new Objects (6 , "NPC" , "Bas bewaakt de ingang elke dag.");
 		item06.x = 830 * 1.5 - 400;
 		item06.y = 570 * 1.5 - 600;
 		itemarray.push ( item06 );
 		
 		placeitems ();
+	}
+	
+	function createmission ()
+	{
+		var mission01:Mission = new Mission (1, "test", "test 2");
+		var mission02:Mission = new Mission (2, "testit", "testit 2");
 	}
 	
 	function placeitems ()
@@ -308,7 +329,7 @@ class Game extends Sprite
 	
 	//====================================================================//
 	//                                                                    //
-	//                           Mission Stuff                            //
+	//            Mission Stuff. Kjell is a really cool guy.              //
 	//                                                                    //
 	//====================================================================//
 	

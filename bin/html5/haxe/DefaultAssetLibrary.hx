@@ -165,6 +165,8 @@ class DefaultAssetLibrary extends AssetLibrary {
 		type.set ("img/topbutton.png", AssetType.IMAGE);
 		className.set ("img/topbuttonhover.png", __ASSET__img_topbuttonhover_png);
 		type.set ("img/topbuttonhover.png", AssetType.IMAGE);
+		className.set ("img/Victorybackground.png", __ASSET__img_victorybackground_png);
+		type.set ("img/Victorybackground.png", AssetType.IMAGE);
 		className.set ("audio/Buttonclick.mp3", __ASSET__audio_buttonclick_mp3);
 		type.set ("audio/Buttonclick.mp3", AssetType.MUSIC);
 		className.set ("audio/Buttonclick.ogg", __ASSET__audio_buttonclick_ogg);
@@ -486,6 +488,10 @@ class DefaultAssetLibrary extends AssetLibrary {
 		path.set (id, id);
 		
 		type.set (id, AssetType.IMAGE);
+		id = "img/Victorybackground.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
 		id = "audio/Buttonclick.mp3";
 		path.set (id, id);
 		
@@ -650,6 +656,7 @@ class DefaultAssetLibrary extends AssetLibrary {
 		#else
 		
 		#if openfl
+		
 		
 		
 		
@@ -935,6 +942,9 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		className.set ("img/topbuttonhover.png", __ASSET__img_topbuttonhover_png);
 		type.set ("img/topbuttonhover.png", AssetType.IMAGE);
+		
+		className.set ("img/Victorybackground.png", __ASSET__img_victorybackground_png);
+		type.set ("img/Victorybackground.png", AssetType.IMAGE);
 		
 		className.set ("audio/Buttonclick.mp3", __ASSET__audio_buttonclick_mp3);
 		type.set ("audio/Buttonclick.mp3", AssetType.MUSIC);
@@ -1710,6 +1720,7 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:keep @:bind #if display private #end class __ASSET__img_thomasicon_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__img_topbutton_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__img_topbuttonhover_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_victorybackground_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__audio_buttonclick_mp3 extends null { }
 @:keep @:bind #if display private #end class __ASSET__audio_buttonclick_ogg extends null { }
 @:keep @:bind #if display private #end class __ASSET__audio_clock_mp3 extends null { }
@@ -1751,6 +1762,7 @@ class DefaultAssetLibrary extends AssetLibrary {
 
 
 #elseif html5
+
 
 
 
@@ -1919,6 +1931,7 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:image("assets/img/thomasicon.png") #if display private #end class __ASSET__img_thomasicon_png extends lime.graphics.Image {}
 @:image("assets/img/topbutton.png") #if display private #end class __ASSET__img_topbutton_png extends lime.graphics.Image {}
 @:image("assets/img/topbuttonhover.png") #if display private #end class __ASSET__img_topbuttonhover_png extends lime.graphics.Image {}
+@:image("assets/img/Victorybackground.png") #if display private #end class __ASSET__img_victorybackground_png extends lime.graphics.Image {}
 @:file("assets/audio/Buttonclick.mp3") #if display private #end class __ASSET__audio_buttonclick_mp3 extends lime.utils.ByteArray {}
 @:file("assets/audio/Buttonclick.ogg") #if display private #end class __ASSET__audio_buttonclick_ogg extends lime.utils.ByteArray {}
 @:file("assets/audio/Clock.mp3") #if display private #end class __ASSET__audio_clock_mp3 extends lime.utils.ByteArray {}

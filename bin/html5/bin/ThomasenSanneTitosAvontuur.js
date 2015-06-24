@@ -146,6 +146,8 @@ ApplicationMain.create = function() {
 	types.push("IMAGE");
 	urls.push("img/topbuttonhover.png");
 	types.push("IMAGE");
+	urls.push("img/Victorybackground.png");
+	types.push("IMAGE");
 	urls.push("audio/Buttonclick.mp3");
 	types.push("MUSIC");
 	urls.push("audio/Buttonclick.ogg");
@@ -1731,6 +1733,9 @@ var DefaultAssetLibrary = function() {
 	id = "img/topbuttonhover.png";
 	this.path.set(id,id);
 	this.type.set(id,"IMAGE");
+	id = "img/Victorybackground.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
 	id = "audio/Buttonclick.mp3";
 	this.path.set(id,id);
 	this.type.set(id,"MUSIC");
@@ -1993,21 +1998,28 @@ Game.prototype = $extend(openfl_display_Sprite.prototype,{
 	keypress: function(event) {
 		if(event.keyCode == 87) this.listenrelease(event.keyCode); else if(event.keyCode == 65) this.listenrelease(event.keyCode); else if(event.keyCode == 83) this.listenrelease(event.keyCode); else if(event.keyCode == 68) this.listenrelease(event.keyCode); else if(event.keyCode == 69) {
 			var returnedobject = this.checkvalid();
-			if(returnedobject.itemid != "none") haxe_Log.trace(returnedobject.iteminteracttext,{ fileName : "Game.hx", lineNumber : 70, className : "Game", methodName : "keypress"}); else haxe_Log.trace("no valid item in range",{ fileName : "Game.hx", lineNumber : 75, className : "Game", methodName : "keypress"});
+			if(returnedobject.itemid != 0) haxe_Log.trace(returnedobject.iteminteracttext,{ fileName : "Game.hx", lineNumber : 70, className : "Game", methodName : "keypress"}); else haxe_Log.trace("no valid item in range",{ fileName : "Game.hx", lineNumber : 75, className : "Game", methodName : "keypress"});
 		}
 	}
 	,updatescene: function() {
+		var blockedup = false;
+		var blockeddown = false;
+		var blockedright = false;
+		var blockedleft = false;
+		this.collcheck();
 		if(this.activekey == 87) {
-			this.scroll(1,"Y");
-			this.player.animate("back_");
+			if(blockedup == false) {
+				this.scroll(3,"Y");
+				this.player.animate("back_");
+			}
 		} else if(this.activekey == 65) {
-			this.scroll(1,"X");
+			this.scroll(3,"X");
 			this.player.animate("left_");
 		} else if(this.activekey == 83) {
-			this.scroll(-1,"Y");
+			this.scroll(-3,"Y");
 			this.player.animate("front_");
 		} else if(this.activekey == 68) {
-			this.scroll(-1,"X");
+			this.scroll(-3,"X");
 			this.player.animate("right_");
 		}
 	}
@@ -2071,7 +2083,7 @@ Game.prototype = $extend(openfl_display_Sprite.prototype,{
 		};
 	}
 	,checkvalid: function() {
-		var closest = new Objects("none","none","none");
+		var closest = new Objects(0,"none","none");
 		var closdifftot = -1;
 		var _g = 0;
 		var _g1 = this.itemarray;
@@ -2095,32 +2107,39 @@ Game.prototype = $extend(openfl_display_Sprite.prototype,{
 		}
 		return closest;
 	}
+	,collcheck: function() {
+		var transparent = this.level.transparencycheck(Std["int"](this.player.get_x()),Std["int"](this.player.get_y()));
+	}
 	,dirtyitemcreate: function() {
-		var item01 = new Objects("001","FURNITURE","Een redelijk normaal bureau.");
+		var item01 = new Objects(1,"FURNITURE","Een redelijk normaal bureau.");
 		item01.set_x(905.);
 		item01.set_y(45.);
 		this.itemarray.push(item01);
-		var item02 = new Objects("002","FURNITURE","Een saaie tafel.");
+		var item02 = new Objects(2,"FURNITURE","Een saaie tafel.");
 		item02.set_x(1137.5);
 		item02.set_y(-135.);
 		this.itemarray.push(item02);
-		var item03 = new Objects("003","FURNITURE","De stoel piept een beetje.");
+		var item03 = new Objects(3,"FURNITURE","De stoel piept een beetje.");
 		item03.set_x(1325.);
 		item03.set_y(112.5);
 		this.itemarray.push(item03);
-		var item04 = new Objects("004","FURNITURE","Allemaal lege laadjes.");
+		var item04 = new Objects(4,"FURNITURE","Allemaal lege laadjes.");
 		item04.set_x(672.5);
 		item04.set_y(127.5);
 		this.itemarray.push(item04);
-		var item05 = new Objects("005","FURNITURE","Een tafel, niet erg bijzonder.");
+		var item05 = new Objects(5,"FURNITURE","Een tafel, niet erg bijzonder.");
 		item05.set_x(1145.);
 		item05.set_y(337.5);
 		this.itemarray.push(item05);
-		var item06 = new Objects("006","NPC","Bas bewaakt de ingang elke dag.");
+		var item06 = new Objects(6,"NPC","Bas bewaakt de ingang elke dag.");
 		item06.set_x(845.);
 		item06.set_y(255.);
 		this.itemarray.push(item06);
 		this.placeitems();
+	}
+	,createmission: function() {
+		var mission01 = new Mission(1,"test","test 2");
+		var mission02 = new Mission(2,"testit","testit 2");
 	}
 	,placeitems: function() {
 		var _g = 0;
@@ -2206,20 +2225,25 @@ Lambda.count = function(it,pred) {
 	return n;
 };
 var Level = function() {
+	this.levelwall = new openfl_display_Bitmap(openfl_Assets.getBitmapData("img/level/floorwalls.png"));
+	this.levelback = new openfl_display_Bitmap(openfl_Assets.getBitmapData("img/level/floorplan.png"));
+	this.levelcoll = new openfl_display_Bitmap(openfl_Assets.getBitmapData("img/level/collision.png"));
 	openfl_display_Sprite.call(this);
-	haxe_Log.trace("level has been created",{ fileName : "Level.hx", lineNumber : 20, className : "Level", methodName : "new"});
-	var levelcoll = new openfl_display_Bitmap(openfl_Assets.getBitmapData("img/level/collision.png"));
-	var levelback = new openfl_display_Bitmap(openfl_Assets.getBitmapData("img/level/floorplan.png"));
-	var levelwall = new openfl_display_Bitmap(openfl_Assets.getBitmapData("img/level/floorwalls.png"));
-	this.addChild(levelcoll);
-	this.addChild(levelback);
-	this.addChild(levelwall);
+	this.addChild(this.levelcoll);
+	this.addChild(this.levelback);
+	this.addChild(this.levelwall);
 };
 $hxClasses["Level"] = Level;
 Level.__name__ = ["Level"];
 Level.__super__ = openfl_display_Sprite;
 Level.prototype = $extend(openfl_display_Sprite.prototype,{
-	__class__: Level
+	transparencycheck: function(x,y) {
+		var checkvalid = false;
+		var checkcol = this.levelwall.bitmapData.getPixel(x,y);
+		haxe_Log.trace(checkcol,{ fileName : "Level.hx", lineNumber : 34, className : "Level", methodName : "transparencycheck"});
+		return false;
+	}
+	,__class__: Level
 });
 var LevelSelect = function() {
 	this.Y = openfl_Lib.current.stage.stageHeight;
@@ -2336,6 +2360,18 @@ MainMenu.prototype = $extend(openfl_display_Sprite.prototype,{
 	,__class__: MainMenu
 });
 Math.__name__ = ["Math"];
+var Mission = function(id,text,target) {
+	this.missiontarget = "000";
+	this.missiontext = "ER IS HIER GEEN TEKST";
+	this.missionid = 0;
+	openfl_display_Sprite.call(this);
+};
+$hxClasses["Mission"] = Mission;
+Mission.__name__ = ["Mission"];
+Mission.__super__ = openfl_display_Sprite;
+Mission.prototype = $extend(openfl_display_Sprite.prototype,{
+	__class__: Mission
+});
 var Music = function() {
 	this.Winning = openfl_Assets.getSound("music/winningmusic.ogg");
 	this.Menu = openfl_Assets.getSound("music/menumusic.ogg");
@@ -2444,13 +2480,13 @@ var Objects = function(id,type,text) {
 	this.markerid = 0;
 	this.iteminteracttext = "Er is hier weinig te vinden...";
 	this.itemtype = "NONE";
-	this.itemid = "000";
+	this.itemid = 0;
 	openfl_display_Sprite.call(this);
 	this.itemid = id;
 	this.itemtype = type;
 	this.iteminteracttext = text;
 	this.namemarker();
-	if(this.itemid != "none") {
+	if(this.itemid != 0) {
 		var marker = new openfl_display_Bitmap(openfl_Assets.getBitmapData("img/marker_" + this.markerid + ".png"));
 		marker.set_width(25);
 		marker.set_height(marker.get_width());
