@@ -34,11 +34,11 @@ class ApplicationMain {
 		var types = [];
 		
 		
-		urls.push ("img/Back.png");
+		urls.push ("img/Background.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
-		urls.push ("img/Background.png");
+		urls.push ("img/Background_2.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
@@ -58,15 +58,47 @@ class ApplicationMain {
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
-		urls.push ("img/Front.png");
+		urls.push ("img/Contactbackground.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
-		urls.push ("img/Left Back.png");
+		urls.push ("img/level/collision.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
-		urls.push ("img/left Front.png");
+		urls.push ("img/level/floorplan.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/level/floorwalls.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/Levelkiezen.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/marker_1.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/marker_2.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/marker_3.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/marker_4.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/marker_5.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/Menubackground.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
@@ -78,23 +110,139 @@ class ApplicationMain {
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
-		urls.push ("img/Right Back.png");
+		urls.push ("img/Optionsbackground.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
-		urls.push ("img/Right Front.png");
+		urls.push ("img/speech bubble big left.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
-		urls.push ("img/Side Left.png");
+		urls.push ("img/speech bubble big right.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
-		urls.push ("img/Side Right.png");
+		urls.push ("img/speech bubble small left.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
-		urls.push ("img/tom_tilesheet.png");
+		urls.push ("img/Speech bubble small right.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/thomas/back_1.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/thomas/back_2.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/thomas/back_3.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/thomas/back_4.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/thomas/front_1.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/thomas/front_2.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/thomas/front_3.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/thomas/front_4.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/thomas/left_1.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/thomas/left_2.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/thomas/left_3.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/thomas/left_4.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/thomas/old-extra/back walking.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/thomas/old-extra/back.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/thomas/old-extra/front walking.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/thomas/old-extra/front.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/thomas/old-extra/left side walking.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/thomas/old-extra/leftback.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/thomas/old-extra/leftfront.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/thomas/old-extra/rightback.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/thomas/old-extra/rightfront.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/thomas/old-extra/side right walking.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/thomas/old-extra/sideleft.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/thomas/old-extra/sideright.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/thomas/old-extra/tiles.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/thomas/right_1.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/thomas/right_2.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/thomas/right_3.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/thomas/right_4.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
@@ -104,6 +252,134 @@ class ApplicationMain {
 		
 		urls.push ("img/topbuttonhover.png");
 		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("audio/Buttonclick.mp3");
+		types.push (lime.Assets.AssetType.MUSIC);
+		
+		
+		urls.push ("audio/Buttonclick.ogg");
+		types.push (lime.Assets.AssetType.SOUND);
+		
+		
+		urls.push ("audio/Clock.mp3");
+		types.push (lime.Assets.AssetType.MUSIC);
+		
+		
+		urls.push ("audio/Clock.ogg");
+		types.push (lime.Assets.AssetType.SOUND);
+		
+		
+		urls.push ("audio/Closedoor.mp3");
+		types.push (lime.Assets.AssetType.MUSIC);
+		
+		
+		urls.push ("audio/Closedoor.ogg");
+		types.push (lime.Assets.AssetType.SOUND);
+		
+		
+		urls.push ("audio/Closedrawer.mp3");
+		types.push (lime.Assets.AssetType.MUSIC);
+		
+		
+		urls.push ("audio/Closedrawer.ogg");
+		types.push (lime.Assets.AssetType.SOUND);
+		
+		
+		urls.push ("audio/Coin.mp3");
+		types.push (lime.Assets.AssetType.MUSIC);
+		
+		
+		urls.push ("audio/Coin.ogg");
+		types.push (lime.Assets.AssetType.SOUND);
+		
+		
+		urls.push ("audio/Hintpopup.mp3");
+		types.push (lime.Assets.AssetType.MUSIC);
+		
+		
+		urls.push ("audio/Hintpopup.ogg");
+		types.push (lime.Assets.AssetType.SOUND);
+		
+		
+		urls.push ("audio/Huh.mp3");
+		types.push (lime.Assets.AssetType.MUSIC);
+		
+		
+		urls.push ("audio/Huh.ogg");
+		types.push (lime.Assets.AssetType.SOUND);
+		
+		
+		urls.push ("audio/Menu.ogg");
+		types.push (lime.Assets.AssetType.SOUND);
+		
+		
+		urls.push ("audio/Objectfound.mp3");
+		types.push (lime.Assets.AssetType.MUSIC);
+		
+		
+		urls.push ("audio/Objectfound.ogg");
+		types.push (lime.Assets.AssetType.SOUND);
+		
+		
+		urls.push ("audio/Objectfound2.mp3");
+		types.push (lime.Assets.AssetType.MUSIC);
+		
+		
+		urls.push ("audio/Objectfound2.ogg");
+		types.push (lime.Assets.AssetType.SOUND);
+		
+		
+		urls.push ("audio/Objectivecomplete.mp3");
+		types.push (lime.Assets.AssetType.MUSIC);
+		
+		
+		urls.push ("audio/Objectivecomplete.ogg");
+		types.push (lime.Assets.AssetType.SOUND);
+		
+		
+		urls.push ("audio/Opendoor.mp3");
+		types.push (lime.Assets.AssetType.MUSIC);
+		
+		
+		urls.push ("audio/Opendoor.ogg");
+		types.push (lime.Assets.AssetType.SOUND);
+		
+		
+		urls.push ("audio/Opendrawer.mp3");
+		types.push (lime.Assets.AssetType.MUSIC);
+		
+		
+		urls.push ("audio/Opendrawer.ogg");
+		types.push (lime.Assets.AssetType.SOUND);
+		
+		
+		urls.push ("audio/Papers.mp3");
+		types.push (lime.Assets.AssetType.MUSIC);
+		
+		
+		urls.push ("audio/Papers.ogg");
+		types.push (lime.Assets.AssetType.SOUND);
+		
+		
+		urls.push ("music/GameMusic.mp3");
+		types.push (lime.Assets.AssetType.MUSIC);
+		
+		
+		urls.push ("music/GameMusic.ogg");
+		types.push (lime.Assets.AssetType.SOUND);
+		
+		
+		urls.push ("music/Menu.mp3");
+		types.push (lime.Assets.AssetType.MUSIC);
+		
+		
+		urls.push ("music/Menu.ogg");
+		types.push (lime.Assets.AssetType.SOUND);
+		
+		
+		urls.push ("music/Winning.mp3");
+		types.push (lime.Assets.AssetType.MUSIC);
 		
 		
 		

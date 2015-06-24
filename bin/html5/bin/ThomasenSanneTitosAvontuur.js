@@ -28,6 +28,8 @@ ApplicationMain.create = function() {
 	var types = [];
 	urls.push("img/Background.png");
 	types.push("IMAGE");
+	urls.push("img/Background_2.png");
+	types.push("IMAGE");
 	urls.push("img/bottombutton.png");
 	types.push("IMAGE");
 	urls.push("img/bottombuttonhover.png");
@@ -36,11 +38,15 @@ ApplicationMain.create = function() {
 	types.push("IMAGE");
 	urls.push("img/ButtonHover.png");
 	types.push("IMAGE");
+	urls.push("img/Contactbackground.png");
+	types.push("IMAGE");
 	urls.push("img/level/collision.png");
 	types.push("IMAGE");
 	urls.push("img/level/floorplan.png");
 	types.push("IMAGE");
 	urls.push("img/level/floorwalls.png");
+	types.push("IMAGE");
+	urls.push("img/Levelkiezen.png");
 	types.push("IMAGE");
 	urls.push("img/marker_1.png");
 	types.push("IMAGE");
@@ -52,9 +58,21 @@ ApplicationMain.create = function() {
 	types.push("IMAGE");
 	urls.push("img/marker_5.png");
 	types.push("IMAGE");
+	urls.push("img/Menubackground.png");
+	types.push("IMAGE");
 	urls.push("img/middlebutton.png");
 	types.push("IMAGE");
 	urls.push("img/middlebuttonhover.png");
+	types.push("IMAGE");
+	urls.push("img/Optionsbackground.png");
+	types.push("IMAGE");
+	urls.push("img/speech bubble big left.png");
+	types.push("IMAGE");
+	urls.push("img/speech bubble big right.png");
+	types.push("IMAGE");
+	urls.push("img/speech bubble small left.png");
+	types.push("IMAGE");
+	urls.push("img/Speech bubble small right.png");
 	types.push("IMAGE");
 	urls.push("img/thomas/back_1.png");
 	types.push("IMAGE");
@@ -118,6 +136,70 @@ ApplicationMain.create = function() {
 	types.push("IMAGE");
 	urls.push("img/topbuttonhover.png");
 	types.push("IMAGE");
+	urls.push("audio/Buttonclick.mp3");
+	types.push("MUSIC");
+	urls.push("audio/Buttonclick.ogg");
+	types.push("SOUND");
+	urls.push("audio/Clock.mp3");
+	types.push("MUSIC");
+	urls.push("audio/Clock.ogg");
+	types.push("SOUND");
+	urls.push("audio/Closedoor.mp3");
+	types.push("MUSIC");
+	urls.push("audio/Closedoor.ogg");
+	types.push("SOUND");
+	urls.push("audio/Closedrawer.mp3");
+	types.push("MUSIC");
+	urls.push("audio/Closedrawer.ogg");
+	types.push("SOUND");
+	urls.push("audio/Coin.mp3");
+	types.push("MUSIC");
+	urls.push("audio/Coin.ogg");
+	types.push("SOUND");
+	urls.push("audio/Hintpopup.mp3");
+	types.push("MUSIC");
+	urls.push("audio/Hintpopup.ogg");
+	types.push("SOUND");
+	urls.push("audio/Huh.mp3");
+	types.push("MUSIC");
+	urls.push("audio/Huh.ogg");
+	types.push("SOUND");
+	urls.push("audio/Menu.ogg");
+	types.push("SOUND");
+	urls.push("audio/Objectfound.mp3");
+	types.push("MUSIC");
+	urls.push("audio/Objectfound.ogg");
+	types.push("SOUND");
+	urls.push("audio/Objectfound2.mp3");
+	types.push("MUSIC");
+	urls.push("audio/Objectfound2.ogg");
+	types.push("SOUND");
+	urls.push("audio/Objectivecomplete.mp3");
+	types.push("MUSIC");
+	urls.push("audio/Objectivecomplete.ogg");
+	types.push("SOUND");
+	urls.push("audio/Opendoor.mp3");
+	types.push("MUSIC");
+	urls.push("audio/Opendoor.ogg");
+	types.push("SOUND");
+	urls.push("audio/Opendrawer.mp3");
+	types.push("MUSIC");
+	urls.push("audio/Opendrawer.ogg");
+	types.push("SOUND");
+	urls.push("audio/Papers.mp3");
+	types.push("MUSIC");
+	urls.push("audio/Papers.ogg");
+	types.push("SOUND");
+	urls.push("music/GameMusic.mp3");
+	types.push("MUSIC");
+	urls.push("music/GameMusic.ogg");
+	types.push("SOUND");
+	urls.push("music/Menu.mp3");
+	types.push("MUSIC");
+	urls.push("music/Menu.ogg");
+	types.push("SOUND");
+	urls.push("music/Winning.mp3");
+	types.push("MUSIC");
 	if(ApplicationMain.config.assetsPrefix != null) {
 		var _g1 = 0;
 		var _g = urls.length;
@@ -1150,8 +1232,6 @@ var Main = function() {
 	this.currentChar = 0;
 	this.sound = new Sound();
 	this.music = new Music();
-	this.musicvolume = 1;
-	this.soundvolume = 1;
 	openfl_display_Sprite.call(this);
 	this.addEventListener(openfl_events_Event.ADDED_TO_STAGE,$bind(this,this.added));
 };
@@ -1163,7 +1243,7 @@ Main.getInstance = function() {
 };
 Main.main = function() {
 	openfl_Lib.current.stage.align = openfl_display_StageAlign.TOP_LEFT;
-	openfl_Lib.current.stage.scaleMode = openfl_display_StageScaleMode.NO_SCALE;
+	openfl_Lib.current.stage.scaleMode = openfl_display_StageScaleMode.EXACT_FIT;
 	openfl_Lib.current.addChild(new Main());
 };
 Main.__super__ = openfl_display_Sprite;
@@ -1178,7 +1258,7 @@ Main.prototype = $extend(openfl_display_Sprite.prototype,{
 		this.switchScreen("main menu screen");
 		this.addChild(this.sound);
 		this.addChild(this.music);
-		haxe_Log.trace("Stuff",{ fileName : "Main.hx", lineNumber : 55, className : "Main", methodName : "init"});
+		haxe_Log.trace("Stuff",{ fileName : "Main.hx", lineNumber : 50, className : "Main", methodName : "init"});
 	}
 	,switchScreen: function(toScreen) {
 		if(this.currentScreen != null) this.removeChild(this.currentScreen);
@@ -1209,6 +1289,9 @@ Main.prototype = $extend(openfl_display_Sprite.prototype,{
 		this.stage.addEventListener(openfl_events_Event.RESIZE,$bind(this,this.resize));
 		this.init();
 	}
+	,exit: function() {
+		openfl_system_System.exit(0);
+	}
 	,__class__: Main
 });
 var DocumentClass = function() {
@@ -1223,7 +1306,7 @@ DocumentClass.prototype = $extend(Main.prototype,{
 	__class__: DocumentClass
 });
 var Button = function(text,image,imageHover) {
-	this.buttonTextFormat = new openfl_text_TextFormat("Arial",24,16711935,true,false,false,null,null,openfl_text_TextFormatAlign.CENTER);
+	this.buttonTextFormat = new openfl_text_TextFormat("Arial",24,16777215,true,false,false,null,null,openfl_text_TextFormatAlign.CENTER);
 	openfl_display_Sprite.call(this);
 	this.buttonText = new openfl_text_TextField();
 	this.buttonText.set_defaultTextFormat(this.buttonTextFormat);
@@ -1231,11 +1314,13 @@ var Button = function(text,image,imageHover) {
 	this.buttonText.set_selectable(false);
 	this.mainiamge = new openfl_display_Bitmap(openfl_Assets.getBitmapData(image));
 	this.mainImageHover = new openfl_display_Bitmap(openfl_Assets.getBitmapData(imageHover));
+	this.buttonText.set_width(300);
 	this.buttonText.set_x(this.mainiamge.get_x() + (this.mainiamge.get_width() - this.buttonText.get_width()) / 2);
 	this.buttonText.set_y(this.mainiamge.get_y() + (this.mainiamge.get_width() - this.mainiamge.get_width()) / 2);
 	this.draw();
 	this.addEventListener(openfl_events_MouseEvent.MOUSE_OVER,$bind(this,this.OnMouseOver));
 	this.addEventListener(openfl_events_MouseEvent.MOUSE_OUT,$bind(this,this.OnMouseOut));
+	this.addEventListener(openfl_events_MouseEvent.CLICK,$bind(this,this.playSound));
 };
 $hxClasses["Button"] = Button;
 Button.__name__ = ["Button"];
@@ -1254,6 +1339,10 @@ Button.prototype = $extend(openfl_display_Sprite.prototype,{
 		this.removeChildren();
 		this.addChild(this.mainiamge);
 		this.addChild(this.buttonText);
+	}
+	,playSound: function(event) {
+		Main.getInstance().sound.playSound("click");
+		haxe_Log.trace("Click",{ fileName : "Button.hx", lineNumber : 77, className : "Button", methodName : "playSound"});
 	}
 	,__class__: Button
 });
@@ -1295,18 +1384,53 @@ CharachterSelect.prototype = $extend(openfl_display_Sprite.prototype,{
 	}
 	,__class__: CharachterSelect
 });
+var ChatBubble = function(bubbleTextList,bubbleImageLeft,bubbleImageRight) {
+	openfl_display_Sprite.call(this);
+	this.bubbleTextList = bubbleTextList;
+	this.bubbleText = "Empty";
+	this.bubbleImageLeft = new openfl_display_Bitmap(openfl_Assets.getBitmapData(bubbleImageLeft));
+	this.bubbleImageRight = new openfl_display_Bitmap(openfl_Assets.getBitmapData(bubbleImageRight));
+	this.addChild(this.bubbleImageLeft);
+	this.addChild(this.bubbleImageRight);
+	this.bubbleImageLeft.set_visible(false);
+	this.bubbleImageRight.set_visible(false);
+};
+$hxClasses["ChatBubble"] = ChatBubble;
+ChatBubble.__name__ = ["ChatBubble"];
+ChatBubble.__super__ = openfl_display_Sprite;
+ChatBubble.prototype = $extend(openfl_display_Sprite.prototype,{
+	showLeftBubble: function() {
+		if(this.bubbleImageRight.get_visible()) this.bubbleImageRight.set_visible(false);
+		this.bubbleImageLeft.set_visible(true);
+	}
+	,showRightBubble: function() {
+		if(this.bubbleImageLeft.get_visible()) this.bubbleImageLeft.set_visible(false);
+		this.bubbleImageRight.set_visible(true);
+	}
+	,nextText: function() {
+		this.currentText++;
+	}
+	,setText: function(text) {
+	}
+	,__class__: ChatBubble
+});
 var Contact = function() {
 	this.Y = openfl_Lib.current.stage.stageHeight;
 	this.X = openfl_Lib.current.stage.stageWidth;
 	this.returnButton = new Button("Main Menu","img/middlebutton.png","img/middlebuttonhover.png");
 	openfl_display_Sprite.call(this);
+	this.drawbackground();
 	this.drawButton();
 };
 $hxClasses["Contact"] = Contact;
 Contact.__name__ = ["Contact"];
 Contact.__super__ = openfl_display_Sprite;
 Contact.prototype = $extend(openfl_display_Sprite.prototype,{
-	drawButton: function() {
+	drawbackground: function() {
+		var background = new openfl_display_Bitmap(openfl_Assets.getBitmapData("img/Contactbackground.png"));
+		this.addChildAt(background,0);
+	}
+	,drawButton: function() {
 		this.returnButton.set_x(this.X / 2 - this.returnButton.get_width() / 2);
 		this.returnButton.set_y(this.Y * 3 / 4 - this.returnButton.get_height() / 2);
 		this.addChild(this.returnButton);
@@ -1382,6 +1506,9 @@ var DefaultAssetLibrary = function() {
 	id = "img/Background.png";
 	this.path.set(id,id);
 	this.type.set(id,"IMAGE");
+	id = "img/Background_2.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
 	id = "img/bottombutton.png";
 	this.path.set(id,id);
 	this.type.set(id,"IMAGE");
@@ -1394,6 +1521,9 @@ var DefaultAssetLibrary = function() {
 	id = "img/ButtonHover.png";
 	this.path.set(id,id);
 	this.type.set(id,"IMAGE");
+	id = "img/Contactbackground.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
 	id = "img/level/collision.png";
 	this.path.set(id,id);
 	this.type.set(id,"IMAGE");
@@ -1401,6 +1531,9 @@ var DefaultAssetLibrary = function() {
 	this.path.set(id,id);
 	this.type.set(id,"IMAGE");
 	id = "img/level/floorwalls.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
+	id = "img/Levelkiezen.png";
 	this.path.set(id,id);
 	this.type.set(id,"IMAGE");
 	id = "img/marker_1.png";
@@ -1418,10 +1551,28 @@ var DefaultAssetLibrary = function() {
 	id = "img/marker_5.png";
 	this.path.set(id,id);
 	this.type.set(id,"IMAGE");
+	id = "img/Menubackground.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
 	id = "img/middlebutton.png";
 	this.path.set(id,id);
 	this.type.set(id,"IMAGE");
 	id = "img/middlebuttonhover.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
+	id = "img/Optionsbackground.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
+	id = "img/speech bubble big left.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
+	id = "img/speech bubble big right.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
+	id = "img/speech bubble small left.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
+	id = "img/Speech bubble small right.png";
 	this.path.set(id,id);
 	this.type.set(id,"IMAGE");
 	id = "img/thomas/back_1.png";
@@ -1517,6 +1668,102 @@ var DefaultAssetLibrary = function() {
 	id = "img/topbuttonhover.png";
 	this.path.set(id,id);
 	this.type.set(id,"IMAGE");
+	id = "audio/Buttonclick.mp3";
+	this.path.set(id,id);
+	this.type.set(id,"MUSIC");
+	id = "audio/Buttonclick.ogg";
+	this.path.set(id,id);
+	this.type.set(id,"SOUND");
+	id = "audio/Clock.mp3";
+	this.path.set(id,id);
+	this.type.set(id,"MUSIC");
+	id = "audio/Clock.ogg";
+	this.path.set(id,id);
+	this.type.set(id,"SOUND");
+	id = "audio/Closedoor.mp3";
+	this.path.set(id,id);
+	this.type.set(id,"MUSIC");
+	id = "audio/Closedoor.ogg";
+	this.path.set(id,id);
+	this.type.set(id,"SOUND");
+	id = "audio/Closedrawer.mp3";
+	this.path.set(id,id);
+	this.type.set(id,"MUSIC");
+	id = "audio/Closedrawer.ogg";
+	this.path.set(id,id);
+	this.type.set(id,"SOUND");
+	id = "audio/Coin.mp3";
+	this.path.set(id,id);
+	this.type.set(id,"MUSIC");
+	id = "audio/Coin.ogg";
+	this.path.set(id,id);
+	this.type.set(id,"SOUND");
+	id = "audio/Hintpopup.mp3";
+	this.path.set(id,id);
+	this.type.set(id,"MUSIC");
+	id = "audio/Hintpopup.ogg";
+	this.path.set(id,id);
+	this.type.set(id,"SOUND");
+	id = "audio/Huh.mp3";
+	this.path.set(id,id);
+	this.type.set(id,"MUSIC");
+	id = "audio/Huh.ogg";
+	this.path.set(id,id);
+	this.type.set(id,"SOUND");
+	id = "audio/Menu.ogg";
+	this.path.set(id,id);
+	this.type.set(id,"SOUND");
+	id = "audio/Objectfound.mp3";
+	this.path.set(id,id);
+	this.type.set(id,"MUSIC");
+	id = "audio/Objectfound.ogg";
+	this.path.set(id,id);
+	this.type.set(id,"SOUND");
+	id = "audio/Objectfound2.mp3";
+	this.path.set(id,id);
+	this.type.set(id,"MUSIC");
+	id = "audio/Objectfound2.ogg";
+	this.path.set(id,id);
+	this.type.set(id,"SOUND");
+	id = "audio/Objectivecomplete.mp3";
+	this.path.set(id,id);
+	this.type.set(id,"MUSIC");
+	id = "audio/Objectivecomplete.ogg";
+	this.path.set(id,id);
+	this.type.set(id,"SOUND");
+	id = "audio/Opendoor.mp3";
+	this.path.set(id,id);
+	this.type.set(id,"MUSIC");
+	id = "audio/Opendoor.ogg";
+	this.path.set(id,id);
+	this.type.set(id,"SOUND");
+	id = "audio/Opendrawer.mp3";
+	this.path.set(id,id);
+	this.type.set(id,"MUSIC");
+	id = "audio/Opendrawer.ogg";
+	this.path.set(id,id);
+	this.type.set(id,"SOUND");
+	id = "audio/Papers.mp3";
+	this.path.set(id,id);
+	this.type.set(id,"MUSIC");
+	id = "audio/Papers.ogg";
+	this.path.set(id,id);
+	this.type.set(id,"SOUND");
+	id = "music/GameMusic.mp3";
+	this.path.set(id,id);
+	this.type.set(id,"MUSIC");
+	id = "music/GameMusic.ogg";
+	this.path.set(id,id);
+	this.type.set(id,"SOUND");
+	id = "music/Menu.mp3";
+	this.path.set(id,id);
+	this.type.set(id,"MUSIC");
+	id = "music/Menu.ogg";
+	this.path.set(id,id);
+	this.type.set(id,"SOUND");
+	id = "music/Winning.mp3";
+	this.path.set(id,id);
+	this.type.set(id,"MUSIC");
 	var assetsPrefix = ApplicationMain.config.assetsPrefix;
 	if(assetsPrefix != null) {
 		var $it0 = this.path.keys();
@@ -1653,16 +1900,34 @@ var Game = function() {
 	this.levelx = openfl_Lib.current.stage.stageWidth;
 	openfl_display_Sprite.call(this);
 	this.createlevel();
-	this.createplayer();
 	this.listenpress();
 	this.dirtyitemcreate();
+	this.createplayer();
 };
 $hxClasses["Game"] = Game;
 Game.__name__ = ["Game"];
 Game.__super__ = openfl_display_Sprite;
 Game.prototype = $extend(openfl_display_Sprite.prototype,{
 	keypress: function(event) {
-		if(event.keyCode == 87) this.listenrelease(event.keyCode); else if(event.keyCode == 65) this.listenrelease(event.keyCode); else if(event.keyCode == 83) this.listenrelease(event.keyCode); else if(event.keyCode == 68) this.listenrelease(event.keyCode);
+		if(event.keyCode == 87) this.listenrelease(event.keyCode); else if(event.keyCode == 65) this.listenrelease(event.keyCode); else if(event.keyCode == 83) this.listenrelease(event.keyCode); else if(event.keyCode == 68) this.listenrelease(event.keyCode); else if(event.keyCode == 69) {
+			var returnedobject = this.checkvalid();
+			if(returnedobject.itemid != "none") haxe_Log.trace(returnedobject.iteminteracttext,{ fileName : "Game.hx", lineNumber : 63, className : "Game", methodName : "keypress"}); else haxe_Log.trace("no valid item in range",{ fileName : "Game.hx", lineNumber : 68, className : "Game", methodName : "keypress"});
+		}
+	}
+	,updatescene: function() {
+		if(this.activekey == 87) {
+			this.scroll(1,"Y");
+			this.player.animate("back_");
+		} else if(this.activekey == 65) {
+			this.scroll(1,"X");
+			this.player.animate("left_");
+		} else if(this.activekey == 83) {
+			this.scroll(-1,"Y");
+			this.player.animate("front_");
+		} else if(this.activekey == 68) {
+			this.scroll(-1,"X");
+			this.player.animate("right_");
+		}
 	}
 	,listenpress: function() {
 		openfl_Lib.current.stage.addEventListener(openfl_events_KeyboardEvent.KEY_DOWN,$bind(this,this.keypress));
@@ -1697,22 +1962,6 @@ Game.prototype = $extend(openfl_display_Sprite.prototype,{
 		this.level.set_width(this.level.get_width() * 1.5);
 		this.level.set_height(this.level.get_height() * 1.5);
 	}
-	,updatescene: function() {
-		haxe_Log.trace("Level moved, key:" + this.activekey,{ fileName : "Game.hx", lineNumber : 119, className : "Game", methodName : "updatescene"});
-		if(this.activekey == 87) {
-			this.scroll(1,"Y");
-			this.player.animate("back_");
-		} else if(this.activekey == 65) {
-			this.scroll(1,"X");
-			this.player.animate("left_");
-		} else if(this.activekey == 83) {
-			this.scroll(-1,"Y");
-			this.player.animate("front_");
-		} else if(this.activekey == 68) {
-			this.scroll(-1,"X");
-			this.player.animate("right_");
-		}
-	}
 	,scroll: function(dir,axis) {
 		var _g = this;
 		var scrollclock = new haxe_Timer(30);
@@ -1741,14 +1990,29 @@ Game.prototype = $extend(openfl_display_Sprite.prototype,{
 		};
 	}
 	,checkvalid: function() {
-		var closestitem = "none";
+		var closest = new Objects("none","none","none");
+		var closdifftot = -1;
 		var _g = 0;
 		var _g1 = this.itemarray;
 		while(_g < _g1.length) {
-			var object = _g1[_g];
+			var item = _g1[_g];
 			++_g;
+			var diffx = Math.floor(this.player.get_x() - item.get_x());
+			var diffy = Math.floor(this.player.get_y() - item.get_y());
+			if(diffx != 0) diffx = diffx * -1;
+			if(diffy < 0) diffy = diffy * -1;
+			var difftot = Math.floor(Math.sqrt(Math.pow(diffx,2) + Math.pow(diffy,2)));
+			if(difftot < 50) {
+				if(closdifftot == -1) {
+					closest = item;
+					closdifftot = difftot;
+				} else if(closdifftot > difftot) {
+					closest = item;
+					closdifftot = difftot;
+				}
+			}
 		}
-		return closestitem;
+		return closest;
 	}
 	,checkcollision: function(dir,axis) {
 	}
@@ -1883,13 +2147,18 @@ var LevelSelect = function() {
 	this.levelOne = new Button("Level 1","img/middlebutton.png","img/middlebuttonhover.png");
 	this.returnButton = new Button("Main Menu","img/middlebutton.png","img/middlebuttonhover.png");
 	openfl_display_Sprite.call(this);
+	this.drawbackground();
 	this.drawButton();
 };
 $hxClasses["LevelSelect"] = LevelSelect;
 LevelSelect.__name__ = ["LevelSelect"];
 LevelSelect.__super__ = openfl_display_Sprite;
 LevelSelect.prototype = $extend(openfl_display_Sprite.prototype,{
-	drawButton: function() {
+	drawbackground: function() {
+		var background = new openfl_display_Bitmap(openfl_Assets.getBitmapData("img/Contactbackground.png"));
+		this.addChildAt(background,0);
+	}
+	,drawButton: function() {
 		this.levelOne.set_x(this.X / 2 - this.levelOne.get_width() / 2);
 		this.levelOne.set_y(this.Y / 4 - this.levelOne.get_height() / 2);
 		this.addChild(this.levelOne);
@@ -1906,12 +2175,12 @@ LevelSelect.prototype = $extend(openfl_display_Sprite.prototype,{
 	,back: function(e) {
 		if(e.currentTarget == this.levelOne) {
 			Main.getInstance().currentLevel = 1;
-			haxe_Log.trace(Main.getInstance().currentLevel,{ fileName : "LevelSelect.hx", lineNumber : 49, className : "LevelSelect", methodName : "back"});
+			haxe_Log.trace(Main.getInstance().currentLevel,{ fileName : "LevelSelect.hx", lineNumber : 58, className : "LevelSelect", methodName : "back"});
 			Main.getInstance().switchScreen("main menu screen");
 		}
 		if(e.currentTarget == this.levelTwo) {
 			Main.getInstance().currentLevel = 2;
-			haxe_Log.trace(Main.getInstance().currentLevel,{ fileName : "LevelSelect.hx", lineNumber : 56, className : "LevelSelect", methodName : "back"});
+			haxe_Log.trace(Main.getInstance().currentLevel,{ fileName : "LevelSelect.hx", lineNumber : 65, className : "LevelSelect", methodName : "back"});
 			Main.getInstance().switchScreen("main menu screen");
 		}
 		if(e.currentTarget == this.returnButton) Main.getInstance().switchScreen("main menu screen");
@@ -1937,12 +2206,21 @@ MainMenu.prototype = $extend(openfl_display_Sprite.prototype,{
 		this.removeEventListener(openfl_events_Event.ADDED_TO_STAGE,$bind(this,this.init));
 		this.drawbackground();
 		this.drawmenu();
+		this.testChatBubble();
 	}
 	,drawbackground: function() {
-		var background = new openfl_display_Bitmap(openfl_Assets.getBitmapData("img/Background.png"));
+		var background = new openfl_display_Bitmap(openfl_Assets.getBitmapData("img/Menubackground.png"));
 		this.addChildAt(background,0);
 	}
+	,testChatBubble: function() {
+		var testList = [];
+		testList.push("textA");
+		testList.push("textB");
+		testList.push("textC");
+		new ChatBubble(testList,"img/middlebutton.png","img/middlebuttonhover.png");
+	}
 	,drawmenu: function() {
+		Main.getInstance().music.mainMenuMusic();
 		this.addChild(this.start);
 		this.addChild(this.levelSelect);
 		this.addChild(this.options);
@@ -1969,19 +2247,62 @@ MainMenu.prototype = $extend(openfl_display_Sprite.prototype,{
 		if(event.currentTarget == this.levelSelect) Main.getInstance().switchScreen("level select screen");
 		if(event.currentTarget == this.options) Main.getInstance().switchScreen("options screen");
 		if(event.currentTarget == this.contact) Main.getInstance().switchScreen("contact screen");
-		if(event.currentTarget == this.exit) haxe_Log.trace("Exit",{ fileName : "MainMenu.hx", lineNumber : 104, className : "MainMenu", methodName : "click"});
+		if(event.currentTarget == this.exit) {
+			haxe_Log.trace("Exit",{ fileName : "MainMenu.hx", lineNumber : 120, className : "MainMenu", methodName : "click"});
+			Main.getInstance().exit();
+		}
 	}
 	,__class__: MainMenu
 });
 Math.__name__ = ["Math"];
 var Music = function() {
+	this.Winning = openfl_Assets.getSound("music/Winning.ogg");
+	this.Menu = openfl_Assets.getSound("music/Menu.ogg");
+	this.GameMusic = openfl_Assets.getSound("music/GameMusic.ogg");
 	openfl_display_Sprite.call(this);
+	this.musicVolume = 1;
 };
 $hxClasses["Music"] = Music;
 Music.__name__ = ["Music"];
 Music.__super__ = openfl_display_Sprite;
 Music.prototype = $extend(openfl_display_Sprite.prototype,{
-	__class__: Music
+	updateMusicVolume: function(input,inputDirection) {
+		if(inputDirection == "up") {
+			this.musicVolume += input;
+			this.stopMusic();
+			this.mainMenuMusic();
+		}
+		if(inputDirection == "down") {
+			this.musicVolume -= input;
+			this.stopMusic();
+			this.mainMenuMusic();
+		}
+	}
+	,stopMusic: function() {
+		this.soundChannel.stop();
+	}
+	,gameMusic: function() {
+		this.soundChannel = this.GameMusic.play();
+		this.soundChannel.set_soundTransform(new openfl_media_SoundTransform(this.musicVolume));
+		this.soundChannel.addEventListener(openfl_events_Event.SOUND_COMPLETE,$bind(this,this.gameMusicRepeat));
+	}
+	,gameMusicRepeat: function(event) {
+		this.soundChannel = this.GameMusic.play();
+		this.soundChannel.set_soundTransform(new openfl_media_SoundTransform(this.musicVolume));
+		this.soundChannel.addEventListener(openfl_events_Event.SOUND_COMPLETE,$bind(this,this.gameMusicRepeat));
+	}
+	,mainMenuMusic: function() {
+		haxe_Log.trace("playing music",{ fileName : "Music.hx", lineNumber : 95, className : "Music", methodName : "mainMenuMusic"});
+		this.soundChannel = this.Menu.play();
+		this.soundChannel.set_soundTransform(new openfl_media_SoundTransform(this.musicVolume));
+		this.soundChannel.addEventListener(openfl_events_Event.SOUND_COMPLETE,$bind(this,this.mainMenuMusicRepeat));
+	}
+	,mainMenuMusicRepeat: function(event) {
+		this.soundChannel = this.Menu.play();
+		this.soundChannel.set_soundTransform(new openfl_media_SoundTransform(this.musicVolume));
+		this.soundChannel.addEventListener(openfl_events_Event.SOUND_COMPLETE,$bind(this,this.gameMusicRepeat));
+	}
+	,__class__: Music
 });
 var NMEPreloader = function() {
 	openfl_display_Sprite.call(this);
@@ -2048,12 +2369,14 @@ var Objects = function(id,type,text) {
 	this.itemtype = type;
 	this.iteminteracttext = text;
 	this.namemarker();
-	var marker = new openfl_display_Bitmap(openfl_Assets.getBitmapData("img/marker_" + this.markerid + ".png"));
-	marker.set_width(50);
-	marker.set_height(marker.get_width());
-	marker.set_x(marker.get_x() - marker.get_width() / 2);
-	marker.set_y(marker.get_y() - marker.get_height() / 2);
-	this.addChild(marker);
+	if(this.itemid != "none") {
+		var marker = new openfl_display_Bitmap(openfl_Assets.getBitmapData("img/marker_" + this.markerid + ".png"));
+		marker.set_width(25);
+		marker.set_height(marker.get_width());
+		marker.set_x(marker.get_x() - marker.get_width() / 2);
+		marker.set_y(marker.get_y() - marker.get_height() / 2);
+		this.addChild(marker);
+	}
 };
 $hxClasses["Objects"] = Objects;
 Objects.__name__ = ["Objects"];
@@ -2073,13 +2396,18 @@ var Options = function() {
 	this.increaseSound = new Button("+ Sound","img/middlebutton.png","img/middlebuttonhover.png");
 	this.returnButton = new Button("Main Menu","img/middlebutton.png","img/middlebuttonhover.png");
 	openfl_display_Sprite.call(this);
+	this.drawbackground();
 	this.drawButton();
 };
 $hxClasses["Options"] = Options;
 Options.__name__ = ["Options"];
 Options.__super__ = openfl_display_Sprite;
 Options.prototype = $extend(openfl_display_Sprite.prototype,{
-	drawButton: function() {
+	drawbackground: function() {
+		var background = new openfl_display_Bitmap(openfl_Assets.getBitmapData("img/Optionsbackground.png"));
+		this.addChildAt(background,0);
+	}
+	,drawButton: function() {
 		this.increaseSound.set_x(600);
 		this.increaseSound.set_y(50);
 		this.increaseSound.addEventListener(openfl_events_MouseEvent.CLICK,$bind(this,this.editSound));
@@ -2102,10 +2430,10 @@ Options.prototype = $extend(openfl_display_Sprite.prototype,{
 		this.returnButton.addEventListener(openfl_events_MouseEvent.CLICK,$bind(this,this.back));
 	}
 	,editSound: function(e) {
-		if(e.currentTarget == this.increaseMusic) Main.getInstance().musicvolume += 0.1;
-		if(e.currentTarget == this.decreaseMusic) Main.getInstance().musicvolume -= 0.1;
-		if(e.currentTarget == this.increaseSound) Main.getInstance().soundvolume += 0.1;
-		if(e.currentTarget == this.decreaseSound) Main.getInstance().soundvolume -= 0.1;
+		if(e.currentTarget == this.increaseMusic) Main.getInstance().music.updateMusicVolume(0.2,"up");
+		if(e.currentTarget == this.decreaseMusic) Main.getInstance().music.updateMusicVolume(0.2,"down");
+		if(e.currentTarget == this.increaseSound) Main.getInstance().sound.updateSoundVolume(0.2,"up");
+		if(e.currentTarget == this.decreaseSound) Main.getInstance().sound.updateSoundVolume(0.2,"down");
 	}
 	,back: function(e) {
 		Main.getInstance().switchScreen("main menu screen");
@@ -2129,7 +2457,6 @@ Player.__super__ = openfl_display_Sprite;
 Player.prototype = $extend(openfl_display_Sprite.prototype,{
 	animate: function(path) {
 		var _g = this;
-		haxe_Log.trace("Animate Function Called",{ fileName : "Player.hx", lineNumber : 40, className : "Player", methodName : "animate"});
 		this.animationtimer = new haxe_Timer(100);
 		this.lastpath = path;
 		var animationcounter = 1;
@@ -2147,6 +2474,8 @@ Player.prototype = $extend(openfl_display_Sprite.prototype,{
 		var data = openfl_Assets.getBitmapData("img/thomas/" + path + ".png");
 		this.removeChild(this.character);
 		this.character = new openfl_display_Bitmap(data);
+		this.character.set_x(this.character.get_x() - this.character.get_width() / 2);
+		this.character.set_y(this.character.get_y() - this.character.get_height());
 		this.addChild(this.character);
 	}
 	,__class__: Player
@@ -2208,13 +2537,42 @@ Reflect.makeVarArgs = function(f) {
 	};
 };
 var Sound = function() {
+	this.papers = openfl_Assets.getSound("audio/Papers.ogg");
+	this.opendrawer = openfl_Assets.getSound("audio/Opendrawer.ogg");
+	this.opendoor = openfl_Assets.getSound("audio/Opendoor.ogg");
+	this.objectfound2 = openfl_Assets.getSound("audio/Objectfound.ogg");
+	this.objectfound = openfl_Assets.getSound("audio/Objectfound.ogg");
+	this.objectivecomplete = openfl_Assets.getSound("audio/Objectivecomplete.ogg");
+	this.huh = openfl_Assets.getSound("audio/Huh.ogg");
+	this.hintpopup = openfl_Assets.getSound("audio/Hintpopup.ogg");
+	this.coin = openfl_Assets.getSound("audio/Coin.ogg");
+	this.closedrawer = openfl_Assets.getSound("audio/Closedrawer.ogg");
+	this.closedoor = openfl_Assets.getSound("audio/Closedoor.ogg");
+	this.clock = openfl_Assets.getSound("audio/Clock.ogg");
+	this.buttonclick = openfl_Assets.getSound("audio/Buttonclick.ogg");
 	openfl_display_Sprite.call(this);
+	this.soundVolume = 1;
+	this.importSound();
 };
 $hxClasses["Sound"] = Sound;
 Sound.__name__ = ["Sound"];
 Sound.__super__ = openfl_display_Sprite;
 Sound.prototype = $extend(openfl_display_Sprite.prototype,{
-	__class__: Sound
+	importSound: function() {
+	}
+	,playSound: function(input) {
+		switch(input) {
+		case "click":
+			this.channel = this.buttonclick.play();
+			this.channel.set_soundTransform(new openfl_media_SoundTransform(this.soundVolume));
+			break;
+		}
+	}
+	,updateSoundVolume: function(input,inputDirection) {
+		if(inputDirection == "up") this.soundVolume += input;
+		if(inputDirection == "down") this.soundVolume -= input;
+	}
+	,__class__: Sound
 });
 var Std = function() { };
 $hxClasses["Std"] = Std;
@@ -25988,6 +26346,31 @@ openfl_system_SecurityDomain.__name__ = ["openfl","system","SecurityDomain"];
 openfl_system_SecurityDomain.prototype = {
 	__class__: openfl_system_SecurityDomain
 };
+var openfl_system_System = function() { };
+$hxClasses["openfl.system.System"] = openfl_system_System;
+openfl_system_System.__name__ = ["openfl","system","System"];
+openfl_system_System.totalMemory = null;
+openfl_system_System.vmVersion = null;
+openfl_system_System.exit = function(code) {
+	lime_system_System.exit(code);
+};
+openfl_system_System.gc = function() {
+};
+openfl_system_System.pause = function() {
+	throw new js__$Boot_HaxeError("System.pause is currently not supported for HTML5");
+};
+openfl_system_System.resume = function() {
+	throw new js__$Boot_HaxeError("System.resume is currently not supported for HTML5");
+};
+openfl_system_System.setClipboard = function(string) {
+	throw new js__$Boot_HaxeError("System.setClipboard is currently not supported for HTML5");
+};
+openfl_system_System.get_totalMemory = function() {
+	return 0;
+};
+openfl_system_System.get_vmVersion = function() {
+	return "1.0.0";
+};
 var openfl_text_AntiAliasType = $hxClasses["openfl.text.AntiAliasType"] = { __ename__ : true, __constructs__ : ["ADVANCED","NORMAL"] };
 openfl_text_AntiAliasType.ADVANCED = ["ADVANCED",0];
 openfl_text_AntiAliasType.ADVANCED.toString = $estr;
@@ -28109,6 +28492,7 @@ openfl_events_TouchEvent.TOUCH_ROLL_OVER = "touchRollOver";
 openfl_events_TouchEvent.TOUCH_TAP = "touchTap";
 openfl_media_Sound.__registeredSounds = new haxe_ds_StringMap();
 openfl_system_SecurityDomain.currentDomain = new openfl_system_SecurityDomain();
+openfl_system_System.useCodePage = false;
 openfl_text_Font.__registeredFonts = [];
 openfl_ui_GameInput.isAvailable = true;
 openfl_ui_GameInput.numDevices = 0;
