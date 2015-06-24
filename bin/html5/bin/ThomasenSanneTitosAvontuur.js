@@ -36,27 +36,83 @@ ApplicationMain.create = function() {
 	types.push("IMAGE");
 	urls.push("img/ButtonHover.png");
 	types.push("IMAGE");
+	urls.push("img/level/collision.png");
+	types.push("IMAGE");
+	urls.push("img/level/floorplan.png");
+	types.push("IMAGE");
+	urls.push("img/level/floorwalls.png");
+	types.push("IMAGE");
+	urls.push("img/marker_1.png");
+	types.push("IMAGE");
+	urls.push("img/marker_2.png");
+	types.push("IMAGE");
+	urls.push("img/marker_3.png");
+	types.push("IMAGE");
+	urls.push("img/marker_4.png");
+	types.push("IMAGE");
+	urls.push("img/marker_5.png");
+	types.push("IMAGE");
 	urls.push("img/middlebutton.png");
 	types.push("IMAGE");
 	urls.push("img/middlebuttonhover.png");
 	types.push("IMAGE");
-	urls.push("img/thomas/back.png");
+	urls.push("img/thomas/back_1.png");
 	types.push("IMAGE");
-	urls.push("img/thomas/front.png");
+	urls.push("img/thomas/back_2.png");
 	types.push("IMAGE");
-	urls.push("img/thomas/old/leftback.png");
+	urls.push("img/thomas/back_3.png");
 	types.push("IMAGE");
-	urls.push("img/thomas/old/leftfront.png");
+	urls.push("img/thomas/back_4.png");
 	types.push("IMAGE");
-	urls.push("img/thomas/old/rightback.png");
+	urls.push("img/thomas/front_1.png");
 	types.push("IMAGE");
-	urls.push("img/thomas/old/rightfront.png");
+	urls.push("img/thomas/front_2.png");
 	types.push("IMAGE");
-	urls.push("img/thomas/old/tiles.png");
+	urls.push("img/thomas/front_3.png");
 	types.push("IMAGE");
-	urls.push("img/thomas/sideleft.png");
+	urls.push("img/thomas/front_4.png");
 	types.push("IMAGE");
-	urls.push("img/thomas/sideright.png");
+	urls.push("img/thomas/left_1.png");
+	types.push("IMAGE");
+	urls.push("img/thomas/left_2.png");
+	types.push("IMAGE");
+	urls.push("img/thomas/left_3.png");
+	types.push("IMAGE");
+	urls.push("img/thomas/left_4.png");
+	types.push("IMAGE");
+	urls.push("img/thomas/old-extra/back walking.png");
+	types.push("IMAGE");
+	urls.push("img/thomas/old-extra/back.png");
+	types.push("IMAGE");
+	urls.push("img/thomas/old-extra/front walking.png");
+	types.push("IMAGE");
+	urls.push("img/thomas/old-extra/front.png");
+	types.push("IMAGE");
+	urls.push("img/thomas/old-extra/left side walking.png");
+	types.push("IMAGE");
+	urls.push("img/thomas/old-extra/leftback.png");
+	types.push("IMAGE");
+	urls.push("img/thomas/old-extra/leftfront.png");
+	types.push("IMAGE");
+	urls.push("img/thomas/old-extra/rightback.png");
+	types.push("IMAGE");
+	urls.push("img/thomas/old-extra/rightfront.png");
+	types.push("IMAGE");
+	urls.push("img/thomas/old-extra/side right walking.png");
+	types.push("IMAGE");
+	urls.push("img/thomas/old-extra/sideleft.png");
+	types.push("IMAGE");
+	urls.push("img/thomas/old-extra/sideright.png");
+	types.push("IMAGE");
+	urls.push("img/thomas/old-extra/tiles.png");
+	types.push("IMAGE");
+	urls.push("img/thomas/right_1.png");
+	types.push("IMAGE");
+	urls.push("img/thomas/right_2.png");
+	types.push("IMAGE");
+	urls.push("img/thomas/right_3.png");
+	types.push("IMAGE");
+	urls.push("img/thomas/right_4.png");
 	types.push("IMAGE");
 	urls.push("img/topbutton.png");
 	types.push("IMAGE");
@@ -1338,37 +1394,121 @@ var DefaultAssetLibrary = function() {
 	id = "img/ButtonHover.png";
 	this.path.set(id,id);
 	this.type.set(id,"IMAGE");
+	id = "img/level/collision.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
+	id = "img/level/floorplan.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
+	id = "img/level/floorwalls.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
+	id = "img/marker_1.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
+	id = "img/marker_2.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
+	id = "img/marker_3.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
+	id = "img/marker_4.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
+	id = "img/marker_5.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
 	id = "img/middlebutton.png";
 	this.path.set(id,id);
 	this.type.set(id,"IMAGE");
 	id = "img/middlebuttonhover.png";
 	this.path.set(id,id);
 	this.type.set(id,"IMAGE");
-	id = "img/thomas/back.png";
+	id = "img/thomas/back_1.png";
 	this.path.set(id,id);
 	this.type.set(id,"IMAGE");
-	id = "img/thomas/front.png";
+	id = "img/thomas/back_2.png";
 	this.path.set(id,id);
 	this.type.set(id,"IMAGE");
-	id = "img/thomas/old/leftback.png";
+	id = "img/thomas/back_3.png";
 	this.path.set(id,id);
 	this.type.set(id,"IMAGE");
-	id = "img/thomas/old/leftfront.png";
+	id = "img/thomas/back_4.png";
 	this.path.set(id,id);
 	this.type.set(id,"IMAGE");
-	id = "img/thomas/old/rightback.png";
+	id = "img/thomas/front_1.png";
 	this.path.set(id,id);
 	this.type.set(id,"IMAGE");
-	id = "img/thomas/old/rightfront.png";
+	id = "img/thomas/front_2.png";
 	this.path.set(id,id);
 	this.type.set(id,"IMAGE");
-	id = "img/thomas/old/tiles.png";
+	id = "img/thomas/front_3.png";
 	this.path.set(id,id);
 	this.type.set(id,"IMAGE");
-	id = "img/thomas/sideleft.png";
+	id = "img/thomas/front_4.png";
 	this.path.set(id,id);
 	this.type.set(id,"IMAGE");
-	id = "img/thomas/sideright.png";
+	id = "img/thomas/left_1.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
+	id = "img/thomas/left_2.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
+	id = "img/thomas/left_3.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
+	id = "img/thomas/left_4.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
+	id = "img/thomas/old-extra/back walking.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
+	id = "img/thomas/old-extra/back.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
+	id = "img/thomas/old-extra/front walking.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
+	id = "img/thomas/old-extra/front.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
+	id = "img/thomas/old-extra/left side walking.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
+	id = "img/thomas/old-extra/leftback.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
+	id = "img/thomas/old-extra/leftfront.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
+	id = "img/thomas/old-extra/rightback.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
+	id = "img/thomas/old-extra/rightfront.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
+	id = "img/thomas/old-extra/side right walking.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
+	id = "img/thomas/old-extra/sideleft.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
+	id = "img/thomas/old-extra/sideright.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
+	id = "img/thomas/old-extra/tiles.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
+	id = "img/thomas/right_1.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
+	id = "img/thomas/right_2.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
+	id = "img/thomas/right_3.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
+	id = "img/thomas/right_4.png";
 	this.path.set(id,id);
 	this.type.set(id,"IMAGE");
 	id = "img/topbutton.png";
@@ -1506,6 +1646,7 @@ EReg.prototype = {
 	,__class__: EReg
 };
 var Game = function() {
+	this.itemarray = [];
 	this.activestage = openfl_Lib.current.stage;
 	this.activekey = 0;
 	this.levely = openfl_Lib.current.stage.stageHeight;
@@ -1514,47 +1655,30 @@ var Game = function() {
 	this.createlevel();
 	this.createplayer();
 	this.listenpress();
+	this.dirtyitemcreate();
 };
 $hxClasses["Game"] = Game;
 Game.__name__ = ["Game"];
 Game.__super__ = openfl_display_Sprite;
 Game.prototype = $extend(openfl_display_Sprite.prototype,{
 	keypress: function(event) {
-		haxe_Log.trace(event.keyCode,{ fileName : "Game.hx", lineNumber : 33, className : "Game", methodName : "keypress"});
-		if(event.keyCode == 87) {
-			haxe_Log.trace("W pressed",{ fileName : "Game.hx", lineNumber : 37, className : "Game", methodName : "keypress"});
-			this.player.updateGraphic("up");
-			this.listenrelease(event.keyCode);
-		} else if(event.keyCode == 65) {
-			haxe_Log.trace("A pressed",{ fileName : "Game.hx", lineNumber : 46, className : "Game", methodName : "keypress"});
-			this.player.updateGraphic("left");
-			this.listenrelease(event.keyCode);
-		} else if(event.keyCode == 83) {
-			haxe_Log.trace("S pressed",{ fileName : "Game.hx", lineNumber : 55, className : "Game", methodName : "keypress"});
-			this.player.updateGraphic("down");
-			this.listenrelease(event.keyCode);
-		} else if(event.keyCode == 68) {
-			haxe_Log.trace("D pressed",{ fileName : "Game.hx", lineNumber : 64, className : "Game", methodName : "keypress"});
-			this.player.updateGraphic("right");
-			this.listenrelease(event.keyCode);
-		}
+		if(event.keyCode == 87) this.listenrelease(event.keyCode); else if(event.keyCode == 65) this.listenrelease(event.keyCode); else if(event.keyCode == 83) this.listenrelease(event.keyCode); else if(event.keyCode == 68) this.listenrelease(event.keyCode);
 	}
 	,listenpress: function() {
 		openfl_Lib.current.stage.addEventListener(openfl_events_KeyboardEvent.KEY_DOWN,$bind(this,this.keypress));
 	}
 	,listenrelease: function(keyCode) {
-		this.activekey = keyCode;
-		this.movelevel();
 		openfl_Lib.current.stage.removeEventListener(openfl_events_KeyboardEvent.KEY_DOWN,$bind(this,this.keypress));
+		this.activekey = keyCode;
 		openfl_Lib.current.stage.addEventListener(openfl_events_KeyboardEvent.KEY_UP,$bind(this,this.keyrelease));
-		haxe_Log.trace("UP listener added",{ fileName : "Game.hx", lineNumber : 87, className : "Game", methodName : "listenrelease"});
+		this.updatescene();
 	}
 	,keyrelease: function(event) {
 		if(this.activekey == event.keyCode) {
 			openfl_Lib.current.stage.removeEventListener(openfl_events_KeyboardEvent.KEY_UP,$bind(this,this.keyrelease));
 			this.activekey = 0;
+			this.player.stopanimation();
 			this.listenpress();
-			haxe_Log.trace("UP listener removed, DOWN added",{ fileName : "Game.hx", lineNumber : 100, className : "Game", methodName : "keyrelease"});
 		}
 	}
 	,createplayer: function() {
@@ -1568,24 +1692,101 @@ Game.prototype = $extend(openfl_display_Sprite.prototype,{
 	,createlevel: function() {
 		this.level = new Level();
 		this.addChild(this.level);
-		this.level.set_x(0);
-		this.level.set_y(0);
+		this.level.set_x(-400);
+		this.level.set_y(-600);
+		this.level.set_width(this.level.get_width() * 1.5);
+		this.level.set_height(this.level.get_height() * 1.5);
 	}
-	,movelevel: function() {
-		var _g = this;
-		haxe_Log.trace("Level moved" + this.activekey,{ fileName : "Game.hx", lineNumber : 129, className : "Game", methodName : "movelevel"});
-		if(this.activekey == 87) while(this.activekey != 0) {
-			var timer = new haxe_Timer(1000);
-			timer.run = function() {
-				_g.traceit();
-			};
+	,updatescene: function() {
+		haxe_Log.trace("Level moved, key:" + this.activekey,{ fileName : "Game.hx", lineNumber : 119, className : "Game", methodName : "updatescene"});
+		if(this.activekey == 87) {
+			this.scroll(1,"Y");
+			this.player.animate("back_");
 		} else if(this.activekey == 65) {
+			this.scroll(1,"X");
+			this.player.animate("left_");
 		} else if(this.activekey == 83) {
+			this.scroll(-1,"Y");
+			this.player.animate("front_");
 		} else if(this.activekey == 68) {
+			this.scroll(-1,"X");
+			this.player.animate("right_");
 		}
 	}
-	,traceit: function() {
-		haxe_Log.trace("Check",{ fileName : "Game.hx", lineNumber : 161, className : "Game", methodName : "traceit"});
+	,scroll: function(dir,axis) {
+		var _g = this;
+		var scrollclock = new haxe_Timer(30);
+		scrollclock.run = function() {
+			_g.checkcollision(dir,axis);
+			if(axis == "X") {
+				_g.level.set_x(_g.level.get_x() + 3 * dir);
+				var _g1 = 0;
+				var _g2 = _g.itemarray;
+				while(_g1 < _g2.length) {
+					var item = _g2[_g1];
+					++_g1;
+					item.set_x(item.get_x() + 3 * dir);
+				}
+			} else if(axis == "Y") {
+				_g.level.set_y(_g.level.get_y() + 3 * dir);
+				var _g11 = 0;
+				var _g21 = _g.itemarray;
+				while(_g11 < _g21.length) {
+					var item1 = _g21[_g11];
+					++_g11;
+					item1.set_y(item1.get_y() + 3 * dir);
+				}
+			}
+			if(_g.activekey == 0) scrollclock.stop();
+		};
+	}
+	,checkvalid: function() {
+		var closestitem = "none";
+		var _g = 0;
+		var _g1 = this.itemarray;
+		while(_g < _g1.length) {
+			var object = _g1[_g];
+			++_g;
+		}
+		return closestitem;
+	}
+	,checkcollision: function(dir,axis) {
+	}
+	,dirtyitemcreate: function() {
+		var item01 = new Objects("001","FURNITURE","Een redelijk normaal bureau.");
+		item01.set_x(905.);
+		item01.set_y(45.);
+		this.itemarray.push(item01);
+		var item02 = new Objects("002","FURNITURE","Een saaie tafel.");
+		item02.set_x(1137.5);
+		item02.set_y(-135.);
+		this.itemarray.push(item02);
+		var item03 = new Objects("003","FURNITURE","De stoel piept een beetje.");
+		item03.set_x(1325.);
+		item03.set_y(112.5);
+		this.itemarray.push(item03);
+		var item04 = new Objects("004","FURNITURE","Allemaal lege laadjes.");
+		item04.set_x(672.5);
+		item04.set_y(127.5);
+		this.itemarray.push(item04);
+		var item05 = new Objects("005","FURNITURE","Een tafel, niet erg bijzonder.");
+		item05.set_x(1145.);
+		item05.set_y(337.5);
+		this.itemarray.push(item05);
+		var item06 = new Objects("006","NPC","Bas bewaakt de ingang elke dag.");
+		item06.set_x(845.);
+		item06.set_y(255.);
+		this.itemarray.push(item06);
+		this.placeitems();
+	}
+	,placeitems: function() {
+		var _g = 0;
+		var _g1 = this.itemarray;
+		while(_g < _g1.length) {
+			var item = _g1[_g];
+			++_g;
+			this.addChild(item);
+		}
 	}
 	,__class__: Game
 });
@@ -1662,9 +1863,12 @@ Lambda.count = function(it,pred) {
 var Level = function() {
 	openfl_display_Sprite.call(this);
 	haxe_Log.trace("level has been created",{ fileName : "Level.hx", lineNumber : 20, className : "Level", methodName : "new"});
-	var bitmapback = openfl_Assets.getBitmapData("img/Background.png");
-	var bitmap = new openfl_display_Bitmap(bitmapback);
-	this.addChild(bitmap);
+	var levelcoll = new openfl_display_Bitmap(openfl_Assets.getBitmapData("img/level/collision.png"));
+	var levelback = new openfl_display_Bitmap(openfl_Assets.getBitmapData("img/level/floorplan.png"));
+	var levelwall = new openfl_display_Bitmap(openfl_Assets.getBitmapData("img/level/floorwalls.png"));
+	this.addChild(levelcoll);
+	this.addChild(levelback);
+	this.addChild(levelwall);
 };
 $hxClasses["Level"] = Level;
 Level.__name__ = ["Level"];
@@ -1834,6 +2038,32 @@ NMEPreloader.prototype = $extend(openfl_display_Sprite.prototype,{
 	}
 	,__class__: NMEPreloader
 });
+var Objects = function(id,type,text) {
+	this.markerid = 0;
+	this.iteminteracttext = "Er is hier weinig te vinden...";
+	this.itemtype = "NONE";
+	this.itemid = "000";
+	openfl_display_Sprite.call(this);
+	this.itemid = id;
+	this.itemtype = type;
+	this.iteminteracttext = text;
+	this.namemarker();
+	var marker = new openfl_display_Bitmap(openfl_Assets.getBitmapData("img/marker_" + this.markerid + ".png"));
+	marker.set_width(50);
+	marker.set_height(marker.get_width());
+	marker.set_x(marker.get_x() - marker.get_width() / 2);
+	marker.set_y(marker.get_y() - marker.get_height() / 2);
+	this.addChild(marker);
+};
+$hxClasses["Objects"] = Objects;
+Objects.__name__ = ["Objects"];
+Objects.__super__ = openfl_display_Sprite;
+Objects.prototype = $extend(openfl_display_Sprite.prototype,{
+	namemarker: function() {
+		if(this.itemtype == "FURNITURE") this.markerid = 1; else if(this.itemtype == "NPC") this.markerid = 2; else if(this.itemtype == "PLANT") this.markerid = 3; else if(this.itemtype == "ITEM") this.markerid = 4; else if(this.itemtype == "OBJECTIVE") this.markerid = 5; else this.markerid = 0;
+	}
+	,__class__: Objects
+});
 var Options = function() {
 	this.Y = openfl_Lib.current.stage.stageHeight;
 	this.X = openfl_Lib.current.stage.stageWidth;
@@ -1883,23 +2113,38 @@ Options.prototype = $extend(openfl_display_Sprite.prototype,{
 	,__class__: Options
 });
 var Player = function() {
+	this.lastpath = "front_";
+	this.activeKey = 0;
 	this.charType = Main.getInstance().currentChar;
 	this.currentImg = 0;
 	this.stageX = openfl_Lib.current.stage.stageWidth;
 	this.stageY = openfl_Lib.current.stage.stageHeight;
 	openfl_display_Sprite.call(this);
-	haxe_Log.trace("player has been created",{ fileName : "Player.hx", lineNumber : 29, className : "Player", methodName : "new"});
-	this.updatechild("front");
+	haxe_Log.trace("player has been created",{ fileName : "Player.hx", lineNumber : 33, className : "Player", methodName : "new"});
+	this.updategraphic("front_1");
 };
 $hxClasses["Player"] = Player;
 Player.__name__ = ["Player"];
 Player.__super__ = openfl_display_Sprite;
 Player.prototype = $extend(openfl_display_Sprite.prototype,{
-	updateGraphic: function(direction) {
-		if(direction == "up") this.updatechild("back"); else if(direction == "down") this.updatechild("front"); else if(direction == "left") this.updatechild("sideleft"); else if(direction == "right") this.updatechild("sideright");
+	animate: function(path) {
+		var _g = this;
+		haxe_Log.trace("Animate Function Called",{ fileName : "Player.hx", lineNumber : 40, className : "Player", methodName : "animate"});
+		this.animationtimer = new haxe_Timer(100);
+		this.lastpath = path;
+		var animationcounter = 1;
+		this.animationtimer.run = function() {
+			if(animationcounter == 5) animationcounter = 1;
+			_g.updategraphic(path + animationcounter);
+			animationcounter++;
+		};
 	}
-	,updatechild: function(dir) {
-		var data = openfl_Assets.getBitmapData("img/thomas/" + dir + ".png");
+	,stopanimation: function() {
+		this.animationtimer.stop();
+		this.updategraphic(this.lastpath + "1");
+	}
+	,updategraphic: function(path) {
+		var data = openfl_Assets.getBitmapData("img/thomas/" + path + ".png");
 		this.removeChild(this.character);
 		this.character = new openfl_display_Bitmap(data);
 		this.addChild(this.character);

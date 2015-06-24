@@ -37,7 +37,7 @@ class Player extends Sprite
 	
 	public function animate ( path:String )
 	{
-		trace ("Animate Function Called");
+		//trace ("Animate Function Called");
 		
 		animationtimer = new Timer (100);
 		
@@ -47,8 +47,6 @@ class Player extends Sprite
 		
 		animationtimer.run = function ()
 		{
-			trace ("animation cycling " + animationcounter);
-			
 			if (animationcounter == 5)
 			{
 				animationcounter = 1;
@@ -73,6 +71,8 @@ class Player extends Sprite
 	
 		removeChild (character);
 		character = new Bitmap (data);
+		character.x = character.x - character.width / 2;
+		character.y = character.y - character.height;
 		addChild (character);
 	}
 }

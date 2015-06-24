@@ -54,6 +54,38 @@ class ApplicationMain {
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
+		urls.push ("img/level/collision.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/level/floorplan.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/level/floorwalls.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/marker_1.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/marker_2.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/marker_3.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/marker_4.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/marker_5.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
 		urls.push ("img/middlebutton.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		
@@ -62,39 +94,119 @@ class ApplicationMain {
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
-		urls.push ("img/thomas/back.png");
+		urls.push ("img/thomas/back_1.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
-		urls.push ("img/thomas/front.png");
+		urls.push ("img/thomas/back_2.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
-		urls.push ("img/thomas/old/leftback.png");
+		urls.push ("img/thomas/back_3.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
-		urls.push ("img/thomas/old/leftfront.png");
+		urls.push ("img/thomas/back_4.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
-		urls.push ("img/thomas/old/rightback.png");
+		urls.push ("img/thomas/front_1.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
-		urls.push ("img/thomas/old/rightfront.png");
+		urls.push ("img/thomas/front_2.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
-		urls.push ("img/thomas/old/tiles.png");
+		urls.push ("img/thomas/front_3.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
-		urls.push ("img/thomas/sideleft.png");
+		urls.push ("img/thomas/front_4.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
-		urls.push ("img/thomas/sideright.png");
+		urls.push ("img/thomas/left_1.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/thomas/left_2.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/thomas/left_3.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/thomas/left_4.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/thomas/old-extra/back walking.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/thomas/old-extra/back.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/thomas/old-extra/front walking.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/thomas/old-extra/front.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/thomas/old-extra/left side walking.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/thomas/old-extra/leftback.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/thomas/old-extra/leftfront.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/thomas/old-extra/rightback.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/thomas/old-extra/rightfront.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/thomas/old-extra/side right walking.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/thomas/old-extra/sideleft.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/thomas/old-extra/sideright.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/thomas/old-extra/tiles.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/thomas/right_1.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/thomas/right_2.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/thomas/right_3.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
+		urls.push ("img/thomas/right_4.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		

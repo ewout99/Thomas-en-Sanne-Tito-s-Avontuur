@@ -47,6 +47,8 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		path.set ("img/Background.png", "img/Background.png");
 		type.set ("img/Background.png", AssetType.IMAGE);
+		path.set ("img/Background_2.png", "img/Background_2.png");
+		type.set ("img/Background_2.png", AssetType.IMAGE);
 		path.set ("img/bottombutton.png", "img/bottombutton.png");
 		type.set ("img/bottombutton.png", AssetType.IMAGE);
 		path.set ("img/bottombuttonhover.png", "img/bottombuttonhover.png");
@@ -61,6 +63,16 @@ class DefaultAssetLibrary extends AssetLibrary {
 		type.set ("img/level/floorplan.png", AssetType.IMAGE);
 		path.set ("img/level/floorwalls.png", "img/level/floorwalls.png");
 		type.set ("img/level/floorwalls.png", AssetType.IMAGE);
+		path.set ("img/marker_1.png", "img/marker_1.png");
+		type.set ("img/marker_1.png", AssetType.IMAGE);
+		path.set ("img/marker_2.png", "img/marker_2.png");
+		type.set ("img/marker_2.png", AssetType.IMAGE);
+		path.set ("img/marker_3.png", "img/marker_3.png");
+		type.set ("img/marker_3.png", AssetType.IMAGE);
+		path.set ("img/marker_4.png", "img/marker_4.png");
+		type.set ("img/marker_4.png", AssetType.IMAGE);
+		path.set ("img/marker_5.png", "img/marker_5.png");
+		type.set ("img/marker_5.png", AssetType.IMAGE);
 		path.set ("img/middlebutton.png", "img/middlebutton.png");
 		type.set ("img/middlebutton.png", AssetType.IMAGE);
 		path.set ("img/middlebuttonhover.png", "img/middlebuttonhover.png");
@@ -135,6 +147,9 @@ class DefaultAssetLibrary extends AssetLibrary {
 		id = "img/Background.png";
 		path.set (id, id);
 		type.set (id, AssetType.IMAGE);
+		id = "img/Background_2.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
 		id = "img/bottombutton.png";
 		path.set (id, id);
 		type.set (id, AssetType.IMAGE);
@@ -154,6 +169,21 @@ class DefaultAssetLibrary extends AssetLibrary {
 		path.set (id, id);
 		type.set (id, AssetType.IMAGE);
 		id = "img/level/floorwalls.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "img/marker_1.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "img/marker_2.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "img/marker_3.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "img/marker_4.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "img/marker_5.png";
 		path.set (id, id);
 		type.set (id, AssetType.IMAGE);
 		id = "img/middlebutton.png";
@@ -310,11 +340,23 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		
 		
+		
+		
+		
+		
+		
+		
 		#end
 		
 		#if (windows || mac || linux)
 		
 		var useManifest = false;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
 		useManifest = true;
 		useManifest = true;
 		useManifest = true;
@@ -1000,7 +1042,19 @@ class DefaultAssetLibrary extends AssetLibrary {
 
 
 
+
+
+
+
+
+
 #elseif html5
+
+
+
+
+
+
 
 
 
