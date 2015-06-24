@@ -1923,7 +1923,7 @@ Game.prototype = $extend(openfl.display.Sprite.prototype,{
 	keypress: function(event) {
 		if(event.keyCode == 87) this.listenrelease(event.keyCode); else if(event.keyCode == 65) this.listenrelease(event.keyCode); else if(event.keyCode == 83) this.listenrelease(event.keyCode); else if(event.keyCode == 68) this.listenrelease(event.keyCode); else if(event.keyCode == 69) {
 			var returnedobject = this.checkvalid();
-			if(returnedobject.itemid != "none") haxe.Log.trace(returnedobject.iteminteracttext,{ fileName : "Game.hx", lineNumber : 63, className : "Game", methodName : "keypress"}); else haxe.Log.trace("no valid item in range",{ fileName : "Game.hx", lineNumber : 68, className : "Game", methodName : "keypress"});
+			if(returnedobject.itemid != "none") haxe.Log.trace(returnedobject.iteminteracttext,{ fileName : "Game.hx", lineNumber : 69, className : "Game", methodName : "keypress"}); else haxe.Log.trace("no valid item in range",{ fileName : "Game.hx", lineNumber : 74, className : "Game", methodName : "keypress"});
 		}
 	}
 	,updatescene: function() {
@@ -1978,7 +1978,6 @@ Game.prototype = $extend(openfl.display.Sprite.prototype,{
 		var _g = this;
 		var scrollclock = new haxe.Timer(30);
 		scrollclock.run = function() {
-			_g.checkcollision(dir,axis);
 			if(axis == "X") {
 				_g.level.set_x(_g.level.get_x() + 3 * dir);
 				var _g1 = 0;
@@ -2025,8 +2024,6 @@ Game.prototype = $extend(openfl.display.Sprite.prototype,{
 			}
 		}
 		return closest;
-	}
-	,checkcollision: function(dir,axis) {
 	}
 	,dirtyitemcreate: function() {
 		var item01 = new Objects("001","FURNITURE","Een redelijk normaal bureau.");
@@ -2141,8 +2138,10 @@ var Level = function() {
 	haxe.Log.trace("level has been created",{ fileName : "Level.hx", lineNumber : 20, className : "Level", methodName : "new"});
 	var levelcoll = new openfl.display.Bitmap(openfl.Assets.getBitmapData("img/level/collision.png"));
 	var levelback = new openfl.display.Bitmap(openfl.Assets.getBitmapData("img/level/floorplan.png"));
+	var levelwall = new openfl.display.Bitmap(openfl.Assets.getBitmapData("img/level/floorwalls.png"));
 	this.addChild(levelcoll);
 	this.addChild(levelback);
+	this.addChild(levelwall);
 };
 $hxClasses["Level"] = Level;
 Level.__name__ = ["Level"];

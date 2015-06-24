@@ -185,7 +185,7 @@ class Game extends Sprite
 		
 		scrollclock.run = function ()
 		{
-			checkcollision (dir, axis);
+			//checkcollision (dir, axis);
 			
 			if (axis == "X")
 			{
