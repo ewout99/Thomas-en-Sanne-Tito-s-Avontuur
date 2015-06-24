@@ -57,12 +57,16 @@ class DefaultAssetLibrary extends AssetLibrary {
 		type.set ("img/Button.png", AssetType.IMAGE);
 		path.set ("img/ButtonHover.png", "img/ButtonHover.png");
 		type.set ("img/ButtonHover.png", AssetType.IMAGE);
+		path.set ("img/Contactbackground.png", "img/Contactbackground.png");
+		type.set ("img/Contactbackground.png", AssetType.IMAGE);
 		path.set ("img/level/collision.png", "img/level/collision.png");
 		type.set ("img/level/collision.png", AssetType.IMAGE);
 		path.set ("img/level/floorplan.png", "img/level/floorplan.png");
 		type.set ("img/level/floorplan.png", AssetType.IMAGE);
 		path.set ("img/level/floorwalls.png", "img/level/floorwalls.png");
 		type.set ("img/level/floorwalls.png", AssetType.IMAGE);
+		path.set ("img/Levelkiezen.png", "img/Levelkiezen.png");
+		type.set ("img/Levelkiezen.png", AssetType.IMAGE);
 		path.set ("img/marker_1.png", "img/marker_1.png");
 		type.set ("img/marker_1.png", AssetType.IMAGE);
 		path.set ("img/marker_2.png", "img/marker_2.png");
@@ -73,10 +77,22 @@ class DefaultAssetLibrary extends AssetLibrary {
 		type.set ("img/marker_4.png", AssetType.IMAGE);
 		path.set ("img/marker_5.png", "img/marker_5.png");
 		type.set ("img/marker_5.png", AssetType.IMAGE);
+		path.set ("img/Menubackground.png", "img/Menubackground.png");
+		type.set ("img/Menubackground.png", AssetType.IMAGE);
 		path.set ("img/middlebutton.png", "img/middlebutton.png");
 		type.set ("img/middlebutton.png", AssetType.IMAGE);
 		path.set ("img/middlebuttonhover.png", "img/middlebuttonhover.png");
 		type.set ("img/middlebuttonhover.png", AssetType.IMAGE);
+		path.set ("img/Optionsbackground.png", "img/Optionsbackground.png");
+		type.set ("img/Optionsbackground.png", AssetType.IMAGE);
+		path.set ("img/speech bubble big left.png", "img/speech bubble big left.png");
+		type.set ("img/speech bubble big left.png", AssetType.IMAGE);
+		path.set ("img/speech bubble big right.png", "img/speech bubble big right.png");
+		type.set ("img/speech bubble big right.png", AssetType.IMAGE);
+		path.set ("img/speech bubble small left.png", "img/speech bubble small left.png");
+		type.set ("img/speech bubble small left.png", AssetType.IMAGE);
+		path.set ("img/Speech bubble small right.png", "img/Speech bubble small right.png");
+		type.set ("img/Speech bubble small right.png", AssetType.IMAGE);
 		path.set ("img/thomas/back_1.png", "img/thomas/back_1.png");
 		type.set ("img/thomas/back_1.png", AssetType.IMAGE);
 		path.set ("img/thomas/back_2.png", "img/thomas/back_2.png");
@@ -139,6 +155,70 @@ class DefaultAssetLibrary extends AssetLibrary {
 		type.set ("img/topbutton.png", AssetType.IMAGE);
 		path.set ("img/topbuttonhover.png", "img/topbuttonhover.png");
 		type.set ("img/topbuttonhover.png", AssetType.IMAGE);
+		path.set ("audio/Buttonclick.mp3", "audio/Buttonclick.mp3");
+		type.set ("audio/Buttonclick.mp3", AssetType.MUSIC);
+		path.set ("audio/Buttonclick.ogg", "audio/Buttonclick.ogg");
+		type.set ("audio/Buttonclick.ogg", AssetType.SOUND);
+		path.set ("audio/Clock.mp3", "audio/Clock.mp3");
+		type.set ("audio/Clock.mp3", AssetType.MUSIC);
+		path.set ("audio/Clock.ogg", "audio/Clock.ogg");
+		type.set ("audio/Clock.ogg", AssetType.SOUND);
+		path.set ("audio/Closedoor.mp3", "audio/Closedoor.mp3");
+		type.set ("audio/Closedoor.mp3", AssetType.MUSIC);
+		path.set ("audio/Closedoor.ogg", "audio/Closedoor.ogg");
+		type.set ("audio/Closedoor.ogg", AssetType.SOUND);
+		path.set ("audio/Closedrawer.mp3", "audio/Closedrawer.mp3");
+		type.set ("audio/Closedrawer.mp3", AssetType.MUSIC);
+		path.set ("audio/Closedrawer.ogg", "audio/Closedrawer.ogg");
+		type.set ("audio/Closedrawer.ogg", AssetType.SOUND);
+		path.set ("audio/Coin.mp3", "audio/Coin.mp3");
+		type.set ("audio/Coin.mp3", AssetType.MUSIC);
+		path.set ("audio/Coin.ogg", "audio/Coin.ogg");
+		type.set ("audio/Coin.ogg", AssetType.SOUND);
+		path.set ("audio/Hintpopup.mp3", "audio/Hintpopup.mp3");
+		type.set ("audio/Hintpopup.mp3", AssetType.MUSIC);
+		path.set ("audio/Hintpopup.ogg", "audio/Hintpopup.ogg");
+		type.set ("audio/Hintpopup.ogg", AssetType.SOUND);
+		path.set ("audio/Huh.mp3", "audio/Huh.mp3");
+		type.set ("audio/Huh.mp3", AssetType.MUSIC);
+		path.set ("audio/Huh.ogg", "audio/Huh.ogg");
+		type.set ("audio/Huh.ogg", AssetType.SOUND);
+		path.set ("audio/Menu.ogg", "audio/Menu.ogg");
+		type.set ("audio/Menu.ogg", AssetType.SOUND);
+		path.set ("audio/Objectfound.mp3", "audio/Objectfound.mp3");
+		type.set ("audio/Objectfound.mp3", AssetType.MUSIC);
+		path.set ("audio/Objectfound.ogg", "audio/Objectfound.ogg");
+		type.set ("audio/Objectfound.ogg", AssetType.SOUND);
+		path.set ("audio/Objectfound2.mp3", "audio/Objectfound2.mp3");
+		type.set ("audio/Objectfound2.mp3", AssetType.MUSIC);
+		path.set ("audio/Objectfound2.ogg", "audio/Objectfound2.ogg");
+		type.set ("audio/Objectfound2.ogg", AssetType.SOUND);
+		path.set ("audio/Objectivecomplete.mp3", "audio/Objectivecomplete.mp3");
+		type.set ("audio/Objectivecomplete.mp3", AssetType.MUSIC);
+		path.set ("audio/Objectivecomplete.ogg", "audio/Objectivecomplete.ogg");
+		type.set ("audio/Objectivecomplete.ogg", AssetType.SOUND);
+		path.set ("audio/Opendoor.mp3", "audio/Opendoor.mp3");
+		type.set ("audio/Opendoor.mp3", AssetType.MUSIC);
+		path.set ("audio/Opendoor.ogg", "audio/Opendoor.ogg");
+		type.set ("audio/Opendoor.ogg", AssetType.SOUND);
+		path.set ("audio/Opendrawer.mp3", "audio/Opendrawer.mp3");
+		type.set ("audio/Opendrawer.mp3", AssetType.MUSIC);
+		path.set ("audio/Opendrawer.ogg", "audio/Opendrawer.ogg");
+		type.set ("audio/Opendrawer.ogg", AssetType.SOUND);
+		path.set ("audio/Papers.mp3", "audio/Papers.mp3");
+		type.set ("audio/Papers.mp3", AssetType.MUSIC);
+		path.set ("audio/Papers.ogg", "audio/Papers.ogg");
+		type.set ("audio/Papers.ogg", AssetType.SOUND);
+		path.set ("music/GameMusic.mp3", "music/GameMusic.mp3");
+		type.set ("music/GameMusic.mp3", AssetType.MUSIC);
+		path.set ("music/GameMusic.ogg", "music/GameMusic.ogg");
+		type.set ("music/GameMusic.ogg", AssetType.SOUND);
+		path.set ("music/Menu.mp3", "music/Menu.mp3");
+		type.set ("music/Menu.mp3", AssetType.MUSIC);
+		path.set ("music/Menu.ogg", "music/Menu.ogg");
+		type.set ("music/Menu.ogg", AssetType.SOUND);
+		path.set ("music/Winning.mp3", "music/Winning.mp3");
+		type.set ("music/Winning.mp3", AssetType.MUSIC);
 		
 		
 		#elseif html5
@@ -162,6 +242,9 @@ class DefaultAssetLibrary extends AssetLibrary {
 		id = "img/ButtonHover.png";
 		path.set (id, id);
 		type.set (id, AssetType.IMAGE);
+		id = "img/Contactbackground.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
 		id = "img/level/collision.png";
 		path.set (id, id);
 		type.set (id, AssetType.IMAGE);
@@ -169,6 +252,9 @@ class DefaultAssetLibrary extends AssetLibrary {
 		path.set (id, id);
 		type.set (id, AssetType.IMAGE);
 		id = "img/level/floorwalls.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "img/Levelkiezen.png";
 		path.set (id, id);
 		type.set (id, AssetType.IMAGE);
 		id = "img/marker_1.png";
@@ -186,10 +272,28 @@ class DefaultAssetLibrary extends AssetLibrary {
 		id = "img/marker_5.png";
 		path.set (id, id);
 		type.set (id, AssetType.IMAGE);
+		id = "img/Menubackground.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
 		id = "img/middlebutton.png";
 		path.set (id, id);
 		type.set (id, AssetType.IMAGE);
 		id = "img/middlebuttonhover.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "img/Optionsbackground.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "img/speech bubble big left.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "img/speech bubble big right.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "img/speech bubble small left.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "img/Speech bubble small right.png";
 		path.set (id, id);
 		type.set (id, AssetType.IMAGE);
 		id = "img/thomas/back_1.png";
@@ -285,6 +389,102 @@ class DefaultAssetLibrary extends AssetLibrary {
 		id = "img/topbuttonhover.png";
 		path.set (id, id);
 		type.set (id, AssetType.IMAGE);
+		id = "audio/Buttonclick.mp3";
+		path.set (id, id);
+		type.set (id, AssetType.MUSIC);
+		id = "audio/Buttonclick.ogg";
+		path.set (id, id);
+		type.set (id, AssetType.SOUND);
+		id = "audio/Clock.mp3";
+		path.set (id, id);
+		type.set (id, AssetType.MUSIC);
+		id = "audio/Clock.ogg";
+		path.set (id, id);
+		type.set (id, AssetType.SOUND);
+		id = "audio/Closedoor.mp3";
+		path.set (id, id);
+		type.set (id, AssetType.MUSIC);
+		id = "audio/Closedoor.ogg";
+		path.set (id, id);
+		type.set (id, AssetType.SOUND);
+		id = "audio/Closedrawer.mp3";
+		path.set (id, id);
+		type.set (id, AssetType.MUSIC);
+		id = "audio/Closedrawer.ogg";
+		path.set (id, id);
+		type.set (id, AssetType.SOUND);
+		id = "audio/Coin.mp3";
+		path.set (id, id);
+		type.set (id, AssetType.MUSIC);
+		id = "audio/Coin.ogg";
+		path.set (id, id);
+		type.set (id, AssetType.SOUND);
+		id = "audio/Hintpopup.mp3";
+		path.set (id, id);
+		type.set (id, AssetType.MUSIC);
+		id = "audio/Hintpopup.ogg";
+		path.set (id, id);
+		type.set (id, AssetType.SOUND);
+		id = "audio/Huh.mp3";
+		path.set (id, id);
+		type.set (id, AssetType.MUSIC);
+		id = "audio/Huh.ogg";
+		path.set (id, id);
+		type.set (id, AssetType.SOUND);
+		id = "audio/Menu.ogg";
+		path.set (id, id);
+		type.set (id, AssetType.SOUND);
+		id = "audio/Objectfound.mp3";
+		path.set (id, id);
+		type.set (id, AssetType.MUSIC);
+		id = "audio/Objectfound.ogg";
+		path.set (id, id);
+		type.set (id, AssetType.SOUND);
+		id = "audio/Objectfound2.mp3";
+		path.set (id, id);
+		type.set (id, AssetType.MUSIC);
+		id = "audio/Objectfound2.ogg";
+		path.set (id, id);
+		type.set (id, AssetType.SOUND);
+		id = "audio/Objectivecomplete.mp3";
+		path.set (id, id);
+		type.set (id, AssetType.MUSIC);
+		id = "audio/Objectivecomplete.ogg";
+		path.set (id, id);
+		type.set (id, AssetType.SOUND);
+		id = "audio/Opendoor.mp3";
+		path.set (id, id);
+		type.set (id, AssetType.MUSIC);
+		id = "audio/Opendoor.ogg";
+		path.set (id, id);
+		type.set (id, AssetType.SOUND);
+		id = "audio/Opendrawer.mp3";
+		path.set (id, id);
+		type.set (id, AssetType.MUSIC);
+		id = "audio/Opendrawer.ogg";
+		path.set (id, id);
+		type.set (id, AssetType.SOUND);
+		id = "audio/Papers.mp3";
+		path.set (id, id);
+		type.set (id, AssetType.MUSIC);
+		id = "audio/Papers.ogg";
+		path.set (id, id);
+		type.set (id, AssetType.SOUND);
+		id = "music/GameMusic.mp3";
+		path.set (id, id);
+		type.set (id, AssetType.MUSIC);
+		id = "music/GameMusic.ogg";
+		path.set (id, id);
+		type.set (id, AssetType.SOUND);
+		id = "music/Menu.mp3";
+		path.set (id, id);
+		type.set (id, AssetType.MUSIC);
+		id = "music/Menu.ogg";
+		path.set (id, id);
+		type.set (id, AssetType.SOUND);
+		id = "music/Winning.mp3";
+		path.set (id, id);
+		type.set (id, AssetType.MUSIC);
 		
 		
 		var assetsPrefix = ApplicationMain.config.assetsPrefix;
@@ -346,11 +546,91 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		
 		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		#end
 		
 		#if (windows || mac || linux)
 		
 		var useManifest = false;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
 		useManifest = true;
 		useManifest = true;
 		useManifest = true;
@@ -1048,7 +1328,87 @@ class DefaultAssetLibrary extends AssetLibrary {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #elseif html5
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
