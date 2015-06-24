@@ -20,6 +20,7 @@ class Game extends Sprite
 	var activekey:Int = 0;
 	var activestage = Lib.current.stage;
 	var itemarray = new Array<Objects> ();
+	var missiontarget:String = "000";
 
 	public function new() 
 	{
@@ -310,4 +311,9 @@ class Game extends Sprite
 	//                           Mission Stuff                            //
 	//                                                                    //
 	//====================================================================//
+	
+	function displaymission ()
+	{
+		
+	}
 }
