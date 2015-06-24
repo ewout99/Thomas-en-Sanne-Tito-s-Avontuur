@@ -83,6 +83,7 @@ class Main extends Sprite
 				currentScreen = new Options();
 			case Main.GAME_SCREEN:
 				currentScreen = new Game();
+				music.stopMusic();
 		}
 		
 		addChild (currentScreen);
