@@ -65,16 +65,22 @@ class DefaultAssetLibrary extends AssetLibrary {
 		type.set ("img/Hint.png", AssetType.IMAGE);
 		path.set ("img/Hinthover.png", "img/Hinthover.png");
 		type.set ("img/Hinthover.png", AssetType.IMAGE);
+		path.set ("img/level/backups_old/collision - Copy.png", "img/level/backups_old/collision - Copy.png");
+		type.set ("img/level/backups_old/collision - Copy.png", AssetType.IMAGE);
+		path.set ("img/level/backups_old/floorplan - Copy.png", "img/level/backups_old/floorplan - Copy.png");
+		type.set ("img/level/backups_old/floorplan - Copy.png", AssetType.IMAGE);
+		path.set ("img/level/backups_old/floorplan2.png", "img/level/backups_old/floorplan2.png");
+		type.set ("img/level/backups_old/floorplan2.png", AssetType.IMAGE);
+		path.set ("img/level/backups_old/floorwalls - Copy.png", "img/level/backups_old/floorwalls - Copy.png");
+		type.set ("img/level/backups_old/floorwalls - Copy.png", AssetType.IMAGE);
+		path.set ("img/level/backups_old/floorwalls2.png", "img/level/backups_old/floorwalls2.png");
+		type.set ("img/level/backups_old/floorwalls2.png", AssetType.IMAGE);
 		path.set ("img/level/collision.png", "img/level/collision.png");
 		type.set ("img/level/collision.png", AssetType.IMAGE);
 		path.set ("img/level/floorplan.png", "img/level/floorplan.png");
 		type.set ("img/level/floorplan.png", AssetType.IMAGE);
-		path.set ("img/level/floorplan2.png", "img/level/floorplan2.png");
-		type.set ("img/level/floorplan2.png", AssetType.IMAGE);
 		path.set ("img/level/floorwalls.png", "img/level/floorwalls.png");
 		type.set ("img/level/floorwalls.png", AssetType.IMAGE);
-		path.set ("img/level/floorwalls2.png", "img/level/floorwalls2.png");
-		type.set ("img/level/floorwalls2.png", AssetType.IMAGE);
 		path.set ("img/Levelkiezen.png", "img/Levelkiezen.png");
 		type.set ("img/Levelkiezen.png", AssetType.IMAGE);
 		path.set ("img/marker_1.png", "img/marker_1.png");
@@ -93,6 +99,30 @@ class DefaultAssetLibrary extends AssetLibrary {
 		type.set ("img/middlebutton.png", AssetType.IMAGE);
 		path.set ("img/middlebuttonhover.png", "img/middlebuttonhover.png");
 		type.set ("img/middlebuttonhover.png", AssetType.IMAGE);
+		path.set ("img/objectives/objective_1.png", "img/objectives/objective_1.png");
+		type.set ("img/objectives/objective_1.png", AssetType.IMAGE);
+		path.set ("img/objectives/objective_1_alt.png", "img/objectives/objective_1_alt.png");
+		type.set ("img/objectives/objective_1_alt.png", AssetType.IMAGE);
+		path.set ("img/objectives/objective_2.png", "img/objectives/objective_2.png");
+		type.set ("img/objectives/objective_2.png", AssetType.IMAGE);
+		path.set ("img/objectives/objective_2_alt.png", "img/objectives/objective_2_alt.png");
+		type.set ("img/objectives/objective_2_alt.png", AssetType.IMAGE);
+		path.set ("img/objectives/objective_3.png", "img/objectives/objective_3.png");
+		type.set ("img/objectives/objective_3.png", AssetType.IMAGE);
+		path.set ("img/objectives/objective_3_alt.png", "img/objectives/objective_3_alt.png");
+		type.set ("img/objectives/objective_3_alt.png", AssetType.IMAGE);
+		path.set ("img/objectives/objective_4.png", "img/objectives/objective_4.png");
+		type.set ("img/objectives/objective_4.png", AssetType.IMAGE);
+		path.set ("img/objectives/objective_4_alt.png", "img/objectives/objective_4_alt.png");
+		type.set ("img/objectives/objective_4_alt.png", AssetType.IMAGE);
+		path.set ("img/objectives/objective_5.png", "img/objectives/objective_5.png");
+		type.set ("img/objectives/objective_5.png", AssetType.IMAGE);
+		path.set ("img/objectives/objective_5_alt.png", "img/objectives/objective_5_alt.png");
+		type.set ("img/objectives/objective_5_alt.png", AssetType.IMAGE);
+		path.set ("img/objectives/objective_6.png", "img/objectives/objective_6.png");
+		type.set ("img/objectives/objective_6.png", AssetType.IMAGE);
+		path.set ("img/objectives/objective_6_alt.png", "img/objectives/objective_6_alt.png");
+		type.set ("img/objectives/objective_6_alt.png", AssetType.IMAGE);
 		path.set ("img/Objectives.png", "img/Objectives.png");
 		type.set ("img/Objectives.png", AssetType.IMAGE);
 		path.set ("img/optionbutton.png", "img/optionbutton.png");
@@ -324,19 +354,28 @@ class DefaultAssetLibrary extends AssetLibrary {
 		id = "img/Hinthover.png";
 		path.set (id, id);
 		type.set (id, AssetType.IMAGE);
+		id = "img/level/backups_old/collision - Copy.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "img/level/backups_old/floorplan - Copy.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "img/level/backups_old/floorplan2.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "img/level/backups_old/floorwalls - Copy.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "img/level/backups_old/floorwalls2.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
 		id = "img/level/collision.png";
 		path.set (id, id);
 		type.set (id, AssetType.IMAGE);
 		id = "img/level/floorplan.png";
 		path.set (id, id);
 		type.set (id, AssetType.IMAGE);
-		id = "img/level/floorplan2.png";
-		path.set (id, id);
-		type.set (id, AssetType.IMAGE);
 		id = "img/level/floorwalls.png";
-		path.set (id, id);
-		type.set (id, AssetType.IMAGE);
-		id = "img/level/floorwalls2.png";
 		path.set (id, id);
 		type.set (id, AssetType.IMAGE);
 		id = "img/Levelkiezen.png";
@@ -364,6 +403,42 @@ class DefaultAssetLibrary extends AssetLibrary {
 		path.set (id, id);
 		type.set (id, AssetType.IMAGE);
 		id = "img/middlebuttonhover.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "img/objectives/objective_1.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "img/objectives/objective_1_alt.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "img/objectives/objective_2.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "img/objectives/objective_2_alt.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "img/objectives/objective_3.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "img/objectives/objective_3_alt.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "img/objectives/objective_4.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "img/objectives/objective_4_alt.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "img/objectives/objective_5.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "img/objectives/objective_5_alt.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "img/objectives/objective_6.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "img/objectives/objective_6_alt.png";
 		path.set (id, id);
 		type.set (id, AssetType.IMAGE);
 		id = "img/Objectives.png";
@@ -796,11 +871,41 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		
 		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		#end
 		
 		#if (windows || mac || linux)
 		
 		var useManifest = false;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
+		useManifest = true;
 		useManifest = true;
 		useManifest = true;
 		useManifest = true;
@@ -1648,7 +1753,37 @@ class DefaultAssetLibrary extends AssetLibrary {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #elseif html5
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -29,13 +29,13 @@ class Level extends Sprite
 	{
 		var checkvalid:Bool = false;
 		
-		var checkcol:Int = levelcoll.bitmapData.getPixel (x, y);
+		var checkcol:Int = levelcoll.bitmapData.getPixel32 (x, y);
 		
-		trace (x + "   " + y + "   " + checkcol);
+		//trace (x + "   " + y + "   " + checkcol);
 		
-		if (checkcol == 16777215)
+		if (checkcol == -16777216)
 		{
-			
+			checkvalid = true;
 		}
 		
 		return checkvalid;

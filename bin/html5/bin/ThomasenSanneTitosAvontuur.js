@@ -46,15 +46,21 @@ ApplicationMain.create = function() {
 	types.push("IMAGE");
 	urls.push("img/Hinthover.png");
 	types.push("IMAGE");
+	urls.push("img/level/backups_old/collision - Copy.png");
+	types.push("IMAGE");
+	urls.push("img/level/backups_old/floorplan - Copy.png");
+	types.push("IMAGE");
+	urls.push("img/level/backups_old/floorplan2.png");
+	types.push("IMAGE");
+	urls.push("img/level/backups_old/floorwalls - Copy.png");
+	types.push("IMAGE");
+	urls.push("img/level/backups_old/floorwalls2.png");
+	types.push("IMAGE");
 	urls.push("img/level/collision.png");
 	types.push("IMAGE");
 	urls.push("img/level/floorplan.png");
 	types.push("IMAGE");
-	urls.push("img/level/floorplan2.png");
-	types.push("IMAGE");
 	urls.push("img/level/floorwalls.png");
-	types.push("IMAGE");
-	urls.push("img/level/floorwalls2.png");
 	types.push("IMAGE");
 	urls.push("img/Levelkiezen.png");
 	types.push("IMAGE");
@@ -73,6 +79,30 @@ ApplicationMain.create = function() {
 	urls.push("img/middlebutton.png");
 	types.push("IMAGE");
 	urls.push("img/middlebuttonhover.png");
+	types.push("IMAGE");
+	urls.push("img/objectives/objective_1.png");
+	types.push("IMAGE");
+	urls.push("img/objectives/objective_1_alt.png");
+	types.push("IMAGE");
+	urls.push("img/objectives/objective_2.png");
+	types.push("IMAGE");
+	urls.push("img/objectives/objective_2_alt.png");
+	types.push("IMAGE");
+	urls.push("img/objectives/objective_3.png");
+	types.push("IMAGE");
+	urls.push("img/objectives/objective_3_alt.png");
+	types.push("IMAGE");
+	urls.push("img/objectives/objective_4.png");
+	types.push("IMAGE");
+	urls.push("img/objectives/objective_4_alt.png");
+	types.push("IMAGE");
+	urls.push("img/objectives/objective_5.png");
+	types.push("IMAGE");
+	urls.push("img/objectives/objective_5_alt.png");
+	types.push("IMAGE");
+	urls.push("img/objectives/objective_6.png");
+	types.push("IMAGE");
+	urls.push("img/objectives/objective_6_alt.png");
 	types.push("IMAGE");
 	urls.push("img/Objectives.png");
 	types.push("IMAGE");
@@ -1629,19 +1659,28 @@ var DefaultAssetLibrary = function() {
 	id = "img/Hinthover.png";
 	this.path.set(id,id);
 	this.type.set(id,"IMAGE");
+	id = "img/level/backups_old/collision - Copy.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
+	id = "img/level/backups_old/floorplan - Copy.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
+	id = "img/level/backups_old/floorplan2.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
+	id = "img/level/backups_old/floorwalls - Copy.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
+	id = "img/level/backups_old/floorwalls2.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
 	id = "img/level/collision.png";
 	this.path.set(id,id);
 	this.type.set(id,"IMAGE");
 	id = "img/level/floorplan.png";
 	this.path.set(id,id);
 	this.type.set(id,"IMAGE");
-	id = "img/level/floorplan2.png";
-	this.path.set(id,id);
-	this.type.set(id,"IMAGE");
 	id = "img/level/floorwalls.png";
-	this.path.set(id,id);
-	this.type.set(id,"IMAGE");
-	id = "img/level/floorwalls2.png";
 	this.path.set(id,id);
 	this.type.set(id,"IMAGE");
 	id = "img/Levelkiezen.png";
@@ -1669,6 +1708,42 @@ var DefaultAssetLibrary = function() {
 	this.path.set(id,id);
 	this.type.set(id,"IMAGE");
 	id = "img/middlebuttonhover.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
+	id = "img/objectives/objective_1.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
+	id = "img/objectives/objective_1_alt.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
+	id = "img/objectives/objective_2.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
+	id = "img/objectives/objective_2_alt.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
+	id = "img/objectives/objective_3.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
+	id = "img/objectives/objective_3_alt.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
+	id = "img/objectives/objective_4.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
+	id = "img/objectives/objective_4_alt.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
+	id = "img/objectives/objective_5.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
+	id = "img/objectives/objective_5_alt.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
+	id = "img/objectives/objective_6.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
+	id = "img/objectives/objective_6_alt.png";
 	this.path.set(id,id);
 	this.type.set(id,"IMAGE");
 	id = "img/Objectives.png";
@@ -2094,78 +2169,88 @@ EReg.prototype = {
 	,__class__: EReg
 };
 var Game = function() {
-	this.missiontarget = "000";
+	this.activekey = "none";
+	this.key_e = false;
+	this.key_d = false;
+	this.key_s = false;
+	this.key_a = false;
+	this.key_w = false;
+	this.missiontarget = 0;
 	this.itemarray = [];
 	this.activestage = openfl_Lib.current.stage;
-	this.activekey = 0;
 	this.levely = openfl_Lib.current.stage.stageHeight;
 	this.levelx = openfl_Lib.current.stage.stageWidth;
 	openfl_display_Sprite.call(this);
 	this.createlevel();
-	this.listenpress();
 	this.dirtyitemcreate();
 	this.createplayer();
 	this.createUI();
+	this.init();
 };
 $hxClasses["Game"] = Game;
 Game.__name__ = ["Game"];
 Game.__super__ = openfl_display_Sprite;
 Game.prototype = $extend(openfl_display_Sprite.prototype,{
 	keypress: function(event) {
-		if(event.keyCode == 87) this.listenrelease(event.keyCode); else if(event.keyCode == 65) this.listenrelease(event.keyCode); else if(event.keyCode == 83) this.listenrelease(event.keyCode); else if(event.keyCode == 68) this.listenrelease(event.keyCode); else if(event.keyCode == 69) {
-			var returnedobject = this.checkvalid();
-			if(returnedobject.itemid != 0) haxe_Log.trace(returnedobject.iteminteracttext,{ fileName : "Game.hx", lineNumber : 72, className : "Game", methodName : "keypress"}); else haxe_Log.trace("no valid item in range",{ fileName : "Game.hx", lineNumber : 77, className : "Game", methodName : "keypress"});
+		var _g = event.keyCode;
+		switch(_g) {
+		case 87:
+			this.key_w = true;
+			break;
+		case 65:
+			this.key_a = true;
+			break;
+		case 83:
+			this.key_s = true;
+			break;
+		case 68:
+			this.key_d = true;
+			break;
+		case 69:
+			this.interact();
+			break;
 		}
-	}
-	,updatescene: function() {
-		if(this.activekey == 87) {
-			var blocked = this.collcheck(0,10);
-			if(blocked == false) {
-				this.scroll(3,"Y");
-				this.player.animate("back_");
-			}
-		} else if(this.activekey == 65) {
-			var blocked1 = this.collcheck(10,0);
-			if(blocked1 == false) {
-				this.scroll(3,"X");
-				this.player.animate("left_");
-			}
-		} else if(this.activekey == 83) {
-			var blocked2 = this.collcheck(0,-10);
-			if(blocked2 == false) {
-				this.scroll(-3,"Y");
-				this.player.animate("front_");
-			}
-		} else if(this.activekey == 68) {
-			var blocked3 = this.collcheck(-10,0);
-			if(blocked3 == false) {
-				this.scroll(-3,"X");
-				this.player.animate("right_");
-			}
-		}
-	}
-	,listenpress: function() {
-		openfl_Lib.current.stage.addEventListener(openfl_events_KeyboardEvent.KEY_DOWN,$bind(this,this.keypress));
-	}
-	,listenrelease: function(keyCode) {
-		openfl_Lib.current.stage.removeEventListener(openfl_events_KeyboardEvent.KEY_DOWN,$bind(this,this.keypress));
-		this.activekey = keyCode;
-		openfl_Lib.current.stage.addEventListener(openfl_events_KeyboardEvent.KEY_UP,$bind(this,this.keyrelease));
-		this.updatescene();
 	}
 	,keyrelease: function(event) {
-		if(this.activekey == event.keyCode) {
-			openfl_Lib.current.stage.removeEventListener(openfl_events_KeyboardEvent.KEY_UP,$bind(this,this.keyrelease));
-			this.activekey = 0;
-			this.player.stopanimation();
-			this.listenpress();
+		var _g = event.keyCode;
+		switch(_g) {
+		case 87:
+			this.key_w = false;
+			break;
+		case 65:
+			this.key_a = false;
+			break;
+		case 83:
+			this.key_s = false;
+			break;
+		case 68:
+			this.key_d = false;
+			break;
 		}
+		if(this.key_w == false && this.key_a == false && this.key_s == false && this.key_d == false) this.activekey = "none";
+		haxe_Log.trace("level.x= " + this.level.get_x() + " player.x= " + this.player.get_x(),{ fileName : "Game.hx", lineNumber : 81, className : "Game", methodName : "keyrelease"});
+	}
+	,interact: function() {
+		var returnedobject = this.checkvalid();
+		if(returnedobject.itemid != 0) {
+			haxe_Log.trace(returnedobject.iteminteracttext,{ fileName : "Game.hx", lineNumber : 90, className : "Game", methodName : "interact"});
+			this.ui.notify(returnedobject.iteminteracttext);
+		} else haxe_Log.trace("no valid item in range",{ fileName : "Game.hx", lineNumber : 97, className : "Game", methodName : "interact"});
+	}
+	,init: function() {
+		var _g = this;
+		this.updatetimer = new haxe_Timer(40);
+		this.updatetimer.run = function() {
+			_g.update();
+		};
+		openfl_Lib.current.stage.addEventListener(openfl_events_KeyboardEvent.KEY_DOWN,$bind(this,this.keypress));
+		openfl_Lib.current.stage.addEventListener(openfl_events_KeyboardEvent.KEY_UP,$bind(this,this.keyrelease));
 	}
 	,createplayer: function() {
 		this.player = new Player();
 		this.addChild(this.player);
 		this.player.set_x(this.levelx / 2 - this.player.get_width() / 2);
-		this.player.set_y(this.levely / 2 - this.player.get_height() / 2);
+		this.player.set_y(this.levely / 1.5 - this.player.get_height() / 2);
 		this.player.set_width(this.player.get_width() * 1.5);
 		this.player.set_height(this.player.get_height() * 1.5);
 	}
@@ -2174,38 +2259,93 @@ Game.prototype = $extend(openfl_display_Sprite.prototype,{
 		this.addChild(this.level);
 		this.level.set_x(-400);
 		this.level.set_y(-600);
-		this.level.set_width(this.level.get_width() * 1.5);
-		this.level.set_height(this.level.get_height() * 1.5);
 	}
 	,createUI: function() {
 		this.ui = new UI();
 		this.addChild(this.ui);
 	}
-	,scroll: function(dir,axis) {
-		var _g = this;
-		var scrollclock = new haxe_Timer(30);
-		scrollclock.run = function() {
-			if(axis == "X") {
-				_g.level.set_x(_g.level.get_x() + 3 * dir);
-				var _g1 = 0;
-				var _g2 = _g.itemarray;
-				while(_g1 < _g2.length) {
-					var item = _g2[_g1];
-					++_g1;
-					item.set_x(item.get_x() + 3 * dir);
-				}
-			} else if(axis == "Y") {
-				_g.level.set_y(_g.level.get_y() + 3 * dir);
-				var _g11 = 0;
-				var _g21 = _g.itemarray;
-				while(_g11 < _g21.length) {
-					var item1 = _g21[_g11];
-					++_g11;
-					item1.set_y(item1.get_y() + 3 * dir);
-				}
+	,update: function() {
+		var truex = Std["int"](this.level.get_x() * -1 + this.player.get_x());
+		var truey = Std["int"](this.level.get_y() * -1 + this.player.get_y());
+		if(this.key_w == true) {
+			var w_truey = truey - 9;
+			var blocked1 = this.level.transparencycheck(truex,w_truey);
+			var w_truey1 = truey - 6;
+			var blocked2 = this.level.transparencycheck(truex,w_truey1);
+			var w_truey2 = truey - 3;
+			var blocked3 = this.level.transparencycheck(truex,w_truey2);
+			var blocked = false;
+			if(blocked1 == true || blocked2 == true || blocked3 == true) blocked = true;
+			if(blocked == false && this.key_s == false) {
+				this.activekey = "w";
+				if(this.key_a == true || this.key_d == true) this.movelevel("y",-2); else this.movelevel("y",-3);
 			}
-			if(_g.activekey == 0) scrollclock.stop();
-		};
+		}
+		if(this.key_a == true) {
+			var a_truex = truex - 9;
+			var blocked11 = this.level.transparencycheck(a_truex,truey);
+			var a_truex1 = truex - 6;
+			var blocked21 = this.level.transparencycheck(a_truex1,truey);
+			var a_truex2 = truex - 3;
+			var blocked31 = this.level.transparencycheck(a_truex2,truey);
+			var blocked4 = false;
+			if(blocked11 == true || blocked21 == true || blocked31 == true) blocked4 = true;
+			if(blocked4 == false && this.key_d == false) {
+				this.activekey = "a";
+				if(this.key_w == true || this.key_s == true) this.movelevel("x",-2); else this.movelevel("x",-3);
+			}
+		}
+		if(this.key_s == true) {
+			var s_truey = truey + 9;
+			var blocked12 = this.level.transparencycheck(truex,s_truey);
+			var s_truey1 = truey + 6;
+			var blocked22 = this.level.transparencycheck(truex,s_truey1);
+			var s_truey2 = truey + 3;
+			var blocked32 = this.level.transparencycheck(truex,s_truey2);
+			var blocked5 = false;
+			if(blocked12 == true || blocked22 == true || blocked32 == true) blocked5 = true;
+			if(blocked5 == false && this.key_w == false) {
+				this.activekey = "s";
+				if(this.key_a == true || this.key_d == true) this.movelevel("y",2); else this.movelevel("y",3);
+			}
+		}
+		if(this.key_d == true) {
+			var d_truex = truex + 9;
+			var blocked13 = this.level.transparencycheck(d_truex,truey);
+			var d_truex1 = truex + 6;
+			var blocked23 = this.level.transparencycheck(d_truex1,truey);
+			var d_truex2 = truex + 3;
+			var blocked33 = this.level.transparencycheck(d_truex2,truey);
+			var blocked6 = false;
+			if(blocked13 == true || blocked23 == true || blocked33 == true) blocked6 = true;
+			if(blocked6 == false && this.key_a == false) {
+				this.activekey = "d";
+				if(this.key_w == true || this.key_s == true) this.movelevel("x",2); else this.movelevel("x",3);
+			}
+		}
+		this.player.updateplayer(this.activekey);
+	}
+	,movelevel: function(axis,speed) {
+		if(axis == "x") {
+			this.level.set_x(this.level.get_x() - speed);
+			var _g = 0;
+			var _g1 = this.itemarray;
+			while(_g < _g1.length) {
+				var item = _g1[_g];
+				++_g;
+				item.set_x(item.get_x() - speed);
+			}
+		}
+		if(axis == "y") {
+			this.level.set_y(this.level.get_y() - speed);
+			var _g2 = 0;
+			var _g11 = this.itemarray;
+			while(_g2 < _g11.length) {
+				var item1 = _g11[_g2];
+				++_g2;
+				item1.set_y(item1.get_y() - speed);
+			}
+		}
 	}
 	,checkvalid: function() {
 		var closest = new Objects(0,"none","none");
@@ -2232,36 +2372,30 @@ Game.prototype = $extend(openfl_display_Sprite.prototype,{
 		}
 		return closest;
 	}
-	,collcheck: function(x,y) {
-		var chartruex = Std["int"](this.level.get_x() * -1) + 608;
-		var chartruey = Std["int"](this.level.get_y() * -1) + 328;
-		var transparent = this.level.transparencycheck(chartruex,chartruey);
-		return transparent;
-	}
 	,dirtyitemcreate: function() {
-		var item01 = new Objects(1,"FURNITURE","Een redelijk normaal bureau.");
-		item01.set_x(905.);
-		item01.set_y(45.);
+		var item01 = new Objects(1,"NPC","Karin, de secretaresse, kijkt je behulpzaam aan.");
+		item01.set_x(780);
+		item01.set_y(125);
 		this.itemarray.push(item01);
 		var item02 = new Objects(2,"FURNITURE","Een saaie tafel.");
-		item02.set_x(1137.5);
-		item02.set_y(-135.);
+		item02.set_x(580);
+		item02.set_y(200);
 		this.itemarray.push(item02);
 		var item03 = new Objects(3,"FURNITURE","De stoel piept een beetje.");
-		item03.set_x(1325.);
-		item03.set_y(112.5);
+		item03.set_x(675);
+		item03.set_y(75);
 		this.itemarray.push(item03);
-		var item04 = new Objects(4,"FURNITURE","Allemaal lege laadjes.");
-		item04.set_x(672.5);
-		item04.set_y(127.5);
+		var item04 = new Objects(4,"PLANT","De plant mag wel eens wat water krijgen.");
+		item04.set_x(560);
+		item04.set_y(115);
 		this.itemarray.push(item04);
 		var item05 = new Objects(5,"FURNITURE","Een tafel, niet erg bijzonder.");
-		item05.set_x(1145.);
-		item05.set_y(337.5);
+		item05.set_x(630);
+		item05.set_y(25);
 		this.itemarray.push(item05);
 		var item06 = new Objects(6,"NPC","Bas bewaakt de ingang elke dag.");
-		item06.set_x(845.);
-		item06.set_y(255.);
+		item06.set_x(430);
+		item06.set_y(-30);
 		this.itemarray.push(item06);
 		this.placeitems();
 	}
@@ -2367,10 +2501,9 @@ Level.__super__ = openfl_display_Sprite;
 Level.prototype = $extend(openfl_display_Sprite.prototype,{
 	transparencycheck: function(x,y) {
 		var checkvalid = false;
-		var checkcol = this.levelwall.bitmapData.getPixel(x,y);
-		haxe_Log.trace(x + "   " + y + "   " + checkcol,{ fileName : "Level.hx", lineNumber : 34, className : "Level", methodName : "transparencycheck"});
-		if(checkcol == 16777215) {
-		}
+		var checkcol = this.levelcoll.bitmapData.getPixel32(x,y);
+		haxe_Log.trace(x + "   " + y + "   " + checkcol,{ fileName : "Level.hx", lineNumber : 41, className : "Level", methodName : "transparencycheck"});
+		if(checkcol == -16777216) checkvalid = true;
 		return checkvalid;
 	}
 	,__class__: Level
@@ -2674,15 +2807,13 @@ Options.prototype = $extend(openfl_display_Sprite.prototype,{
 	,__class__: Options
 });
 var Player = function() {
-	this.charType2 = "thomas";
-	this.lastpath = "front_";
-	this.activeKey = 0;
+	this.charType2 = "none";
 	this.charType = Main.getInstance().currentChar;
-	this.currentImg = 0;
-	this.stageX = openfl_Lib.current.stage.stageWidth;
-	this.stageY = openfl_Lib.current.stage.stageHeight;
+	this.frameinterval = 1;
+	this.currentframe = 1;
+	this.currentpath = "front_";
+	this.animationtimer = new haxe_Timer(100);
 	openfl_display_Sprite.call(this);
-	haxe_Log.trace("player has been created",{ fileName : "Player.hx", lineNumber : 34, className : "Player", methodName : "new"});
 	if(this.charType == 1) this.charType2 = "thomas"; else if(this.charType == 2) this.charType2 = "sanne";
 	this.updategraphic("front_1");
 };
@@ -2690,27 +2821,36 @@ $hxClasses["Player"] = Player;
 Player.__name__ = ["Player"];
 Player.__super__ = openfl_display_Sprite;
 Player.prototype = $extend(openfl_display_Sprite.prototype,{
-	animate: function(path) {
-		var _g = this;
-		this.animationtimer = new haxe_Timer(100);
-		this.lastpath = path;
-		var animationcounter = 1;
-		this.animationtimer.run = function() {
-			if(animationcounter == 5) animationcounter = 1;
-			_g.updategraphic(path + animationcounter);
-			animationcounter++;
-		};
-	}
-	,stopanimation: function() {
-		this.animationtimer.stop();
-		this.updategraphic(this.lastpath + "1");
+	updateplayer: function(key) {
+		if(this.frameinterval == 5) {
+			if(key != "none") {
+				if(this.currentframe != 4) this.currentframe++; else this.currentframe = 1;
+				switch(key) {
+				case "w":
+					this.currentpath = "back_";
+					break;
+				case "a":
+					this.currentpath = "left_";
+					break;
+				case "s":
+					this.currentpath = "front_";
+					break;
+				case "d":
+					this.currentpath = "right_";
+					break;
+				}
+			} else this.currentframe = 1;
+			var path = this.currentpath + this.currentframe;
+			this.updategraphic(path);
+			this.frameinterval = 1;
+		} else this.frameinterval++;
 	}
 	,updategraphic: function(path) {
 		var data = openfl_Assets.getBitmapData("img/" + this.charType2 + "/" + path + ".png");
 		this.removeChild(this.character);
 		this.character = new openfl_display_Bitmap(data);
 		this.character.set_x(this.character.get_x() - this.character.get_width() / 2);
-		this.character.set_y(this.character.get_y() - this.character.get_height());
+		this.character.set_y(this.character.get_y() - this.character.get_height() + 5);
 		this.addChild(this.character);
 	}
 	,__class__: Player
@@ -2821,6 +2961,9 @@ Std.parseInt = function(x) {
 	if(v == 0 && (HxOverrides.cca(x,1) == 120 || HxOverrides.cca(x,1) == 88)) v = parseInt(x);
 	if(isNaN(v)) return null;
 	return v;
+};
+Std.random = function(x) {
+	if(x <= 0) return 0; else return Math.floor(Math.random() * x);
 };
 var StringBuf = function() {
 	this.b = "";
@@ -2951,6 +3094,13 @@ Type.enumEq = function(a,b) {
 	return true;
 };
 var UI = function() {
+	this.objective6 = new openfl_display_Bitmap(openfl_Assets.getBitmapData("img/objectives/objective_6_alt.png"));
+	this.objective5 = new openfl_display_Bitmap(openfl_Assets.getBitmapData("img/objectives/objective_5_alt.png"));
+	this.objective4 = new openfl_display_Bitmap(openfl_Assets.getBitmapData("img/objectives/objective_4_alt.png"));
+	this.objective3 = new openfl_display_Bitmap(openfl_Assets.getBitmapData("img/objectives/objective_3_alt.png"));
+	this.objective2 = new openfl_display_Bitmap(openfl_Assets.getBitmapData("img/objectives/objective_2_alt.png"));
+	this.objective1 = new openfl_display_Bitmap(openfl_Assets.getBitmapData("img/objectives/objective_1_alt.png"));
+	this.textfield = new openfl_text_TextField();
 	this.progressInt = 1;
 	this.hint = new Button("","img/Hint.png","img/Hinthover.png");
 	this.UIy = openfl_Lib.current.stage.stageHeight;
@@ -2982,21 +3132,97 @@ UI.prototype = $extend(openfl_display_Sprite.prototype,{
 		option.set_y(25);
 		this.addChild(option);
 		option.addEventListener(openfl_events_MouseEvent.CLICK,$bind(this,this.backMenu));
+		this.objective1.set_width(this.objective1.get_width() / 1.5);
+		this.objective1.set_height(this.objective1.get_height() / 1.5);
+		this.objective1.set_x(50);
+		this.objective1.set_y(this.UIy / 2 - objectives.get_height() / 2 + 50);
+		this.addChild(this.objective1);
+		this.objective2.set_width(this.objective2.get_width() / 1.5);
+		this.objective2.set_height(this.objective2.get_height() / 1.5);
+		this.objective2.set_x(50);
+		this.objective2.set_y(this.UIy / 2 - objectives.get_height() / 2 + 120);
+		this.addChild(this.objective2);
+		this.objective3.set_width(this.objective3.get_width() / 1.5);
+		this.objective3.set_height(this.objective3.get_height() / 1.5);
+		this.objective3.set_x(50);
+		this.objective3.set_y(this.UIy / 2 - objectives.get_height() / 2 + 190);
+		this.addChild(this.objective3);
+		this.objective4.set_width(this.objective4.get_width() / 1.5);
+		this.objective4.set_height(this.objective4.get_height() / 1.5);
+		this.objective4.set_x(50);
+		this.objective4.set_y(this.UIy / 2 - objectives.get_height() / 2 + 270);
+		this.addChild(this.objective4);
+		this.objective5.set_width(this.objective5.get_width() / 1.5);
+		this.objective5.set_height(this.objective5.get_height() / 1.5);
+		this.objective5.set_x(50);
+		this.objective5.set_y(this.UIy / 2 - objectives.get_height() / 2 + 345);
+		this.addChild(this.objective5);
+		this.objective6.set_width(this.objective6.get_width() / 1.5);
+		this.objective6.set_height(this.objective6.get_height() / 1.5);
+		this.objective6.set_x(50);
+		this.objective6.set_y(this.UIy / 2 - objectives.get_height() / 2 + 420);
+		this.addChild(this.objective6);
 		this.hint.set_width(this.hint.get_width() / 2);
 		this.hint.set_height(this.hint.get_height() / 2);
 		this.hint.set_x(this.UIx - this.hint.get_width() - 10);
 		this.hint.set_y(this.UIy - this.hint.get_height() - 10);
 		this.addChild(this.hint);
 		this.hint.addEventListener(openfl_events_MouseEvent.CLICK,$bind(this,this.giveHint));
-		this.progressUpdate(this.progressInt);
+		this.textfield.set_x(this.UIx / 2 - progressie.get_width() / 2 + 15);
+		this.textfield.set_y(25);
+		this.textfield.set_width(this.UIx / 2);
+		this.textfield.set_textColor(16777215);
+		this.textfield.set_wordWrap(true);
 	}
-	,progressUpdate: function(progress) {
-		var _g = 0;
-		while(_g < progress) {
-			var i = _g++;
+	,modobj1: function(change) {
+		if(change == "start") {
+			this.removeChild(this.objective1);
+			this.objective1 = new openfl_display_Bitmap(openfl_Assets.getBitmapData("img/objectives/objective_1.png"));
+			this.addChild(this.objective1);
+			this.objective1.addEventListener(openfl_events_MouseEvent.CLICK,$bind(this,this.objectiveclick));
+		} else if(change == "end") {
+			this.removeChild(this.objective1);
+			this.objective1 = new openfl_display_Bitmap(openfl_Assets.getBitmapData("img/objectives/objective_1_alt.png"));
+			this.addChild(this.objective1);
+			this.objective1.removeEventListener(openfl_events_MouseEvent.CLICK,$bind(this,this.objectiveclick));
 		}
 	}
+	,objectiveclick: function(event) {
+		haxe_Log.trace(event.target,{ fileName : "UI.hx", lineNumber : 139, className : "UI", methodName : "objectiveclick"});
+	}
+	,notify: function(text) {
+		this.removeChild(this.textfield);
+		this.textfield.set_text(text);
+		this.addChild(this.textfield);
+	}
 	,giveHint: function(e) {
+		var displaytext = "Er staat hier geen text";
+		var hintid = Std["int"](Std.random(6));
+		haxe_Log.trace("hintid: " + hintid,{ fileName : "UI.hx", lineNumber : 157, className : "UI", methodName : "giveHint"});
+		switch(hintid) {
+		case 0:
+			displaytext = "Probeer altijd met mensen te praten als je vast zit.";
+			break;
+		case 1:
+			displaytext = "De KJRW is altijd beschikbaar voor advies, ongeacht het onderwerp.";
+			break;
+		case 2:
+			displaytext = "Alle gekleurde rondjes op de kaart kan je activeren met 'E'.";
+			break;
+		case 3:
+			displaytext = "Als je moeite hebt met het vinden van de oplossing, loop rond en onderzoek het level.Als je moeite hebt met het vinden van de oplossing, loop rond en onderzoek het level.Als je moeite hebt met het vinden van de oplossing, loop rond en onderzoek het level.Als je moeite hebt met het vinden van de oplossing, loop rond en onderzoek het level.Als je moeite hebt met het vinden van de oplossing, loop rond en onderzoek het level.Als je moeite hebt met het vinden van de oplossing, loop rond en onderzoek het level.";
+			break;
+		case 4:
+			displaytext = "Veel kinderen die de KJRW helpen hebben vragen over hun ouders of school.";
+			break;
+		case 5:
+			displaytext = "De eerste missie van een level is meestal heel dichtbij.";
+			break;
+		case 6:
+			displaytext = "Speel de KJRW game zolang je wil!";
+			break;
+		}
+		this.notify(displaytext);
 	}
 	,backMenu: function(e) {
 		Main.getInstance().switchScreen("options screen");

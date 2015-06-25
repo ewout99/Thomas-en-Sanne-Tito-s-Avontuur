@@ -19,7 +19,9 @@ class Player extends Sprite
 	//var stageX:Int = Lib.current.stage.stageWidth;
 	//public var activeKey:Int = 0;
 	var animationtimer:Timer = new Timer (100);
-	var lastpath:String = "front_";
+	var currentpath:String = "front_";
+	var currentframe:Int = 1;
+	var frameinterval:Int = 1;
 	
 	var character:Bitmap;
 	var charType:Int = Main.getInstance().currentChar;
@@ -42,7 +44,7 @@ class Player extends Sprite
 		updategraphic ("front_1");
 	}
 	
-	public function animate ( path:String )
+	/*public function animate ( path:String )
 	{
 		lastpath = path;
 		
@@ -59,13 +61,56 @@ class Player extends Sprite
 			
 			animationcounter ++;
 		}
-	}
+	}*/
 	
-	public function stopanimation ()
+	/*public function stopanimation ()
 	{
 		animationtimer.stop ();
 		
 		updategraphic ( lastpath + "1" );
+	}*/
+	
+	public function updateplayer (key:String)
+	{
+		if (frameinterval == 5)
+		{
+			if (key != "none")
+			{
+				if (currentframe != 4)
+				{
+					currentframe ++;
+				}
+				
+				else
+				{
+					currentframe = 1;
+				}
+				
+				switch (key)
+				{
+					case "w": currentpath = "back_";
+					case "a": currentpath = "left_";
+					case "s": currentpath = "front_";
+					case "d": currentpath = "right_";
+				}
+			}
+			
+			else
+			{
+				currentframe = 1;
+			}
+			
+			var path:String = currentpath + currentframe;
+			
+			updategraphic ( path );
+			
+			frameinterval = 1;
+		}
+		
+		else
+		{
+			frameinterval ++;
+		}
 	}
 	
 	function updategraphic (path:String)
@@ -75,7 +120,7 @@ class Player extends Sprite
 		removeChild (character);
 		character = new Bitmap (data);
 		character.x = character.x - character.width / 2;
-		character.y = character.y - character.height;
+		character.y = character.y - character.height + 5;
 		addChild (character);
 	}
 }

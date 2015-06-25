@@ -65,16 +65,22 @@ class DefaultAssetLibrary extends AssetLibrary {
 		type.set ("img/Hint.png", AssetType.IMAGE);
 		className.set ("img/Hinthover.png", __ASSET__img_hinthover_png);
 		type.set ("img/Hinthover.png", AssetType.IMAGE);
+		className.set ("img/level/backups_old/collision - Copy.png", __ASSET__img_level_backups_old_collision___copy_png);
+		type.set ("img/level/backups_old/collision - Copy.png", AssetType.IMAGE);
+		className.set ("img/level/backups_old/floorplan - Copy.png", __ASSET__img_level_backups_old_floorplan___copy_png);
+		type.set ("img/level/backups_old/floorplan - Copy.png", AssetType.IMAGE);
+		className.set ("img/level/backups_old/floorplan2.png", __ASSET__img_level_backups_old_floorplan2_png);
+		type.set ("img/level/backups_old/floorplan2.png", AssetType.IMAGE);
+		className.set ("img/level/backups_old/floorwalls - Copy.png", __ASSET__img_level_backups_old_floorwalls___copy_png);
+		type.set ("img/level/backups_old/floorwalls - Copy.png", AssetType.IMAGE);
+		className.set ("img/level/backups_old/floorwalls2.png", __ASSET__img_level_backups_old_floorwalls2_png);
+		type.set ("img/level/backups_old/floorwalls2.png", AssetType.IMAGE);
 		className.set ("img/level/collision.png", __ASSET__img_level_collision_png);
 		type.set ("img/level/collision.png", AssetType.IMAGE);
 		className.set ("img/level/floorplan.png", __ASSET__img_level_floorplan_png);
 		type.set ("img/level/floorplan.png", AssetType.IMAGE);
-		className.set ("img/level/floorplan2.png", __ASSET__img_level_floorplan2_png);
-		type.set ("img/level/floorplan2.png", AssetType.IMAGE);
 		className.set ("img/level/floorwalls.png", __ASSET__img_level_floorwalls_png);
 		type.set ("img/level/floorwalls.png", AssetType.IMAGE);
-		className.set ("img/level/floorwalls2.png", __ASSET__img_level_floorwalls2_png);
-		type.set ("img/level/floorwalls2.png", AssetType.IMAGE);
 		className.set ("img/Levelkiezen.png", __ASSET__img_levelkiezen_png);
 		type.set ("img/Levelkiezen.png", AssetType.IMAGE);
 		className.set ("img/marker_1.png", __ASSET__img_marker_1_png);
@@ -93,6 +99,30 @@ class DefaultAssetLibrary extends AssetLibrary {
 		type.set ("img/middlebutton.png", AssetType.IMAGE);
 		className.set ("img/middlebuttonhover.png", __ASSET__img_middlebuttonhover_png);
 		type.set ("img/middlebuttonhover.png", AssetType.IMAGE);
+		className.set ("img/objectives/objective_1.png", __ASSET__img_objectives_objective_1_png);
+		type.set ("img/objectives/objective_1.png", AssetType.IMAGE);
+		className.set ("img/objectives/objective_1_alt.png", __ASSET__img_objectives_objective_1_alt_png);
+		type.set ("img/objectives/objective_1_alt.png", AssetType.IMAGE);
+		className.set ("img/objectives/objective_2.png", __ASSET__img_objectives_objective_2_png);
+		type.set ("img/objectives/objective_2.png", AssetType.IMAGE);
+		className.set ("img/objectives/objective_2_alt.png", __ASSET__img_objectives_objective_2_alt_png);
+		type.set ("img/objectives/objective_2_alt.png", AssetType.IMAGE);
+		className.set ("img/objectives/objective_3.png", __ASSET__img_objectives_objective_3_png);
+		type.set ("img/objectives/objective_3.png", AssetType.IMAGE);
+		className.set ("img/objectives/objective_3_alt.png", __ASSET__img_objectives_objective_3_alt_png);
+		type.set ("img/objectives/objective_3_alt.png", AssetType.IMAGE);
+		className.set ("img/objectives/objective_4.png", __ASSET__img_objectives_objective_4_png);
+		type.set ("img/objectives/objective_4.png", AssetType.IMAGE);
+		className.set ("img/objectives/objective_4_alt.png", __ASSET__img_objectives_objective_4_alt_png);
+		type.set ("img/objectives/objective_4_alt.png", AssetType.IMAGE);
+		className.set ("img/objectives/objective_5.png", __ASSET__img_objectives_objective_5_png);
+		type.set ("img/objectives/objective_5.png", AssetType.IMAGE);
+		className.set ("img/objectives/objective_5_alt.png", __ASSET__img_objectives_objective_5_alt_png);
+		type.set ("img/objectives/objective_5_alt.png", AssetType.IMAGE);
+		className.set ("img/objectives/objective_6.png", __ASSET__img_objectives_objective_6_png);
+		type.set ("img/objectives/objective_6.png", AssetType.IMAGE);
+		className.set ("img/objectives/objective_6_alt.png", __ASSET__img_objectives_objective_6_alt_png);
+		type.set ("img/objectives/objective_6_alt.png", AssetType.IMAGE);
 		className.set ("img/Objectives.png", __ASSET__img_objectives_png);
 		type.set ("img/Objectives.png", AssetType.IMAGE);
 		className.set ("img/optionbutton.png", __ASSET__img_optionbutton_png);
@@ -334,6 +364,26 @@ class DefaultAssetLibrary extends AssetLibrary {
 		path.set (id, id);
 		
 		type.set (id, AssetType.IMAGE);
+		id = "img/level/backups_old/collision - Copy.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "img/level/backups_old/floorplan - Copy.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "img/level/backups_old/floorplan2.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "img/level/backups_old/floorwalls - Copy.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "img/level/backups_old/floorwalls2.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
 		id = "img/level/collision.png";
 		path.set (id, id);
 		
@@ -342,15 +392,7 @@ class DefaultAssetLibrary extends AssetLibrary {
 		path.set (id, id);
 		
 		type.set (id, AssetType.IMAGE);
-		id = "img/level/floorplan2.png";
-		path.set (id, id);
-		
-		type.set (id, AssetType.IMAGE);
 		id = "img/level/floorwalls.png";
-		path.set (id, id);
-		
-		type.set (id, AssetType.IMAGE);
-		id = "img/level/floorwalls2.png";
 		path.set (id, id);
 		
 		type.set (id, AssetType.IMAGE);
@@ -387,6 +429,54 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		type.set (id, AssetType.IMAGE);
 		id = "img/middlebuttonhover.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "img/objectives/objective_1.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "img/objectives/objective_1_alt.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "img/objectives/objective_2.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "img/objectives/objective_2_alt.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "img/objectives/objective_3.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "img/objectives/objective_3_alt.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "img/objectives/objective_4.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "img/objectives/objective_4_alt.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "img/objectives/objective_5.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "img/objectives/objective_5_alt.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "img/objectives/objective_6.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "img/objectives/objective_6_alt.png";
 		path.set (id, id);
 		
 		type.set (id, AssetType.IMAGE);
@@ -918,6 +1008,21 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		
 		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		#end
 		
 		#if (windows || mac || linux)
@@ -954,20 +1059,29 @@ class DefaultAssetLibrary extends AssetLibrary {
 		className.set ("img/Hinthover.png", __ASSET__img_hinthover_png);
 		type.set ("img/Hinthover.png", AssetType.IMAGE);
 		
+		className.set ("img/level/backups_old/collision - Copy.png", __ASSET__img_level_backups_old_collision___copy_png);
+		type.set ("img/level/backups_old/collision - Copy.png", AssetType.IMAGE);
+		
+		className.set ("img/level/backups_old/floorplan - Copy.png", __ASSET__img_level_backups_old_floorplan___copy_png);
+		type.set ("img/level/backups_old/floorplan - Copy.png", AssetType.IMAGE);
+		
+		className.set ("img/level/backups_old/floorplan2.png", __ASSET__img_level_backups_old_floorplan2_png);
+		type.set ("img/level/backups_old/floorplan2.png", AssetType.IMAGE);
+		
+		className.set ("img/level/backups_old/floorwalls - Copy.png", __ASSET__img_level_backups_old_floorwalls___copy_png);
+		type.set ("img/level/backups_old/floorwalls - Copy.png", AssetType.IMAGE);
+		
+		className.set ("img/level/backups_old/floorwalls2.png", __ASSET__img_level_backups_old_floorwalls2_png);
+		type.set ("img/level/backups_old/floorwalls2.png", AssetType.IMAGE);
+		
 		className.set ("img/level/collision.png", __ASSET__img_level_collision_png);
 		type.set ("img/level/collision.png", AssetType.IMAGE);
 		
 		className.set ("img/level/floorplan.png", __ASSET__img_level_floorplan_png);
 		type.set ("img/level/floorplan.png", AssetType.IMAGE);
 		
-		className.set ("img/level/floorplan2.png", __ASSET__img_level_floorplan2_png);
-		type.set ("img/level/floorplan2.png", AssetType.IMAGE);
-		
 		className.set ("img/level/floorwalls.png", __ASSET__img_level_floorwalls_png);
 		type.set ("img/level/floorwalls.png", AssetType.IMAGE);
-		
-		className.set ("img/level/floorwalls2.png", __ASSET__img_level_floorwalls2_png);
-		type.set ("img/level/floorwalls2.png", AssetType.IMAGE);
 		
 		className.set ("img/Levelkiezen.png", __ASSET__img_levelkiezen_png);
 		type.set ("img/Levelkiezen.png", AssetType.IMAGE);
@@ -995,6 +1109,42 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		className.set ("img/middlebuttonhover.png", __ASSET__img_middlebuttonhover_png);
 		type.set ("img/middlebuttonhover.png", AssetType.IMAGE);
+		
+		className.set ("img/objectives/objective_1.png", __ASSET__img_objectives_objective_1_png);
+		type.set ("img/objectives/objective_1.png", AssetType.IMAGE);
+		
+		className.set ("img/objectives/objective_1_alt.png", __ASSET__img_objectives_objective_1_alt_png);
+		type.set ("img/objectives/objective_1_alt.png", AssetType.IMAGE);
+		
+		className.set ("img/objectives/objective_2.png", __ASSET__img_objectives_objective_2_png);
+		type.set ("img/objectives/objective_2.png", AssetType.IMAGE);
+		
+		className.set ("img/objectives/objective_2_alt.png", __ASSET__img_objectives_objective_2_alt_png);
+		type.set ("img/objectives/objective_2_alt.png", AssetType.IMAGE);
+		
+		className.set ("img/objectives/objective_3.png", __ASSET__img_objectives_objective_3_png);
+		type.set ("img/objectives/objective_3.png", AssetType.IMAGE);
+		
+		className.set ("img/objectives/objective_3_alt.png", __ASSET__img_objectives_objective_3_alt_png);
+		type.set ("img/objectives/objective_3_alt.png", AssetType.IMAGE);
+		
+		className.set ("img/objectives/objective_4.png", __ASSET__img_objectives_objective_4_png);
+		type.set ("img/objectives/objective_4.png", AssetType.IMAGE);
+		
+		className.set ("img/objectives/objective_4_alt.png", __ASSET__img_objectives_objective_4_alt_png);
+		type.set ("img/objectives/objective_4_alt.png", AssetType.IMAGE);
+		
+		className.set ("img/objectives/objective_5.png", __ASSET__img_objectives_objective_5_png);
+		type.set ("img/objectives/objective_5.png", AssetType.IMAGE);
+		
+		className.set ("img/objectives/objective_5_alt.png", __ASSET__img_objectives_objective_5_alt_png);
+		type.set ("img/objectives/objective_5_alt.png", AssetType.IMAGE);
+		
+		className.set ("img/objectives/objective_6.png", __ASSET__img_objectives_objective_6_png);
+		type.set ("img/objectives/objective_6.png", AssetType.IMAGE);
+		
+		className.set ("img/objectives/objective_6_alt.png", __ASSET__img_objectives_objective_6_alt_png);
+		type.set ("img/objectives/objective_6_alt.png", AssetType.IMAGE);
 		
 		className.set ("img/Objectives.png", __ASSET__img_objectives_png);
 		type.set ("img/Objectives.png", AssetType.IMAGE);
@@ -1900,11 +2050,14 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:keep @:bind #if display private #end class __ASSET__img_contactbackground_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__img_hint_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__img_hinthover_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_level_backups_old_collision___copy_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_level_backups_old_floorplan___copy_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_level_backups_old_floorplan2_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_level_backups_old_floorwalls___copy_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_level_backups_old_floorwalls2_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__img_level_collision_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__img_level_floorplan_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
-@:keep @:bind #if display private #end class __ASSET__img_level_floorplan2_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__img_level_floorwalls_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
-@:keep @:bind #if display private #end class __ASSET__img_level_floorwalls2_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__img_levelkiezen_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__img_marker_1_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__img_marker_2_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
@@ -1914,6 +2067,18 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:keep @:bind #if display private #end class __ASSET__img_menubackground_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__img_middlebutton_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__img_middlebuttonhover_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_objectives_objective_1_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_objectives_objective_1_alt_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_objectives_objective_2_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_objectives_objective_2_alt_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_objectives_objective_3_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_objectives_objective_3_alt_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_objectives_objective_4_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_objectives_objective_4_alt_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_objectives_objective_5_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_objectives_objective_5_alt_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_objectives_objective_6_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_objectives_objective_6_alt_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__img_objectives_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__img_optionbutton_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__img_optionsbackground_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
@@ -2140,6 +2305,21 @@ class DefaultAssetLibrary extends AssetLibrary {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #else
 
 
@@ -2157,11 +2337,14 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:image("assets/img/Contactbackground.png") #if display private #end class __ASSET__img_contactbackground_png extends lime.graphics.Image {}
 @:image("assets/img/Hint.png") #if display private #end class __ASSET__img_hint_png extends lime.graphics.Image {}
 @:image("assets/img/Hinthover.png") #if display private #end class __ASSET__img_hinthover_png extends lime.graphics.Image {}
+@:image("assets/img/level/backups_old/collision - Copy.png") #if display private #end class __ASSET__img_level_backups_old_collision___copy_png extends lime.graphics.Image {}
+@:image("assets/img/level/backups_old/floorplan - Copy.png") #if display private #end class __ASSET__img_level_backups_old_floorplan___copy_png extends lime.graphics.Image {}
+@:image("assets/img/level/backups_old/floorplan2.png") #if display private #end class __ASSET__img_level_backups_old_floorplan2_png extends lime.graphics.Image {}
+@:image("assets/img/level/backups_old/floorwalls - Copy.png") #if display private #end class __ASSET__img_level_backups_old_floorwalls___copy_png extends lime.graphics.Image {}
+@:image("assets/img/level/backups_old/floorwalls2.png") #if display private #end class __ASSET__img_level_backups_old_floorwalls2_png extends lime.graphics.Image {}
 @:image("assets/img/level/collision.png") #if display private #end class __ASSET__img_level_collision_png extends lime.graphics.Image {}
 @:image("assets/img/level/floorplan.png") #if display private #end class __ASSET__img_level_floorplan_png extends lime.graphics.Image {}
-@:image("assets/img/level/floorplan2.png") #if display private #end class __ASSET__img_level_floorplan2_png extends lime.graphics.Image {}
 @:image("assets/img/level/floorwalls.png") #if display private #end class __ASSET__img_level_floorwalls_png extends lime.graphics.Image {}
-@:image("assets/img/level/floorwalls2.png") #if display private #end class __ASSET__img_level_floorwalls2_png extends lime.graphics.Image {}
 @:image("assets/img/Levelkiezen.png") #if display private #end class __ASSET__img_levelkiezen_png extends lime.graphics.Image {}
 @:image("assets/img/marker_1.png") #if display private #end class __ASSET__img_marker_1_png extends lime.graphics.Image {}
 @:image("assets/img/marker_2.png") #if display private #end class __ASSET__img_marker_2_png extends lime.graphics.Image {}
@@ -2171,6 +2354,18 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:image("assets/img/Menubackground.png") #if display private #end class __ASSET__img_menubackground_png extends lime.graphics.Image {}
 @:image("assets/img/middlebutton.png") #if display private #end class __ASSET__img_middlebutton_png extends lime.graphics.Image {}
 @:image("assets/img/middlebuttonhover.png") #if display private #end class __ASSET__img_middlebuttonhover_png extends lime.graphics.Image {}
+@:image("assets/img/objectives/objective_1.png") #if display private #end class __ASSET__img_objectives_objective_1_png extends lime.graphics.Image {}
+@:image("assets/img/objectives/objective_1_alt.png") #if display private #end class __ASSET__img_objectives_objective_1_alt_png extends lime.graphics.Image {}
+@:image("assets/img/objectives/objective_2.png") #if display private #end class __ASSET__img_objectives_objective_2_png extends lime.graphics.Image {}
+@:image("assets/img/objectives/objective_2_alt.png") #if display private #end class __ASSET__img_objectives_objective_2_alt_png extends lime.graphics.Image {}
+@:image("assets/img/objectives/objective_3.png") #if display private #end class __ASSET__img_objectives_objective_3_png extends lime.graphics.Image {}
+@:image("assets/img/objectives/objective_3_alt.png") #if display private #end class __ASSET__img_objectives_objective_3_alt_png extends lime.graphics.Image {}
+@:image("assets/img/objectives/objective_4.png") #if display private #end class __ASSET__img_objectives_objective_4_png extends lime.graphics.Image {}
+@:image("assets/img/objectives/objective_4_alt.png") #if display private #end class __ASSET__img_objectives_objective_4_alt_png extends lime.graphics.Image {}
+@:image("assets/img/objectives/objective_5.png") #if display private #end class __ASSET__img_objectives_objective_5_png extends lime.graphics.Image {}
+@:image("assets/img/objectives/objective_5_alt.png") #if display private #end class __ASSET__img_objectives_objective_5_alt_png extends lime.graphics.Image {}
+@:image("assets/img/objectives/objective_6.png") #if display private #end class __ASSET__img_objectives_objective_6_png extends lime.graphics.Image {}
+@:image("assets/img/objectives/objective_6_alt.png") #if display private #end class __ASSET__img_objectives_objective_6_alt_png extends lime.graphics.Image {}
 @:image("assets/img/Objectives.png") #if display private #end class __ASSET__img_objectives_png extends lime.graphics.Image {}
 @:image("assets/img/optionbutton.png") #if display private #end class __ASSET__img_optionbutton_png extends lime.graphics.Image {}
 @:image("assets/img/Optionsbackground.png") #if display private #end class __ASSET__img_optionsbackground_png extends lime.graphics.Image {}

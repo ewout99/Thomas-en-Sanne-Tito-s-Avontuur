@@ -1,4 +1,5 @@
 package;
+import openfl.display.Bitmap;
 import openfl.display.Sprite;
 
 /**
@@ -7,9 +8,11 @@ import openfl.display.Sprite;
  */
 class Mission extends Sprite
 {
-	var missionid:Int = 0;
-	var missiontext:String = "ER IS HIER GEEN TEKST";
-	var missiontarget:String = "000";
+	public var missionid:Int = 0;
+	public var missiontext:String = "ER IS HIER GEEN TEKST";
+	public var missiontarget:String = "000";
+	public var missiongraphic:Bitmap;
+	public var missiongraphicdone:Bitmap;
 	
 	public function new(id:Int, text:String, target:String) 
 	{

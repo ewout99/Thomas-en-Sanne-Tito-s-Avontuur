@@ -74,7 +74,7 @@ class Button extends Sprite
 	function playSound (event:MouseEvent)
 	{
 		Main.getInstance().sound.playSound("click");
-		trace ("Click");
+		//trace ("Click");
 	}
 	
 }

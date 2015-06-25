@@ -3,6 +3,7 @@ package ;
 import openfl.display.Sprite;
 import openfl.ui.Keyboard;
 import openfl.events.KeyboardEvent;
+import openfl.events.MouseEvent;
 import openfl.Lib;
 import haxe.Timer;
 
@@ -23,25 +24,33 @@ class Game extends Sprite
 	var missiontarget:Int = 0;
 	var updatetimer:Timer;
 	
+	//missionstates
+	var miss1:Bool = false;
+	var miss2:Bool = false;
+	var miss3:Bool = false;
+	var miss4:Bool = false;
+	var miss5:Bool = false;
+	var miss6:Bool = false;
+	var activemiss:Int = 1;
+	
 	//keystates
 	var key_w:Bool = false;
 	var key_a:Bool = false;
 	var key_s:Bool = false;
 	var key_d:Bool = false;
 	var key_e:Bool = false;
-	var key_esc:Bool = false;
-	var key_space:Bool = false;
+	public var activekey:String = "none";
 
 	public function new() 
 	{
 		super();
 		
-		init ();
-		
 		createlevel ();
 		dirtyitemcreate ();
 		createplayer ();
 		createUI();
+		
+		init ();
 	}
 	
 	//====================================================================//
@@ -74,7 +83,12 @@ class Game extends Sprite
 			case 68: key_d = false;
 		}
 		
-		player.stopanimation ();
+		if (key_w == false && key_a == false && key_s == false && key_d == false)
+		{
+			activekey = "none";
+		}
+		
+		//trace ("level.x= " + level.x + " player.x= " + player.x);
 	}
 	
 	function interact ()
@@ -84,6 +98,10 @@ class Game extends Sprite
 		if ( returnedobject.itemid != 0 )
 		{
 			trace (returnedobject.iteminteracttext);
+			
+			ui.notify (returnedobject.iteminteracttext);
+			
+			missionhandler (returnedobject.itemid);
 		}
 		
 		else
@@ -121,7 +139,7 @@ class Game extends Sprite
 		addChild (player);
 		
 		player.x = levelx / 2 - player.width / 2;
-		player.y = levely / 2 - player.height / 2;
+		player.y = levely / 1.5 - player.height / 2;
 		
 		player.width = player.width * 1.5;
 		player.height = player.height * 1.5;
@@ -136,8 +154,6 @@ class Game extends Sprite
 		
 		level.x = -400;
 		level.y = -600;
-		level.width = level.width * 1.5;
-		level.height = level.height * 1.5;
 	}
 	
 	// Adds UI to the game
@@ -154,18 +170,33 @@ class Game extends Sprite
 	//                                                                    //
 	//====================================================================//
 	
+	//updates the level by looking at which keys are active and what speeds should be applied in what directions
 	function update ()
 	{
-		var truex:Int = Std.int(level.x * -1) + 608;
-		var truey:Int = Std.int(level.y * -1) + 328;
+		var truex:Int = Std.int(level.x * -1 + player.x);
+		var truey:Int = Std.int(level.y * -1 + player.y);
+		//trace (truex + "   " + truey);
 		
 		if ( key_w == true )
 		{
-			var w_truey:Int = truey - 5;
-			var blocked = level.transparencycheck ( truex, w_truey );
+			var w_truey:Int = truey - 9;
+			var blocked1 = level.transparencycheck ( truex, w_truey );
+			var w_truey:Int = truey - 6;
+			var blocked2 = level.transparencycheck ( truex, w_truey );
+			var w_truey:Int = truey - 3;
+			var blocked3 = level.transparencycheck ( truex, w_truey );
+			
+			var blocked:Bool = false;
+			
+			if ( blocked1 == true || blocked2 == true || blocked3 == true )
+			{
+				blocked = true;
+			}
 			
 			if ( blocked == false && key_s == false )
 			{
+				activekey = "w";
+				
 				if ( key_a == true || key_d == true )
 				{
 					movelevel ( "y", -2 );
@@ -180,11 +211,24 @@ class Game extends Sprite
 		
 		if ( key_a == true )
 		{
-			var a_truex:Int = truex - 5;
-			var blocked = level.transparencycheck ( a_truex, truey );
+			var a_truex:Int = truex - 9;
+			var blocked1 = level.transparencycheck ( a_truex, truey );
+			var a_truex:Int = truex - 6;
+			var blocked2 = level.transparencycheck ( a_truex, truey );
+			var a_truex:Int = truex - 3;
+			var blocked3 = level.transparencycheck ( a_truex, truey );
+			
+			var blocked:Bool = false;
+			
+			if ( blocked1 == true || blocked2 == true || blocked3 == true )
+			{
+				blocked = true;
+			}
 			
 			if ( blocked == false && key_d == false )
 			{
+				activekey = "a";
+				
 				if ( key_w == true || key_s == true )
 				{
 					movelevel ( "x", -2 );
@@ -199,11 +243,24 @@ class Game extends Sprite
 		
 		if ( key_s == true )
 		{
-			var s_truey:Int = truey + 5;
-			var blocked = level.transparencycheck ( truex, s_truey );
+			var s_truey:Int = truey + 9;
+			var blocked1 = level.transparencycheck ( truex, s_truey );
+			var s_truey:Int = truey + 6;
+			var blocked2 = level.transparencycheck ( truex, s_truey );
+			var s_truey:Int = truey + 3;
+			var blocked3 = level.transparencycheck ( truex, s_truey );
+			
+			var blocked:Bool = false;
+			
+			if ( blocked1 == true || blocked2 == true || blocked3 == true )
+			{
+				blocked = true;
+			}
 			
 			if ( blocked == false && key_w == false )
 			{
+				activekey = "s";
+				
 				if ( key_a == true || key_d == true )
 				{
 					movelevel ( "y", 2 );
@@ -218,11 +275,24 @@ class Game extends Sprite
 		
 		if ( key_d == true )
 		{
-			var d_truex:Int = truex + 5;
-			var blocked = level.transparencycheck ( d_truex, truey );
+			var d_truex:Int = truex + 9;
+			var blocked1 = level.transparencycheck ( d_truex, truey );
+			var d_truex:Int = truex + 6;
+			var blocked2 = level.transparencycheck ( d_truex, truey );
+			var d_truex:Int = truex + 3;
+			var blocked3 = level.transparencycheck ( d_truex, truey );
+			
+			var blocked:Bool = false;
+			
+			if ( blocked1 == true || blocked2 == true || blocked3 == true )
+			{
+				blocked = true;
+			}
 			
 			if ( blocked == false && key_a == false )
 			{
+				activekey = "d";
+				
 				if ( key_w == true || key_s == true )
 				{
 					movelevel ( "x", 2 );
@@ -234,8 +304,11 @@ class Game extends Sprite
 				}
 			}
 		}
+		
+		player.updateplayer (activekey);
 	}
 	
+	// actually moves the level around
 	function movelevel (axis:String, speed:Int)
 	{
 		if (axis == "x")
@@ -259,6 +332,7 @@ class Game extends Sprite
 		}
 	}
 	
+	//Checks if an object can be interacted with and returns the closest of those valid targets
 	function checkvalid ()
 	{
 		var closest:Objects = new Objects (0 , "none" , "none");
@@ -306,48 +380,51 @@ class Game extends Sprite
 	//                                                                    //
 	//====================================================================//
 	
+	//creates hardcoded item markers in a quick and dirty way
 	function dirtyitemcreate ()
 	{
-		//define items type with either FURNITURE, NPC, PLANT, ITEM or OBJECTIVE
-		var item01:Objects = new Objects (1 , "FURNITURE" , "Een redelijk normaal bureau.");
-		item01.x = 870 * 1.5 - 400;
-		item01.y = 430 * 1.5 - 600;
+		//define items types with either FURNITURE, NPC, PLANT, ITEM or OBJECTIVE
+		var item01:Objects = new Objects (1 , "NPC" , "Karin, de secretaresse, kijkt je behulpzaam aan.");
+		item01.x = 1180 - 400;
+		item01.y = 725 - 600;
 		itemarray.push ( item01 );
 		
 		var item02:Objects = new Objects (2 , "FURNITURE" , "Een saaie tafel.");
-		item02.x = 1025 * 1.5 - 400;
-		item02.y = 310 * 1.5 - 600;
+		item02.x = 980 - 400;
+		item02.y = 800 - 600;
 		itemarray.push ( item02 );
 		
 		var item03:Objects = new Objects (3 , "FURNITURE" , "De stoel piept een beetje.");
-		item03.x = 1150 * 1.5 - 400;
-		item03.y = 475 * 1.5 - 600;
+		item03.x = 1075 - 400;
+		item03.y = 675 - 600;
 		itemarray.push ( item03 );
 		
-		var item04:Objects = new Objects (4 , "FURNITURE" , "Allemaal lege laadjes.");
-		item04.x = 715 * 1.5 - 400;
-		item04.y = 485 * 1.5 - 600;
+		var item04:Objects = new Objects (4 , "PLANT" , "De plant mag wel eens wat water krijgen.");
+		item04.x = 960 - 400;
+		item04.y = 715 - 600;
 		itemarray.push ( item04 );
 		
 		var item05:Objects = new Objects (5 , "FURNITURE" , "Een tafel, niet erg bijzonder.");
-		item05.x = 1030 * 1.5 - 400;
-		item05.y = 625 * 1.5 - 600;
+		item05.x = 1030 - 400;
+		item05.y = 625 - 600;
 		itemarray.push ( item05 );
 		
 		var item06:Objects = new Objects (6 , "NPC" , "Bas bewaakt de ingang elke dag.");
-		item06.x = 830 * 1.5 - 400;
-		item06.y = 570 * 1.5 - 600;
+		item06.x = 830 - 400;
+		item06.y = 570 - 600;
 		itemarray.push ( item06 );
 		
 		placeitems ();
 	}
 	
+	//Creates missions in the same way as the above items
 	function createmission ()
 	{
 		var mission01:Mission = new Mission (1, "test", "test 2");
 		var mission02:Mission = new Mission (2, "testit", "testit 2");
 	}
 	
+	//Goes through the itemarray and adds all available item markers to stage
 	function placeitems ()
 	{
 		for (item in itemarray)
@@ -362,8 +439,64 @@ class Game extends Sprite
 	//                                                                    //
 	//====================================================================//
 	
-	function displaymission ()
+	function missionhandler (itemid:Int)
 	{
+		if (miss1 == false)
+		{
+			if (itemid == 0) //TODO
+			{
+				miss1 = true;
+				ui.modobj1 ("end");
+				ui.modobj2 ("start");
+			}
+		}
 		
+		else if (miss2 == false)
+		{
+			if (itemid == 0) //TODO
+			{
+				miss2 = true;
+				ui.modobj2 ("end");
+				ui.modobj3 ("start");
+			}
+		}
+		
+		else if (miss3 == false)
+		{
+			if (itemid == 0) //TODO
+			{
+				miss3 = true;
+				ui.modobj3 ("end");
+				ui.modobj4 ("start");
+			}
+		}
+		
+		else if (miss4 == false)
+		{
+			if (itemid == 0) //TODO
+			{
+				miss4 = true;
+				ui.modobj4 ("end");
+				ui.modobj5 ("start");
+			}
+		}
+		
+		else if (miss5 == false)
+		{
+			if (itemid == 0) //TODO
+			{
+				miss5 = true;
+				ui.modobj5 ("end");
+				ui.modobj6 ("start");
+			}
+		}
+		
+		else if (miss6 == false)
+		{
+			if (itemid == 0) //TODO
+			{
+				
+			}
+		}
 	}
 }
