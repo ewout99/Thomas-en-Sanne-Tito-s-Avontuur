@@ -198,6 +198,10 @@ class ApplicationMain {
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
+		urls.push ("img/optionbutton_alt.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
 		urls.push ("img/Optionsbackground.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		

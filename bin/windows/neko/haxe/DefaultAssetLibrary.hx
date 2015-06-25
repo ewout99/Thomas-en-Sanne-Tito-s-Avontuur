@@ -127,6 +127,8 @@ class DefaultAssetLibrary extends AssetLibrary {
 		type.set ("img/Objectives.png", AssetType.IMAGE);
 		path.set ("img/optionbutton.png", "img/optionbutton.png");
 		type.set ("img/optionbutton.png", AssetType.IMAGE);
+		path.set ("img/optionbutton_alt.png", "img/optionbutton_alt.png");
+		type.set ("img/optionbutton_alt.png", AssetType.IMAGE);
 		path.set ("img/Optionsbackground.png", "img/Optionsbackground.png");
 		type.set ("img/Optionsbackground.png", AssetType.IMAGE);
 		path.set ("img/Progressbarpiece.png", "img/Progressbarpiece.png");
@@ -445,6 +447,9 @@ class DefaultAssetLibrary extends AssetLibrary {
 		path.set (id, id);
 		type.set (id, AssetType.IMAGE);
 		id = "img/optionbutton.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "img/optionbutton_alt.png";
 		path.set (id, id);
 		type.set (id, AssetType.IMAGE);
 		id = "img/Optionsbackground.png";
@@ -886,11 +891,13 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		
 		
+		
 		#end
 		
 		#if (windows || mac || linux)
 		
 		var useManifest = false;
+		useManifest = true;
 		useManifest = true;
 		useManifest = true;
 		useManifest = true;
@@ -1768,7 +1775,9 @@ class DefaultAssetLibrary extends AssetLibrary {
 
 
 
+
 #elseif html5
+
 
 
 

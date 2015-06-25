@@ -199,12 +199,12 @@ class Game extends Sprite
 				
 				if ( key_a == true || key_d == true )
 				{
-					movelevel ( "y", -2 );
+					movelevel ( "y", -3 );
 				}
 				
 				else
 				{
-					movelevel ( "y", -3 );
+					movelevel ( "y", -5 );
 				}
 			}
 		}
@@ -231,12 +231,12 @@ class Game extends Sprite
 				
 				if ( key_w == true || key_s == true )
 				{
-					movelevel ( "x", -2 );
+					movelevel ( "x", -3 );
 				}
 				
 				else
 				{
-					movelevel ( "x", -3 );
+					movelevel ( "x", -5 );
 				}
 			}
 		}
@@ -263,12 +263,12 @@ class Game extends Sprite
 				
 				if ( key_a == true || key_d == true )
 				{
-					movelevel ( "y", 2 );
+					movelevel ( "y", 3 );
 				}
 				
 				else
 				{
-					movelevel ( "y", 3 );
+					movelevel ( "y", 5 );
 				}
 			}
 		}
@@ -295,12 +295,12 @@ class Game extends Sprite
 				
 				if ( key_w == true || key_s == true )
 				{
-					movelevel ( "x", 2 );
+					movelevel ( "x", 3 );
 				}
 				
 				else
 				{
-					movelevel ( "x", 3 );
+					movelevel ( "x", 5 );
 				}
 			}
 		}
@@ -389,7 +389,7 @@ class Game extends Sprite
 		item01.y = 725 - 600;
 		itemarray.push ( item01 );
 		
-		var item02:Objects = new Objects (2 , "FURNITURE" , "Een saaie tafel.");
+		var item02:Objects = new Objects (2 , "FURNITURE" , "Een bruine tafel met flyers over scheidingspapieren.");
 		item02.x = 980 - 400;
 		item02.y = 800 - 600;
 		itemarray.push ( item02 );
@@ -399,29 +399,37 @@ class Game extends Sprite
 		item03.y = 675 - 600;
 		itemarray.push ( item03 );
 		
-		var item04:Objects = new Objects (4 , "PLANT" , "De plant mag wel eens wat water krijgen.");
+		var item04:Objects = new Objects (4 , "PLANT" , "De plant mag wel wat water krijgen.");
 		item04.x = 960 - 400;
 		item04.y = 715 - 600;
 		itemarray.push ( item04 );
 		
-		var item05:Objects = new Objects (5 , "FURNITURE" , "Een tafel, niet erg bijzonder.");
-		item05.x = 1030 - 400;
-		item05.y = 625 - 600;
+		var item05:Objects = new Objects (5 , "FURNITURE" , "Deze archiefkast ziet er interessant uit!");
+		item05.x = 2330 - 400;
+		item05.y = 520 - 600;
 		itemarray.push ( item05 );
 		
-		var item06:Objects = new Objects (6 , "NPC" , "Bas bewaakt de ingang elke dag.");
-		item06.x = 830 - 400;
-		item06.y = 570 - 600;
+		var item06:Objects = new Objects (6 , "NPC" , "De archivist heeft een lange baard en kijkt bezorgd naar zijn bureau.");
+		item06.x = 2600 - 400;
+		item06.y = 600 - 600;
+		itemarray.push ( item06 );
+		
+		var item07:Objects = new Objects (7 , "FURNITURE" , "De automaat heeft allemaal soorten drankjes.");
+		item07.x = 2400 - 400;
+		item07.y = 700 - 600;
+		itemarray.push ( item07 );
+		
+		var item08:Objects = new Objects (8 , "NPC" , "De concierge staat al de hele ochtend te werken.");
+		item08.x = 1630 - 400;
+		item08.y = 960 - 600;
+		itemarray.push ( item08 );
+		
+		var item06:Objects = new Objects (9 , "NPC" , "Deze plant beweegt!");
+		item06.x = 950 - 400;
+		item06.y = 425 - 600;
 		itemarray.push ( item06 );
 		
 		placeitems ();
-	}
-	
-	//Creates missions in the same way as the above items
-	function createmission ()
-	{
-		var mission01:Mission = new Mission (1, "test", "test 2");
-		var mission02:Mission = new Mission (2, "testit", "testit 2");
 	}
 	
 	//Goes through the itemarray and adds all available item markers to stage
@@ -443,7 +451,7 @@ class Game extends Sprite
 	{
 		if (miss1 == false)
 		{
-			if (itemid == 0) //TODO
+			if (itemid == 1) //TODO
 			{
 				miss1 = true;
 				ui.modobj1 ("end");
@@ -453,7 +461,7 @@ class Game extends Sprite
 		
 		else if (miss2 == false)
 		{
-			if (itemid == 0) //TODO
+			if (itemid == 5) //TODO
 			{
 				miss2 = true;
 				ui.modobj2 ("end");
@@ -463,7 +471,7 @@ class Game extends Sprite
 		
 		else if (miss3 == false)
 		{
-			if (itemid == 0) //TODO
+			if (itemid == 6) //TODO
 			{
 				miss3 = true;
 				ui.modobj3 ("end");
@@ -473,7 +481,7 @@ class Game extends Sprite
 		
 		else if (miss4 == false)
 		{
-			if (itemid == 0) //TODO
+			if (itemid == 7) //TODO
 			{
 				miss4 = true;
 				ui.modobj4 ("end");
@@ -483,7 +491,7 @@ class Game extends Sprite
 		
 		else if (miss5 == false)
 		{
-			if (itemid == 0) //TODO
+			if (itemid == 8) //TODO
 			{
 				miss5 = true;
 				ui.modobj5 ("end");
@@ -493,9 +501,9 @@ class Game extends Sprite
 		
 		else if (miss6 == false)
 		{
-			if (itemid == 0) //TODO
+			if (itemid == 9) //TODO
 			{
-				
+				Main.getInstance().switchScreen(Main.VICTORY_SCREEN);
 			}
 		}
 	}

@@ -108,6 +108,8 @@ ApplicationMain.create = function() {
 	types.push("IMAGE");
 	urls.push("img/optionbutton.png");
 	types.push("IMAGE");
+	urls.push("img/optionbutton_alt.png");
+	types.push("IMAGE");
 	urls.push("img/Optionsbackground.png");
 	types.push("IMAGE");
 	urls.push("img/Progressbarpiece.png");
@@ -1443,7 +1445,6 @@ Button.prototype = $extend(openfl_display_Sprite.prototype,{
 	}
 	,playSound: function(event) {
 		Main.getInstance().sound.playSound("click");
-		haxe_Log.trace("Click",{ fileName : "Button.hx", lineNumber : 77, className : "Button", methodName : "playSound"});
 	}
 	,__class__: Button
 });
@@ -1750,6 +1751,9 @@ var DefaultAssetLibrary = function() {
 	this.path.set(id,id);
 	this.type.set(id,"IMAGE");
 	id = "img/optionbutton.png";
+	this.path.set(id,id);
+	this.type.set(id,"IMAGE");
+	id = "img/optionbutton_alt.png";
 	this.path.set(id,id);
 	this.type.set(id,"IMAGE");
 	id = "img/Optionsbackground.png";
@@ -2175,6 +2179,13 @@ var Game = function() {
 	this.key_s = false;
 	this.key_a = false;
 	this.key_w = false;
+	this.activemiss = 1;
+	this.miss6 = false;
+	this.miss5 = false;
+	this.miss4 = false;
+	this.miss3 = false;
+	this.miss2 = false;
+	this.miss1 = false;
 	this.missiontarget = 0;
 	this.itemarray = [];
 	this.activestage = openfl_Lib.current.stage;
@@ -2228,14 +2239,14 @@ Game.prototype = $extend(openfl_display_Sprite.prototype,{
 			break;
 		}
 		if(this.key_w == false && this.key_a == false && this.key_s == false && this.key_d == false) this.activekey = "none";
-		haxe_Log.trace("level.x= " + this.level.get_x() + " player.x= " + this.player.get_x(),{ fileName : "Game.hx", lineNumber : 81, className : "Game", methodName : "keyrelease"});
 	}
 	,interact: function() {
 		var returnedobject = this.checkvalid();
 		if(returnedobject.itemid != 0) {
-			haxe_Log.trace(returnedobject.iteminteracttext,{ fileName : "Game.hx", lineNumber : 90, className : "Game", methodName : "interact"});
+			haxe_Log.trace(returnedobject.iteminteracttext,{ fileName : "Game.hx", lineNumber : 100, className : "Game", methodName : "interact"});
 			this.ui.notify(returnedobject.iteminteracttext);
-		} else haxe_Log.trace("no valid item in range",{ fileName : "Game.hx", lineNumber : 97, className : "Game", methodName : "interact"});
+			this.missionhandler(returnedobject.itemid);
+		} else haxe_Log.trace("no valid item in range",{ fileName : "Game.hx", lineNumber : 109, className : "Game", methodName : "interact"});
 	}
 	,init: function() {
 		var _g = this;
@@ -2278,7 +2289,7 @@ Game.prototype = $extend(openfl_display_Sprite.prototype,{
 			if(blocked1 == true || blocked2 == true || blocked3 == true) blocked = true;
 			if(blocked == false && this.key_s == false) {
 				this.activekey = "w";
-				if(this.key_a == true || this.key_d == true) this.movelevel("y",-2); else this.movelevel("y",-3);
+				if(this.key_a == true || this.key_d == true) this.movelevel("y",-3); else this.movelevel("y",-5);
 			}
 		}
 		if(this.key_a == true) {
@@ -2292,7 +2303,7 @@ Game.prototype = $extend(openfl_display_Sprite.prototype,{
 			if(blocked11 == true || blocked21 == true || blocked31 == true) blocked4 = true;
 			if(blocked4 == false && this.key_d == false) {
 				this.activekey = "a";
-				if(this.key_w == true || this.key_s == true) this.movelevel("x",-2); else this.movelevel("x",-3);
+				if(this.key_w == true || this.key_s == true) this.movelevel("x",-3); else this.movelevel("x",-5);
 			}
 		}
 		if(this.key_s == true) {
@@ -2306,7 +2317,7 @@ Game.prototype = $extend(openfl_display_Sprite.prototype,{
 			if(blocked12 == true || blocked22 == true || blocked32 == true) blocked5 = true;
 			if(blocked5 == false && this.key_w == false) {
 				this.activekey = "s";
-				if(this.key_a == true || this.key_d == true) this.movelevel("y",2); else this.movelevel("y",3);
+				if(this.key_a == true || this.key_d == true) this.movelevel("y",3); else this.movelevel("y",5);
 			}
 		}
 		if(this.key_d == true) {
@@ -2320,7 +2331,7 @@ Game.prototype = $extend(openfl_display_Sprite.prototype,{
 			if(blocked13 == true || blocked23 == true || blocked33 == true) blocked6 = true;
 			if(blocked6 == false && this.key_a == false) {
 				this.activekey = "d";
-				if(this.key_w == true || this.key_s == true) this.movelevel("x",2); else this.movelevel("x",3);
+				if(this.key_w == true || this.key_s == true) this.movelevel("x",3); else this.movelevel("x",5);
 			}
 		}
 		this.player.updateplayer(this.activekey);
@@ -2377,7 +2388,7 @@ Game.prototype = $extend(openfl_display_Sprite.prototype,{
 		item01.set_x(780);
 		item01.set_y(125);
 		this.itemarray.push(item01);
-		var item02 = new Objects(2,"FURNITURE","Een saaie tafel.");
+		var item02 = new Objects(2,"FURNITURE","Een bruine tafel met flyers over scheidingspapieren.");
 		item02.set_x(580);
 		item02.set_y(200);
 		this.itemarray.push(item02);
@@ -2385,23 +2396,19 @@ Game.prototype = $extend(openfl_display_Sprite.prototype,{
 		item03.set_x(675);
 		item03.set_y(75);
 		this.itemarray.push(item03);
-		var item04 = new Objects(4,"PLANT","De plant mag wel eens wat water krijgen.");
+		var item04 = new Objects(4,"PLANT","De plant mag wel wat water krijgen.");
 		item04.set_x(560);
 		item04.set_y(115);
 		this.itemarray.push(item04);
-		var item05 = new Objects(5,"FURNITURE","Een tafel, niet erg bijzonder.");
-		item05.set_x(630);
-		item05.set_y(25);
+		var item05 = new Objects(5,"FURNITURE","Deze archiefkast ziet er interessant uit!");
+		item05.set_x(1930);
+		item05.set_y(-80);
 		this.itemarray.push(item05);
-		var item06 = new Objects(6,"NPC","Bas bewaakt de ingang elke dag.");
-		item06.set_x(430);
-		item06.set_y(-30);
+		var item06 = new Objects(6,"NPC","De archivist heeft een lange baard en kijkt bezorgd naar zijn bureau.");
+		item06.set_x(2200);
+		item06.set_y(0);
 		this.itemarray.push(item06);
 		this.placeitems();
-	}
-	,createmission: function() {
-		var mission01 = new Mission(1,"test","test 2");
-		var mission02 = new Mission(2,"testit","testit 2");
 	}
 	,placeitems: function() {
 		var _g = 0;
@@ -2412,7 +2419,41 @@ Game.prototype = $extend(openfl_display_Sprite.prototype,{
 			this.addChild(item);
 		}
 	}
-	,displaymission: function() {
+	,missionhandler: function(itemid) {
+		if(this.miss1 == false) {
+			if(itemid == 1) {
+				this.miss1 = true;
+				this.ui.modobj1("end");
+				this.ui.modobj2("start");
+			}
+		} else if(this.miss2 == false) {
+			if(itemid == 5) {
+				this.miss2 = true;
+				this.ui.modobj2("end");
+				this.ui.modobj3("start");
+			}
+		} else if(this.miss3 == false) {
+			if(itemid == 6) {
+				this.miss3 = true;
+				this.ui.modobj3("end");
+				this.ui.modobj4("start");
+			}
+		} else if(this.miss4 == false) {
+			if(itemid == 0) {
+				this.miss4 = true;
+				this.ui.modobj4("end");
+				this.ui.modobj5("start");
+			}
+		} else if(this.miss5 == false) {
+			if(itemid == 0) {
+				this.miss5 = true;
+				this.ui.modobj5("end");
+				this.ui.modobj6("start");
+			}
+		} else if(this.miss6 == false) {
+			if(itemid == 0) {
+			}
+		}
 	}
 	,__class__: Game
 });
@@ -2502,7 +2543,6 @@ Level.prototype = $extend(openfl_display_Sprite.prototype,{
 	transparencycheck: function(x,y) {
 		var checkvalid = false;
 		var checkcol = this.levelcoll.bitmapData.getPixel32(x,y);
-		haxe_Log.trace(x + "   " + y + "   " + checkcol,{ fileName : "Level.hx", lineNumber : 41, className : "Level", methodName : "transparencycheck"});
 		if(checkcol == -16777216) checkvalid = true;
 		return checkvalid;
 	}
@@ -2623,18 +2663,6 @@ MainMenu.prototype = $extend(openfl_display_Sprite.prototype,{
 	,__class__: MainMenu
 });
 Math.__name__ = ["Math"];
-var Mission = function(id,text,target) {
-	this.missiontarget = "000";
-	this.missiontext = "ER IS HIER GEEN TEKST";
-	this.missionid = 0;
-	openfl_display_Sprite.call(this);
-};
-$hxClasses["Mission"] = Mission;
-Mission.__name__ = ["Mission"];
-Mission.__super__ = openfl_display_Sprite;
-Mission.prototype = $extend(openfl_display_Sprite.prototype,{
-	__class__: Mission
-});
 var Music = function() {
 	this.Winning = openfl_Assets.getSound("music/winningmusic.ogg");
 	this.Menu = openfl_Assets.getSound("music/menumusic.ogg");
@@ -3094,74 +3122,51 @@ Type.enumEq = function(a,b) {
 	return true;
 };
 var UI = function() {
-	this.objective6 = new openfl_display_Bitmap(openfl_Assets.getBitmapData("img/objectives/objective_6_alt.png"));
-	this.objective5 = new openfl_display_Bitmap(openfl_Assets.getBitmapData("img/objectives/objective_5_alt.png"));
-	this.objective4 = new openfl_display_Bitmap(openfl_Assets.getBitmapData("img/objectives/objective_4_alt.png"));
-	this.objective3 = new openfl_display_Bitmap(openfl_Assets.getBitmapData("img/objectives/objective_3_alt.png"));
-	this.objective2 = new openfl_display_Bitmap(openfl_Assets.getBitmapData("img/objectives/objective_2_alt.png"));
-	this.objective1 = new openfl_display_Bitmap(openfl_Assets.getBitmapData("img/objectives/objective_1_alt.png"));
+	this.objectives = new openfl_display_Bitmap(openfl_Assets.getBitmapData("img/Objectives.png"));
+	this.curstage = openfl_Lib.current.stage;
+	this.tooltip4 = new openfl_text_TextField();
+	this.tooltip3 = new openfl_text_TextField();
+	this.tooltip2 = new openfl_text_TextField();
+	this.tooltip1 = new openfl_text_TextField();
+	this.textfield3 = new openfl_text_TextField();
+	this.textfield2 = new openfl_text_TextField();
 	this.textfield = new openfl_text_TextField();
 	this.progressInt = 1;
-	this.hint = new Button("","img/Hint.png","img/Hinthover.png");
+	this.hint = new Button("","img/Hinthover.png","img/Hint.png");
 	this.UIy = openfl_Lib.current.stage.stageHeight;
 	this.UIx = openfl_Lib.current.stage.stageWidth;
 	openfl_display_Sprite.call(this);
 	this.drawUI();
+	this.modobj1("start");
+	this.modobj2("end");
+	this.modobj3("end");
+	this.modobj4("end");
+	this.modobj5("end");
+	this.modobj6("end");
 };
 $hxClasses["UI"] = UI;
 UI.__name__ = ["UI"];
 UI.__super__ = openfl_display_Sprite;
 UI.prototype = $extend(openfl_display_Sprite.prototype,{
 	drawUI: function() {
-		var objectives = new openfl_display_Bitmap(openfl_Assets.getBitmapData("img/Objectives.png"));
-		objectives.set_width(objectives.get_width() / 1.2);
-		objectives.set_height(objectives.get_height() / 1.2);
-		objectives.set_x(10);
-		objectives.set_y(this.UIy / 2 - objectives.get_height() / 2);
-		this.addChild(objectives);
+		this.objectives.set_width(this.objectives.get_width() / 1.2);
+		this.objectives.set_height(this.objectives.get_height() / 1.2);
+		this.objectives.set_x(10);
+		this.objectives.set_y(this.UIy / 2 - this.objectives.get_height() / 2);
+		this.addChild(this.objectives);
 		var progressie = new openfl_display_Bitmap(openfl_Assets.getBitmapData("img/Progressie.png"));
 		progressie.set_width(progressie.get_width());
 		progressie.set_height(progressie.get_height());
 		progressie.set_x(this.UIx / 2 - progressie.get_width() / 2);
 		progressie.set_y(10);
 		this.addChild(progressie);
-		var option = new openfl_display_Bitmap(openfl_Assets.getBitmapData("img/optionbutton.png"));
+		var option = new Button("","img/optionbutton.png","img/optionbutton_alt.png");
 		option.set_width(option.get_width() / 1.5);
 		option.set_height(option.get_height() / 1.5);
-		option.set_x(this.UIx - option.get_width() - 25);
+		option.set_x(this.UIx - option.get_width() + 25);
 		option.set_y(25);
 		this.addChild(option);
 		option.addEventListener(openfl_events_MouseEvent.CLICK,$bind(this,this.backMenu));
-		this.objective1.set_width(this.objective1.get_width() / 1.5);
-		this.objective1.set_height(this.objective1.get_height() / 1.5);
-		this.objective1.set_x(50);
-		this.objective1.set_y(this.UIy / 2 - objectives.get_height() / 2 + 50);
-		this.addChild(this.objective1);
-		this.objective2.set_width(this.objective2.get_width() / 1.5);
-		this.objective2.set_height(this.objective2.get_height() / 1.5);
-		this.objective2.set_x(50);
-		this.objective2.set_y(this.UIy / 2 - objectives.get_height() / 2 + 120);
-		this.addChild(this.objective2);
-		this.objective3.set_width(this.objective3.get_width() / 1.5);
-		this.objective3.set_height(this.objective3.get_height() / 1.5);
-		this.objective3.set_x(50);
-		this.objective3.set_y(this.UIy / 2 - objectives.get_height() / 2 + 190);
-		this.addChild(this.objective3);
-		this.objective4.set_width(this.objective4.get_width() / 1.5);
-		this.objective4.set_height(this.objective4.get_height() / 1.5);
-		this.objective4.set_x(50);
-		this.objective4.set_y(this.UIy / 2 - objectives.get_height() / 2 + 270);
-		this.addChild(this.objective4);
-		this.objective5.set_width(this.objective5.get_width() / 1.5);
-		this.objective5.set_height(this.objective5.get_height() / 1.5);
-		this.objective5.set_x(50);
-		this.objective5.set_y(this.UIy / 2 - objectives.get_height() / 2 + 345);
-		this.addChild(this.objective5);
-		this.objective6.set_width(this.objective6.get_width() / 1.5);
-		this.objective6.set_height(this.objective6.get_height() / 1.5);
-		this.objective6.set_x(50);
-		this.objective6.set_y(this.UIy / 2 - objectives.get_height() / 2 + 420);
-		this.addChild(this.objective6);
 		this.hint.set_width(this.hint.get_width() / 2);
 		this.hint.set_height(this.hint.get_height() / 2);
 		this.hint.set_x(this.UIx - this.hint.get_width() - 10);
@@ -3172,54 +3177,220 @@ UI.prototype = $extend(openfl_display_Sprite.prototype,{
 		this.textfield.set_y(25);
 		this.textfield.set_width(this.UIx / 2);
 		this.textfield.set_textColor(16777215);
-		this.textfield.set_wordWrap(true);
+		this.textfield2.set_x(this.UIx / 2 - progressie.get_width() / 2 + 15);
+		this.textfield2.set_y(37);
+		this.textfield2.set_width(this.UIx / 2);
+		this.textfield2.set_textColor(8421504);
+		this.textfield3.set_x(this.UIx / 2 - progressie.get_width() / 2 + 15);
+		this.textfield3.set_y(49);
+		this.textfield3.set_width(this.UIx / 2);
+		this.textfield3.set_textColor(3684408);
+		this.tooltip1.set_x(20);
+		this.tooltip1.set_y(20);
+		this.tooltip1.set_width(this.UIx / 4);
+		this.tooltip1.set_textColor(16777215);
+		this.tooltip1.set_text("Weetjes:");
+		this.tooltip2.set_x(20);
+		this.tooltip2.set_y(32);
+		this.tooltip2.set_width(this.UIx / 4);
+		this.tooltip2.set_textColor(16777215);
+		this.tooltip2.set_text("Gebruik 'WASD' om rond te lopen");
+		this.tooltip3.set_x(20);
+		this.tooltip3.set_y(44);
+		this.tooltip3.set_width(this.UIx / 4);
+		this.tooltip3.set_textColor(16777215);
+		this.tooltip3.set_text("Druk op 'E' om iets te activeren");
+		this.tooltip4.set_x(20);
+		this.tooltip4.set_y(56);
+		this.tooltip4.set_width(this.UIx / 4);
+		this.tooltip4.set_textColor(16777215);
+		this.tooltip4.set_text("Klik op de icoontjes voor uitleg ");
+		this.addChild(this.tooltip1);
+		this.addChild(this.tooltip2);
+		this.addChild(this.tooltip3);
+		this.addChild(this.tooltip4);
 	}
 	,modobj1: function(change) {
 		if(change == "start") {
 			this.removeChild(this.objective1);
-			this.objective1 = new openfl_display_Bitmap(openfl_Assets.getBitmapData("img/objectives/objective_1.png"));
+			this.objective1 = new Button("1","img/objectives/objective_1.png","img/objectives/objective_1.png");
+			this.objective1.set_width(this.objective1.get_width() / 1.5);
+			this.objective1.set_height(this.objective1.get_height() / 1.5);
+			this.objective1.set_x(50);
+			this.objective1.set_y(this.UIy / 2 - this.objectives.get_height() / 2 + 45);
+			this.objective1.addEventListener(openfl_events_MouseEvent.CLICK,$bind(this,this.objective1click));
+			haxe_Log.trace("objective 1 listener added",{ fileName : "UI.hx", lineNumber : 144, className : "UI", methodName : "modobj1"});
 			this.addChild(this.objective1);
-			this.objective1.addEventListener(openfl_events_MouseEvent.CLICK,$bind(this,this.objectiveclick));
 		} else if(change == "end") {
 			this.removeChild(this.objective1);
-			this.objective1 = new openfl_display_Bitmap(openfl_Assets.getBitmapData("img/objectives/objective_1_alt.png"));
+			this.objective1 = new Button("1","img/objectives/objective_2_alt.png","img/objectives/objective_2_alt.png");
+			this.objective1.set_width(this.objective1.get_width() / 1.5);
+			this.objective1.set_height(this.objective1.get_height() / 1.5);
+			this.objective1.set_x(50);
+			this.objective1.set_y(this.UIy / 2 - this.objectives.get_height() / 2 + 45);
 			this.addChild(this.objective1);
-			this.objective1.removeEventListener(openfl_events_MouseEvent.CLICK,$bind(this,this.objectiveclick));
+			this.objective1.removeEventListener(openfl_events_MouseEvent.CLICK,$bind(this,this.objective1click));
 		}
 	}
-	,objectiveclick: function(event) {
-		haxe_Log.trace(event.target,{ fileName : "UI.hx", lineNumber : 139, className : "UI", methodName : "objectiveclick"});
+	,modobj2: function(change) {
+		if(change == "start") {
+			this.removeChild(this.objective2);
+			this.objective2 = new Button("2","img/objectives/objective_2.png","img/objectives/objective_2.png");
+			this.objective2.set_width(this.objective2.get_width() / 1.5);
+			this.objective2.set_height(this.objective2.get_height() / 1.5);
+			this.objective2.set_x(50);
+			this.objective2.set_y(this.UIy / 2 - this.objectives.get_height() / 2 + 120);
+			this.objective2.addEventListener(openfl_events_MouseEvent.CLICK,$bind(this,this.objective2click));
+			this.addChild(this.objective2);
+		} else if(change == "end") {
+			this.removeChild(this.objective2);
+			this.objective2 = new Button("2","img/objectives/objective_1_alt.png","img/objectives/objective_1_alt.png");
+			this.objective2.set_width(this.objective2.get_width() / 1.5);
+			this.objective2.set_height(this.objective2.get_height() / 1.5);
+			this.objective2.set_x(50);
+			this.objective2.set_y(this.UIy / 2 - this.objectives.get_height() / 2 + 120);
+			this.addChild(this.objective2);
+			this.objective2.removeEventListener(openfl_events_MouseEvent.CLICK,$bind(this,this.objective2click));
+		}
+	}
+	,modobj3: function(change) {
+		if(change == "start") {
+			this.removeChild(this.objective3);
+			this.objective3 = new Button("3","img/objectives/objective_3.png","img/objectives/objective_3.png");
+			this.objective3.set_width(this.objective3.get_width() / 1.5);
+			this.objective3.set_height(this.objective3.get_height() / 1.5);
+			this.objective3.set_x(50);
+			this.objective3.set_y(this.UIy / 2 - this.objectives.get_height() / 2 + 190);
+			this.objective3.addEventListener(openfl_events_MouseEvent.CLICK,$bind(this,this.objective3click));
+			this.addChild(this.objective3);
+		} else if(change == "end") {
+			this.removeChild(this.objective3);
+			this.objective3 = new Button("3","img/objectives/objective_3_alt.png","img/objectives/objective_3_alt.png");
+			this.objective3.set_width(this.objective3.get_width() / 1.5);
+			this.objective3.set_height(this.objective3.get_height() / 1.5);
+			this.objective3.set_x(50);
+			this.objective3.set_y(this.UIy / 2 - this.objectives.get_height() / 2 + 190);
+			this.addChild(this.objective3);
+			this.objective3.removeEventListener(openfl_events_MouseEvent.CLICK,$bind(this,this.objective3click));
+		}
+	}
+	,modobj4: function(change) {
+		if(change == "start") {
+			this.removeChild(this.objective4);
+			this.objective4 = new Button("4","img/objectives/objective_4.png","img/objectives/objective_4.png");
+			this.objective4.set_width(this.objective4.get_width() / 1.5);
+			this.objective4.set_height(this.objective4.get_height() / 1.5);
+			this.objective4.set_x(50);
+			this.objective4.set_y(this.UIy / 2 - this.objectives.get_height() / 2 + 270);
+			this.objective4.addEventListener(openfl_events_MouseEvent.CLICK,$bind(this,this.objective4click));
+			this.addChild(this.objective4);
+		} else if(change == "end") {
+			this.removeChild(this.objective4);
+			this.objective4 = new Button("4","img/objectives/objective_4_alt.png","img/objectives/objective_4_alt.png");
+			this.objective4.set_width(this.objective4.get_width() / 1.5);
+			this.objective4.set_height(this.objective4.get_height() / 1.5);
+			this.objective4.set_x(50);
+			this.objective4.set_y(this.UIy / 2 - this.objectives.get_height() / 2 + 270);
+			this.addChild(this.objective4);
+			this.objective4.removeEventListener(openfl_events_MouseEvent.CLICK,$bind(this,this.objective4click));
+		}
+	}
+	,modobj5: function(change) {
+		if(change == "start") {
+			this.removeChild(this.objective5);
+			this.objective5 = new Button("5","img/objectives/objective_5.png","img/objectives/objective_5.png");
+			this.objective5.set_width(this.objective5.get_width() / 1.5);
+			this.objective5.set_height(this.objective5.get_height() / 1.5);
+			this.objective5.set_x(50);
+			this.objective5.set_y(this.UIy / 2 - this.objectives.get_height() / 2 + 345);
+			this.objective5.addEventListener(openfl_events_MouseEvent.CLICK,$bind(this,this.objective5click));
+			this.addChild(this.objective5);
+		} else if(change == "end") {
+			this.removeChild(this.objective5);
+			this.objective5 = new Button("5","img/objectives/objective_5_alt.png","img/objectives/objective_5_alt.png");
+			this.objective5.set_width(this.objective5.get_width() / 1.5);
+			this.objective5.set_height(this.objective5.get_height() / 1.5);
+			this.objective5.set_x(50);
+			this.objective5.set_y(this.UIy / 2 - this.objectives.get_height() / 2 + 345);
+			this.addChild(this.objective5);
+			this.objective5.removeEventListener(openfl_events_MouseEvent.CLICK,$bind(this,this.objective5click));
+		}
+	}
+	,modobj6: function(change) {
+		if(change == "start") {
+			this.removeChild(this.objective6);
+			this.objective6 = new Button("6","img/objectives/objective_6.png","img/objectives/objective_6.png");
+			this.objective6.set_width(this.objective6.get_width() / 1.5);
+			this.objective6.set_height(this.objective6.get_height() / 1.5);
+			this.objective6.set_x(50);
+			this.objective6.set_y(this.UIy / 2 - this.objectives.get_height() / 2 + 420);
+			this.objective6.addEventListener(openfl_events_MouseEvent.CLICK,$bind(this,this.objective6click));
+			this.addChild(this.objective6);
+		} else if(change == "end") {
+			this.removeChild(this.objective6);
+			this.objective6 = new Button("6","img/objectives/objective_1_alt.png","img/objectives/objective_1_alt.png");
+			this.objective6.set_width(this.objective6.get_width() / 1.5);
+			this.objective6.set_height(this.objective6.get_height() / 1.5);
+			this.objective6.set_x(50);
+			this.objective6.set_y(this.UIy / 2 - this.objectives.get_height() / 2 + 420);
+			this.addChild(this.objective6);
+			this.objective6.removeEventListener(openfl_events_MouseEvent.CLICK,$bind(this,this.objective6click));
+		}
+	}
+	,objective1click: function(event) {
+		this.notify("OPDRACHT: Tito is ontsnapt! Hij is hier ergens naar binnen gerend... Probeer hem te vinden.");
+	}
+	,objective2click: function(event) {
+		this.notify("OPDRACHT: Karin zegt dat je het beter aan de archivist kan vragen, als je hem een folder kan brengen die die is verloren.");
+	}
+	,objective3click: function(event) {
+		this.notify("OPDRACHT: Je hebt de folder gevonden! Breng hem naar de archivist toe.");
+	}
+	,objective4click: function(event) {
+		this.notify("OPDRACHT: De archivist zegt dat de concierge het misschien weet in ruil voor een blikje fris.");
+	}
+	,objective5click: function(event) {
+		this.notify("OPDRACHT: Je hebt een blikje fris gevonden! Breng het naar de concierge toe.");
+	}
+	,objective6click: function(event) {
+		this.notify("OPDRACHT: De concierge heeft Tito gezien! Hij verstopt zich in een van de planten!");
 	}
 	,notify: function(text) {
 		this.removeChild(this.textfield);
+		this.removeChild(this.textfield2);
+		this.removeChild(this.textfield3);
+		this.textfield3.set_text(this.textfield2.get_text());
+		this.textfield2.set_text(this.textfield.get_text());
 		this.textfield.set_text(text);
 		this.addChild(this.textfield);
+		this.addChild(this.textfield2);
+		this.addChild(this.textfield3);
 	}
 	,giveHint: function(e) {
 		var displaytext = "Er staat hier geen text";
 		var hintid = Std["int"](Std.random(6));
-		haxe_Log.trace("hintid: " + hintid,{ fileName : "UI.hx", lineNumber : 157, className : "UI", methodName : "giveHint"});
+		haxe_Log.trace("hintid: " + hintid,{ fileName : "UI.hx", lineNumber : 347, className : "UI", methodName : "giveHint"});
 		switch(hintid) {
 		case 0:
-			displaytext = "Probeer altijd met mensen te praten als je vast zit.";
+			displaytext = "HINT: Probeer altijd met mensen te praten als je vast zit.";
 			break;
 		case 1:
-			displaytext = "De KJRW is altijd beschikbaar voor advies, ongeacht het onderwerp.";
+			displaytext = "HINT: De KJRW is altijd beschikbaar voor advies, ongeacht het onderwerp.";
 			break;
 		case 2:
-			displaytext = "Alle gekleurde rondjes op de kaart kan je activeren met 'E'.";
+			displaytext = "HINT: Alle gekleurde rondjes op de kaart kan je activeren met 'E'.";
 			break;
 		case 3:
-			displaytext = "Als je moeite hebt met het vinden van de oplossing, loop rond en onderzoek het level.Als je moeite hebt met het vinden van de oplossing, loop rond en onderzoek het level.Als je moeite hebt met het vinden van de oplossing, loop rond en onderzoek het level.Als je moeite hebt met het vinden van de oplossing, loop rond en onderzoek het level.Als je moeite hebt met het vinden van de oplossing, loop rond en onderzoek het level.Als je moeite hebt met het vinden van de oplossing, loop rond en onderzoek het level.";
+			displaytext = "HINT: Als je moeite hebt met het vinden van de oplossing, loop rond en onderzoek het level.";
 			break;
 		case 4:
-			displaytext = "Veel kinderen die de KJRW helpen hebben vragen over hun ouders of school.";
+			displaytext = "HINT: Veel kinderen die de KJRW helpen hebben vragen over hun ouders of school.";
 			break;
 		case 5:
-			displaytext = "De eerste missie van een level is meestal heel dichtbij.";
+			displaytext = "HINT: De eerste missie van een level is meestal heel dichtbij.";
 			break;
 		case 6:
-			displaytext = "Speel de KJRW game zolang je wil!";
+			displaytext = "HINT: Klik op het actieve missie icoontje om je missie te bekijken.";
 			break;
 		}
 		this.notify(displaytext);

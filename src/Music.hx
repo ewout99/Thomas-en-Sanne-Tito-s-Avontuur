@@ -66,6 +66,8 @@ class Music extends Sprite
 	{
 		#if html
 		soundChannel.stop();
+		#elseif flash
+		soundChannel.stop ();
 		#end
 	}
 	

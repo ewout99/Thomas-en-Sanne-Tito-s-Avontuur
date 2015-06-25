@@ -127,6 +127,8 @@ class DefaultAssetLibrary extends AssetLibrary {
 		type.set ("img/Objectives.png", AssetType.IMAGE);
 		className.set ("img/optionbutton.png", __ASSET__img_optionbutton_png);
 		type.set ("img/optionbutton.png", AssetType.IMAGE);
+		className.set ("img/optionbutton_alt.png", __ASSET__img_optionbutton_alt_png);
+		type.set ("img/optionbutton_alt.png", AssetType.IMAGE);
 		className.set ("img/Optionsbackground.png", __ASSET__img_optionsbackground_png);
 		type.set ("img/Optionsbackground.png", AssetType.IMAGE);
 		className.set ("img/Progressbarpiece.png", __ASSET__img_progressbarpiece_png);
@@ -485,6 +487,10 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		type.set (id, AssetType.IMAGE);
 		id = "img/optionbutton.png";
+		path.set (id, id);
+		
+		type.set (id, AssetType.IMAGE);
+		id = "img/optionbutton_alt.png";
 		path.set (id, id);
 		
 		type.set (id, AssetType.IMAGE);
@@ -1023,6 +1029,7 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		
 		
+		
 		#end
 		
 		#if (windows || mac || linux)
@@ -1151,6 +1158,9 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		className.set ("img/optionbutton.png", __ASSET__img_optionbutton_png);
 		type.set ("img/optionbutton.png", AssetType.IMAGE);
+		
+		className.set ("img/optionbutton_alt.png", __ASSET__img_optionbutton_alt_png);
+		type.set ("img/optionbutton_alt.png", AssetType.IMAGE);
 		
 		className.set ("img/Optionsbackground.png", __ASSET__img_optionsbackground_png);
 		type.set ("img/Optionsbackground.png", AssetType.IMAGE);
@@ -2081,6 +2091,7 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:keep @:bind #if display private #end class __ASSET__img_objectives_objective_6_alt_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__img_objectives_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__img_optionbutton_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep @:bind #if display private #end class __ASSET__img_optionbutton_alt_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__img_optionsbackground_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__img_progressbarpiece_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep @:bind #if display private #end class __ASSET__img_progressie_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
@@ -2320,6 +2331,7 @@ class DefaultAssetLibrary extends AssetLibrary {
 
 
 
+
 #else
 
 
@@ -2368,6 +2380,7 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:image("assets/img/objectives/objective_6_alt.png") #if display private #end class __ASSET__img_objectives_objective_6_alt_png extends lime.graphics.Image {}
 @:image("assets/img/Objectives.png") #if display private #end class __ASSET__img_objectives_png extends lime.graphics.Image {}
 @:image("assets/img/optionbutton.png") #if display private #end class __ASSET__img_optionbutton_png extends lime.graphics.Image {}
+@:image("assets/img/optionbutton_alt.png") #if display private #end class __ASSET__img_optionbutton_alt_png extends lime.graphics.Image {}
 @:image("assets/img/Optionsbackground.png") #if display private #end class __ASSET__img_optionsbackground_png extends lime.graphics.Image {}
 @:image("assets/img/Progressbarpiece.png") #if display private #end class __ASSET__img_progressbarpiece_png extends lime.graphics.Image {}
 @:image("assets/img/Progressie.png") #if display private #end class __ASSET__img_progressie_png extends lime.graphics.Image {}

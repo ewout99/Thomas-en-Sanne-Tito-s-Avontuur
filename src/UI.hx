@@ -19,9 +19,17 @@ class UI extends Sprite
 {
 	var UIx:Int = Lib.current.stage.stageWidth;
 	var UIy:Int = Lib.current.stage.stageHeight;
-	public var hint:Button = new Button("", "img/Hint.png", "img/Hinthover.png");
+	public var hint:Button = new Button("", "img/Hinthover.png", "img/Hint.png");
 	public var progressInt:Int = 1;
+	
 	var textfield:TextField = new TextField ();
+	var textfield2:TextField = new TextField ();
+	var textfield3:TextField = new TextField ();
+	var tooltip1:TextField = new TextField ();
+	var tooltip2:TextField = new TextField ();
+	var tooltip3:TextField = new TextField ();
+	var tooltip4:TextField = new TextField ();
+	
 	var curstage = Lib.current.stage;
 	
 	var objectives = new Bitmap(Assets.getBitmapData("img/Objectives.png"));
@@ -60,10 +68,10 @@ class UI extends Sprite
 		progressie.y = 10;
 		addChild(progressie);
 		
-		var option = new Bitmap(Assets.getBitmapData("img/optionbutton.png"));
+		var option = new Button ("", "img/optionbutton.png", "img/optionbutton_alt.png");
 		option.width = option.width / 1.5;
 		option.height = option.height / 1.5;
-		option.x = (UIx - option.width - 25);
+		option.x = (UIx - option.width + 25);
 		option.y = 25;
 		addChild(option);
 		option.addEventListener(MouseEvent.CLICK, backMenu);
@@ -72,7 +80,6 @@ class UI extends Sprite
 		hint.height = hint.height / 2;
 		hint.x = ( UIx - hint.width - 10);
 		hint.y = ( UIy - hint.height - 10);
-		//hint.visible = false;
 		addChild(hint);
 		hint.addEventListener(MouseEvent.CLICK, giveHint);
 		
@@ -80,7 +87,45 @@ class UI extends Sprite
 		textfield.y = 25;
 		textfield.width = UIx / 2;
 		textfield.textColor = 0xFFFFFF;
-		textfield.wordWrap = true;
+		
+		textfield2.x = ( UIx / 2 ) - ( progressie.width / 2 ) + 15;
+		textfield2.y = 37;
+		textfield2.width = UIx / 2;
+		textfield2.textColor = 0x808080;
+		
+		textfield3.x = ( UIx / 2 ) - ( progressie.width / 2 ) + 15;
+		textfield3.y = 49;
+		textfield3.width = UIx / 2;
+		textfield3.textColor = 0x383838;
+		
+		tooltip1.x = 20;
+		tooltip1.y = 20;
+		tooltip1.width = UIx / 4;
+		tooltip1.textColor = 0xFFFFFF;
+		tooltip1.text = "Weetjes:";
+		
+		tooltip2.x = 20;
+		tooltip2.y = 32;
+		tooltip2.width = UIx / 4;
+		tooltip2.textColor = 0xFFFFFF;
+		tooltip2.text = "Gebruik 'WASD' om rond te lopen";
+		
+		tooltip3.x = 20;
+		tooltip3.y = 44;
+		tooltip3.width = UIx / 4;
+		tooltip3.textColor = 0xFFFFFF;
+		tooltip3.text = "Druk op 'E' om iets te activeren";
+		
+		tooltip4.x = 20;
+		tooltip4.y = 56;
+		tooltip4.width = UIx / 4;
+		tooltip4.textColor = 0xFFFFFF;
+		tooltip4.text = "Klik op de icoontjes voor uitleg ";
+		
+		addChild ( tooltip1 );
+		addChild ( tooltip2 );
+		addChild ( tooltip3 );
+		addChild ( tooltip4 );
 		
 		//progressUpdate(progressInt);
 		
@@ -251,40 +296,48 @@ class UI extends Sprite
 
 	function objective1click (event:MouseEvent)
 	{
-		notify ("Tito is ontsnapt! Hij is hier ergens naar binnen gerend... Probeer hem te vinden.");
+		notify ("OPDRACHT: Tito is ontsnapt! Hij is hier ergens naar binnen gerend... Probeer hem te vinden.");
 	}
 	
 	function objective2click (event:MouseEvent)
 	{
-		notify ("Karin zegt dat je het beter aan de archivist kan vragen, als je hem een folder kan brengen die die is verloren.");
+		notify ("OPDRACHT: Karin zegt dat je het beter aan de archivist kan vragen, als je hem een folder kan brengen die die is verloren.");
 	}
 	
 	function objective3click (event:MouseEvent)
 	{
-		notify ("Je hebt de folder gevonden! Breng hem naar de archivist toe.");
+		notify ("OPDRACHT: Je hebt de folder gevonden! Breng hem naar de archivist toe.");
 	}
 	
 	function objective4click (event:MouseEvent)
 	{
-		notify ("De archivist zegt dat de concierge het misschien weet in ruil voor een blikje fris.");
+		notify ("OPDRACHT: De archivist zegt dat de concierge het misschien weet in ruil voor een blikje fris.");
 	}
 	
 	function objective5click (event:MouseEvent)
 	{
-		notify ("Je hebt een blikje fris gevonden! Breng het naar de concierge toe.");
+		notify ("OPDRACHT: Je hebt een blikje fris gevonden! Breng het naar de concierge toe.");
 	}
 	
 	function objective6click (event:MouseEvent)
 	{
-		notify ("De concierge heeft Tito gezien! Hij verstopt zich in een van de planten!");
+		notify ("OPDRACHT: De concierge heeft Tito gezien! Hij verstopt zich in een van de planten!");
 	}
 	
 	public function notify (text:String)
 	{
 		removeChild ( textfield );
+		removeChild ( textfield2 );
+		removeChild ( textfield3 );
+		textfield3.text = textfield2.text;
+		textfield2.text = textfield.text;
 		textfield.text = text;
 		addChild ( textfield );
+		addChild ( textfield2 );
+		addChild ( textfield3 );
 	}
+	
+	
 	
 	function giveHint (e:MouseEvent)
 	{
@@ -296,13 +349,13 @@ class UI extends Sprite
 		
 		switch (hintid)
 		{
-			case 0: displaytext = "Probeer altijd met mensen te praten als je vast zit.";
-			case 1: displaytext = "De KJRW is altijd beschikbaar voor advies, ongeacht het onderwerp.";
-			case 2: displaytext = "Alle gekleurde rondjes op de kaart kan je activeren met 'E'.";
-			case 3: displaytext = "Als je moeite hebt met het vinden van de oplossing, loop rond en onderzoek het level.";
-			case 4: displaytext = "Veel kinderen die de KJRW helpen hebben vragen over hun ouders of school.";
-			case 5: displaytext = "De eerste missie van een level is meestal heel dichtbij.";
-			case 6: displaytext = "Klik op het actieve missie icoontje om je missie te bekijken.";
+			case 0: displaytext = "HINT: Probeer altijd met mensen te praten als je vast zit.";
+			case 1: displaytext = "HINT: De KJRW is altijd beschikbaar voor advies, ongeacht het onderwerp.";
+			case 2: displaytext = "HINT: Alle gekleurde rondjes op de kaart kan je activeren met 'E'.";
+			case 3: displaytext = "HINT: Als je moeite hebt met het vinden van de oplossing, loop rond en onderzoek het level.";
+			case 4: displaytext = "HINT: Veel kinderen die de KJRW helpen hebben vragen over hun ouders of school.";
+			case 5: displaytext = "HINT: De eerste missie van een level is meestal heel dichtbij.";
+			case 6: displaytext = "HINT: Klik op het actieve missie icoontje om je missie te bekijken.";
 		}
 		
 		notify (displaytext);

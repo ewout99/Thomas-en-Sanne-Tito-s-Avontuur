@@ -18,6 +18,7 @@ class Options extends Sprite
 	private var decreaseSound:Button = new Button ("- Sound", "img/middlebutton.png", "img/middlebuttonhover.png");
 	private var increaseMusic:Button = new Button ("+ Music", "img/middlebutton.png", "img/middlebuttonhover.png");
 	private var decreaseMusic:Button = new Button ("- Music", "img/middlebutton.png", "img/middlebuttonhover.png");
+	private var returnGame:Button = new Button ("Back to Game", "img/middlebutton.png", "img/middlebuttonhover.png");
 	// For some reason stage.*** won't work this was the solution
 	var X:Int = Lib.current.stage.stageWidth;
 	var Y:Int = Lib.current.stage.stageHeight;
@@ -65,6 +66,11 @@ class Options extends Sprite
 		returnButton.y = (Y * 3/ 4 - returnButton.height /2 );
 		addChild(returnButton);
 		returnButton.addEventListener(MouseEvent.CLICK, back);
+		
+		returnGame.x = (X / 2 - returnButton.width / 2 );
+		returnGame.y = (Y * 4 / 5 - returnButton.height / 2 );
+		//addChild(returnGame); IES BORKED, STARTS NEW GAME
+		returnGame.addEventListener(MouseEvent.CLICK, backgame);
 	}
 	
 	// Lets the buttons adjust the float in Main
@@ -86,6 +92,11 @@ class Options extends Sprite
 		{
 			Main.getInstance().sound.updateSoundVolume(0.2, "down");
 		}
+	}
+	
+	function backgame (e:MouseEvent)
+	{
+		Main.getInstance().switchScreen(Main.GAME_SCREEN);
 	}
 	
 	// Return to the main menu

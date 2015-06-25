@@ -77,9 +77,10 @@ class MainMenu extends Sprite
                 
                 
                 start.x = ( X / 2 - start.width / 2);
-                start.y = 250;
+                start.y = 330;
                 levelSelect.x = ( X / 2 - levelSelect.width / 2);
-                levelSelect.y = 330;
+                levelSelect.y = 3300;
+				levelSelect.visible = false;
                 options.x = (X / 2 - options.width / 2);
                 options.y = 410;
                 contact.x = (X / 2 - contact.width / 2);
