@@ -64,7 +64,7 @@ class Music extends Sprite
 	
 	public function stopMusic ()
 	{
-		#if html
+		#if html5
 		soundChannel.stop();
 		#elseif flash
 		soundChannel.stop ();
@@ -76,7 +76,11 @@ class Music extends Sprite
 	public function gameMusic ()
 	
 	{
-		#if html
+		#if html5
+		soundChannel = GameMusic.play();
+		soundChannel.soundTransform = new SoundTransform(musicVolume);
+		soundChannel.addEventListener(Event.SOUND_COMPLETE, gameMusicRepeat );
+		#elseif flash
 		soundChannel = GameMusic.play();
 		soundChannel.soundTransform = new SoundTransform(musicVolume);
 		soundChannel.addEventListener(Event.SOUND_COMPLETE, gameMusicRepeat );
@@ -87,7 +91,11 @@ class Music extends Sprite
 	
 	function gameMusicRepeat (event:Event)
 	{
-		#if html
+		#if html5
+		soundChannel = GameMusic.play();
+		soundChannel.soundTransform = new SoundTransform(musicVolume);
+		soundChannel.addEventListener(Event.SOUND_COMPLETE, gameMusicRepeat );
+		#elseif flash
 		soundChannel = GameMusic.play();
 		soundChannel.soundTransform = new SoundTransform(musicVolume);
 		soundChannel.addEventListener(Event.SOUND_COMPLETE, gameMusicRepeat );
@@ -99,8 +107,12 @@ class Music extends Sprite
 	public function mainMenuMusic ()
 	
 	{
-		#if html
+		#if html5
 		trace("playing music");
+		soundChannel = Menu.play();
+		soundChannel.soundTransform = new SoundTransform(musicVolume);
+		soundChannel.addEventListener(Event.SOUND_COMPLETE, mainMenuMusicRepeat );
+		#elseif flash
 		soundChannel = Menu.play();
 		soundChannel.soundTransform = new SoundTransform(musicVolume);
 		soundChannel.addEventListener(Event.SOUND_COMPLETE, mainMenuMusicRepeat );
@@ -111,7 +123,11 @@ class Music extends Sprite
 	
 	function mainMenuMusicRepeat (event:Event)
 	{
-		#if html
+		#if html5
+		soundChannel = Menu.play();
+		soundChannel.soundTransform = new SoundTransform(musicVolume);
+		soundChannel.addEventListener(Event.SOUND_COMPLETE, gameMusicRepeat );
+		#elseif flash
 		soundChannel = Menu.play();
 		soundChannel.soundTransform = new SoundTransform(musicVolume);
 		soundChannel.addEventListener(Event.SOUND_COMPLETE, gameMusicRepeat );
