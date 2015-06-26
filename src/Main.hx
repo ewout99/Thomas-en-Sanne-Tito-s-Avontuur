@@ -52,7 +52,7 @@ class Main extends Sprite
 		instance = this;
 		switchScreen (Main.MAIN_MENU_SCREEN);
 		addChild (sound);
-		addChild (music);
+		// addChild (music);
 	}
 	
 	/**

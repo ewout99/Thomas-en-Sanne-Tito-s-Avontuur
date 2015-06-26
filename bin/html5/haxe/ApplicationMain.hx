@@ -542,47 +542,27 @@ class ApplicationMain {
 		types.push (lime.Assets.AssetType.SOUND);
 		
 		
-		urls.push ("music/gamemusic.mp3");
+		urls.push ("music/gameMusic.mp3");
 		types.push (lime.Assets.AssetType.MUSIC);
 		
 		
-		urls.push ("music/gamemusic.ogg");
+		urls.push ("music/gameMusic.ogg");
 		types.push (lime.Assets.AssetType.MUSIC);
 		
 		
-		urls.push ("music/menumusic.mp3");
+		urls.push ("music/menuMusic.mp3");
 		types.push (lime.Assets.AssetType.MUSIC);
 		
 		
-		urls.push ("music/menumusic.ogg");
+		urls.push ("music/menuMusic.ogg");
 		types.push (lime.Assets.AssetType.SOUND);
 		
 		
-		urls.push ("music/Old/GameMusic.mp3");
+		urls.push ("music/winningMusic.mp3");
 		types.push (lime.Assets.AssetType.MUSIC);
 		
 		
-		urls.push ("music/Old/GameMusic.ogg");
-		types.push (lime.Assets.AssetType.SOUND);
-		
-		
-		urls.push ("music/Old/Menu.mp3");
-		types.push (lime.Assets.AssetType.MUSIC);
-		
-		
-		urls.push ("music/Old/Menu.ogg");
-		types.push (lime.Assets.AssetType.SOUND);
-		
-		
-		urls.push ("music/Old/Winning.mp3");
-		types.push (lime.Assets.AssetType.MUSIC);
-		
-		
-		urls.push ("music/winningmusic.mp3");
-		types.push (lime.Assets.AssetType.MUSIC);
-		
-		
-		urls.push ("music/winningmusic.ogg");
+		urls.push ("music/winningMusic.ogg");
 		types.push (lime.Assets.AssetType.MUSIC);
 		
 		

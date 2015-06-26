@@ -19,13 +19,13 @@ class Music extends Sprite
 {
 	// Importing all songs
 	#if flash
-	var GameMusic = Assets.getSound("music/gamemusic.mp3");
-	var Menu = Assets.getSound("music/menumusic.mp3");
-	var Winning = Assets.getSound("music/winningmusic.mp3");
-	#elseif html
-	var GameMusic = Assets.getSound("music/gamemusic.ogg");
-	var Menu = Assets.getSound("music/menumusic.ogg");
-	var Winning = Assets.getSound("music/winningmusic.ogg");
+	public var gameMusic1 = Assets.getSound("music/gameMusic.mp3");
+	public var menuMusic1 = Assets.getSound("music/menuMusic.mp3");
+	public var winning1 = Assets.getSound("music/winningMusic.mp3");
+	#elseif html5
+	public var gameMusic1 = Assets.getSound("music/gameMusic.ogg");
+	public var menuMusic1 = Assets.getSound("music/menuMusic.ogg");
+	public var Winning1 = Assets.getSound("music/winningMusic.ogg");
 	#end
 
 	// variables for music volume and a soundchannel
@@ -69,11 +69,11 @@ class Music extends Sprite
 	public function gameMusic ()
 	{
 		#if html5
-		soundChannel = GameMusic.play();
+		soundChannel = gameMusic1.play();
 		soundChannel.soundTransform = new SoundTransform(musicVolume);
 		soundChannel.addEventListener(Event.SOUND_COMPLETE, gameMusicRepeat );
 		#elseif flash
-		soundChannel = GameMusic.play();
+		soundChannel = gameMusic1.play();
 		soundChannel.soundTransform = new SoundTransform(musicVolume);
 		soundChannel.addEventListener(Event.SOUND_COMPLETE, gameMusicRepeat );
 		#end
@@ -84,39 +84,39 @@ class Music extends Sprite
 	function gameMusicRepeat (event:Event)
 	{
 		#if html5
-		soundChannel = GameMusic.play();
+		soundChannel = gameMusic1.play();
 		soundChannel.soundTransform = new SoundTransform(musicVolume);
 		soundChannel.addEventListener(Event.SOUND_COMPLETE, gameMusicRepeat );
 		#elseif flash
-		soundChannel = GameMusic.play();
+		soundChannel = gameMusic1.play();
 		soundChannel.soundTransform = new SoundTransform(musicVolume);
 		soundChannel.addEventListener(Event.SOUND_COMPLETE, gameMusicRepeat );
 		#end
 	}
 	
-	// starts the menu music
+	// starts the menuMusic music
 	public function mainMenuMusic ()
 	{
 		#if html5
-		soundChannel = Menu.play();
+		soundChannel = menuMusic1.play();
 		soundChannel.soundTransform = new SoundTransform(musicVolume);
 		soundChannel.addEventListener(Event.SOUND_COMPLETE, mainMenuMusicRepeat );
 		#elseif flash
-		soundChannel = Menu.play();
+		soundChannel = menuMusic1.play();
 		soundChannel.soundTransform = new SoundTransform(musicVolume);
 		soundChannel.addEventListener(Event.SOUND_COMPLETE, mainMenuMusicRepeat );
 		#end
 	}
 	
-	// repeats the menu music
+	// repeats the menuMusic music
 	function mainMenuMusicRepeat (event:Event)
 	{
 		#if html5
-		soundChannel = Menu.play();
+		soundChannel = menuMusic1.play();
 		soundChannel.soundTransform = new SoundTransform(musicVolume);
 		soundChannel.addEventListener(Event.SOUND_COMPLETE, gameMusicRepeat );
 		#elseif flash
-		soundChannel = Menu.play();
+		soundChannel = menuMusic1.play();
 		soundChannel.soundTransform = new SoundTransform(musicVolume);
 		soundChannel.addEventListener(Event.SOUND_COMPLETE, gameMusicRepeat );
 		#end

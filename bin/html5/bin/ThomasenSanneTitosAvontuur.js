@@ -280,27 +280,17 @@ ApplicationMain.create = function() {
 	types.push("MUSIC");
 	urls.push("audio/Papers.ogg");
 	types.push("SOUND");
-	urls.push("music/gamemusic.mp3");
+	urls.push("music/gameMusic.mp3");
 	types.push("MUSIC");
-	urls.push("music/gamemusic.ogg");
+	urls.push("music/gameMusic.ogg");
 	types.push("MUSIC");
-	urls.push("music/menumusic.mp3");
+	urls.push("music/menuMusic.mp3");
 	types.push("MUSIC");
-	urls.push("music/menumusic.ogg");
+	urls.push("music/menuMusic.ogg");
 	types.push("SOUND");
-	urls.push("music/Old/GameMusic.mp3");
+	urls.push("music/winningMusic.mp3");
 	types.push("MUSIC");
-	urls.push("music/Old/GameMusic.ogg");
-	types.push("SOUND");
-	urls.push("music/Old/Menu.mp3");
-	types.push("MUSIC");
-	urls.push("music/Old/Menu.ogg");
-	types.push("SOUND");
-	urls.push("music/Old/Winning.mp3");
-	types.push("MUSIC");
-	urls.push("music/winningmusic.mp3");
-	types.push("MUSIC");
-	urls.push("music/winningmusic.ogg");
+	urls.push("music/winningMusic.ogg");
 	types.push("MUSIC");
 	if(ApplicationMain.config.assetsPrefix != null) {
 		var _g1 = 0;
@@ -1368,7 +1358,6 @@ Main.prototype = $extend(openfl.display.Sprite.prototype,{
 		Main.instance = this;
 		this.switchScreen("main menu screen");
 		this.addChild(this.sound);
-		this.addChild(this.music);
 	}
 	,switchScreen: function(toScreen) {
 		if(this.currentScreen != null) {
@@ -2028,37 +2017,22 @@ var DefaultAssetLibrary = function() {
 	id = "audio/Papers.ogg";
 	this.path.set(id,id);
 	this.type.set(id,"SOUND");
-	id = "music/gamemusic.mp3";
+	id = "music/gameMusic.mp3";
 	this.path.set(id,id);
 	this.type.set(id,"MUSIC");
-	id = "music/gamemusic.ogg";
+	id = "music/gameMusic.ogg";
 	this.path.set(id,id);
 	this.type.set(id,"MUSIC");
-	id = "music/menumusic.mp3";
+	id = "music/menuMusic.mp3";
 	this.path.set(id,id);
 	this.type.set(id,"MUSIC");
-	id = "music/menumusic.ogg";
+	id = "music/menuMusic.ogg";
 	this.path.set(id,id);
 	this.type.set(id,"SOUND");
-	id = "music/Old/GameMusic.mp3";
+	id = "music/winningMusic.mp3";
 	this.path.set(id,id);
 	this.type.set(id,"MUSIC");
-	id = "music/Old/GameMusic.ogg";
-	this.path.set(id,id);
-	this.type.set(id,"SOUND");
-	id = "music/Old/Menu.mp3";
-	this.path.set(id,id);
-	this.type.set(id,"MUSIC");
-	id = "music/Old/Menu.ogg";
-	this.path.set(id,id);
-	this.type.set(id,"SOUND");
-	id = "music/Old/Winning.mp3";
-	this.path.set(id,id);
-	this.type.set(id,"MUSIC");
-	id = "music/winningmusic.mp3";
-	this.path.set(id,id);
-	this.type.set(id,"MUSIC");
-	id = "music/winningmusic.ogg";
+	id = "music/winningMusic.ogg";
 	this.path.set(id,id);
 	this.type.set(id,"MUSIC");
 	var assetsPrefix = ApplicationMain.config.assetsPrefix;
@@ -2460,30 +2434,35 @@ Game.prototype = $extend(openfl.display.Sprite.prototype,{
 				this.miss1 = true;
 				this.ui.modobj1("end");
 				this.ui.modobj2("start");
+				this.ui.notify("OPDRACHT: Karin zegt dat je het beter aan de archivaris kan vragen, als je hem een folder kan brengen die hij is verloren.");
 			}
 		} else if(this.miss2 == false) {
 			if(itemid == 5) {
 				this.miss2 = true;
 				this.ui.modobj2("end");
 				this.ui.modobj3("start");
+				this.ui.notify("OPDRACHT: Je hebt de folder gevonden! Breng hem naar de archivaris toe.");
 			}
 		} else if(this.miss3 == false) {
 			if(itemid == 6) {
 				this.miss3 = true;
 				this.ui.modobj3("end");
 				this.ui.modobj4("start");
+				this.ui.notify("OPDRACHT: De archivist zegt dat de concierge het misschien weet in ruil voor een blikje fris.");
 			}
 		} else if(this.miss4 == false) {
 			if(itemid == 7) {
 				this.miss4 = true;
 				this.ui.modobj4("end");
 				this.ui.modobj5("start");
+				this.ui.notify("OPDRACHT: Je hebt een blikje fris gevonden! Breng het naar de concierge toe.");
 			}
 		} else if(this.miss5 == false) {
 			if(itemid == 8) {
 				this.miss5 = true;
 				this.ui.modobj5("end");
 				this.ui.modobj6("start");
+				this.ui.notify("OPDRACHT: De concierge heeft Tito gezien! Hij verstopt zich in een van de planten!");
 			}
 		} else if(this.miss6 == false) {
 			if(itemid == 9) Main.getInstance().switchScreen("victory screen");
@@ -2705,9 +2684,9 @@ IMap.prototype = {
 };
 Math.__name__ = ["Math"];
 var Music = function() {
-	this.Winning = openfl.Assets.getSound("music/winningmusic.ogg");
-	this.Menu = openfl.Assets.getSound("music/menumusic.ogg");
-	this.GameMusic = openfl.Assets.getSound("music/gamemusic.ogg");
+	this.Winning1 = openfl.Assets.getSound("music/winningmusic.ogg");
+	this.menuMusic1 = openfl.Assets.getSound("music/menuMusicmusic.ogg");
+	this.gameMusic1 = openfl.Assets.getSound("music/gameMusic.ogg");
 	openfl.display.Sprite.call(this);
 	this.musicVolume = 1;
 };
@@ -2731,22 +2710,22 @@ Music.prototype = $extend(openfl.display.Sprite.prototype,{
 		this.soundChannel.stop();
 	}
 	,gameMusic: function() {
-		this.soundChannel = this.GameMusic.play();
+		this.soundChannel = this.gameMusic1.play();
 		this.soundChannel.set_soundTransform(new openfl.media.SoundTransform(this.musicVolume));
 		this.soundChannel.addEventListener(openfl.events.Event.SOUND_COMPLETE,$bind(this,this.gameMusicRepeat));
 	}
 	,gameMusicRepeat: function(event) {
-		this.soundChannel = this.GameMusic.play();
+		this.soundChannel = this.gameMusic1.play();
 		this.soundChannel.set_soundTransform(new openfl.media.SoundTransform(this.musicVolume));
 		this.soundChannel.addEventListener(openfl.events.Event.SOUND_COMPLETE,$bind(this,this.gameMusicRepeat));
 	}
 	,mainMenuMusic: function() {
-		this.soundChannel = this.Menu.play();
+		this.soundChannel = this.menuMusic1.play();
 		this.soundChannel.set_soundTransform(new openfl.media.SoundTransform(this.musicVolume));
 		this.soundChannel.addEventListener(openfl.events.Event.SOUND_COMPLETE,$bind(this,this.mainMenuMusicRepeat));
 	}
 	,mainMenuMusicRepeat: function(event) {
-		this.soundChannel = this.Menu.play();
+		this.soundChannel = this.menuMusic1.play();
 		this.soundChannel.set_soundTransform(new openfl.media.SoundTransform(this.musicVolume));
 		this.soundChannel.addEventListener(openfl.events.Event.SOUND_COMPLETE,$bind(this,this.gameMusicRepeat));
 	}
@@ -2831,19 +2810,39 @@ Objects.__name__ = ["Objects"];
 Objects.__super__ = openfl.display.Sprite;
 Objects.prototype = $extend(openfl.display.Sprite.prototype,{
 	namemarker: function() {
-		if(this.itemtype == "FURNITURE") this.markerid = 1; else if(this.itemtype == "NPC") this.markerid = 2; else if(this.itemtype == "PLANT") this.markerid = 3; else if(this.itemtype == "ITEM") this.markerid = 4; else if(this.itemtype == "OBJECTIVE") this.markerid = 5; else this.markerid = 0;
+		var _g = this.itemtype;
+		switch(_g) {
+		case "FURNITURE":
+			this.markerid = 1;
+			break;
+		case "NPC":
+			this.markerid = 2;
+			break;
+		case "PLANT":
+			this.markerid = 3;
+			break;
+		case "ITEM":
+			this.markerid = 4;
+			break;
+		case "OBJECTIVE":
+			this.markerid = 5;
+			break;
+		case "NONE":
+			this.markerid = 0;
+			break;
+		}
 	}
 	,__class__: Objects
 });
 var Options = function() {
 	this.Y = openfl.Lib.current.stage.stageHeight;
 	this.X = openfl.Lib.current.stage.stageWidth;
-	this.returnGame = new Button("Back to Game","img/middlebutton.png","img/middlebuttonhover.png");
-	this.decreaseMusic = new Button("- Music","img/middlebutton.png","img/middlebuttonhover.png");
-	this.increaseMusic = new Button("+ Music","img/middlebutton.png","img/middlebuttonhover.png");
-	this.decreaseSound = new Button("- Sound","img/middlebutton.png","img/middlebuttonhover.png");
-	this.increaseSound = new Button("+ Sound","img/middlebutton.png","img/middlebuttonhover.png");
-	this.returnButton = new Button("Main Menu","img/middlebutton.png","img/middlebuttonhover.png");
+	this.returnGame = new Button("Terug naar Spel","img/middlebutton.png","img/middlebuttonhover.png");
+	this.decreaseMusic = new Button("- Muziek","img/middlebutton.png","img/middlebuttonhover.png");
+	this.increaseMusic = new Button("+ Muziek","img/middlebutton.png","img/middlebuttonhover.png");
+	this.decreaseSound = new Button("- Geluid","img/middlebutton.png","img/middlebuttonhover.png");
+	this.increaseSound = new Button("+ Geluid","img/middlebutton.png","img/middlebuttonhover.png");
+	this.returnButton = new Button("Hoofdmenu","img/middlebutton.png","img/middlebuttonhover.png");
 	openfl.display.Sprite.call(this);
 	this.drawbackground();
 	this.drawButton();
@@ -3206,6 +3205,7 @@ var UI = function() {
 	this.modobj4("end");
 	this.modobj5("end");
 	this.modobj6("end");
+	this.objective1start();
 };
 $hxClasses["UI"] = UI;
 UI.__name__ = ["UI"];
@@ -3282,7 +3282,7 @@ UI.prototype = $extend(openfl.display.Sprite.prototype,{
 			this.objective1.set_x(50);
 			this.objective1.set_y(this.UIy / 2 - this.objectives.get_height() / 2 + 45);
 			this.objective1.addEventListener(openfl.events.MouseEvent.CLICK,$bind(this,this.objective1click));
-			haxe.Log.trace("objective 1 listener added",{ fileName : "UI.hx", lineNumber : 152, className : "UI", methodName : "modobj1"});
+			haxe.Log.trace("objective 1 listener added",{ fileName : "UI.hx", lineNumber : 154, className : "UI", methodName : "modobj1"});
 			this.addChild(this.objective1);
 		} else if(change == "end") {
 			if(this.objective1 != null) this.removeChild(this.objective1);
@@ -3400,14 +3400,17 @@ UI.prototype = $extend(openfl.display.Sprite.prototype,{
 			this.objective6.removeEventListener(openfl.events.MouseEvent.CLICK,$bind(this,this.objective6click));
 		}
 	}
+	,objective1start: function() {
+		this.notify("OPDRACHT: Tito is ontsnapt! Hij is hier ergens naar binnen gerend... Probeer hem te vinden.");
+	}
 	,objective1click: function(event) {
 		this.notify("OPDRACHT: Tito is ontsnapt! Hij is hier ergens naar binnen gerend... Probeer hem te vinden.");
 	}
 	,objective2click: function(event) {
-		this.notify("OPDRACHT: Karin zegt dat je het beter aan de archivist kan vragen, als je hem een folder kan brengen die die is verloren.");
+		this.notify("OPDRACHT: Karin zegt dat je het beter aan de archivaris kan vragen, als je hem een folder kan brengen die hij is verloren.");
 	}
 	,objective3click: function(event) {
-		this.notify("OPDRACHT: Je hebt de folder gevonden! Breng hem naar de archivist toe.");
+		this.notify("OPDRACHT: Je hebt de folder gevonden! Breng hem naar de archivaris toe.");
 	}
 	,objective4click: function(event) {
 		this.notify("OPDRACHT: De archivist zegt dat de concierge het misschien weet in ruil voor een blikje fris.");
@@ -3435,7 +3438,7 @@ UI.prototype = $extend(openfl.display.Sprite.prototype,{
 	,giveHint: function(e) {
 		var displaytext = "Er staat hier geen text";
 		var hintid = Std["int"](Std.random(6));
-		haxe.Log.trace("hintid: " + hintid,{ fileName : "UI.hx", lineNumber : 406, className : "UI", methodName : "giveHint"});
+		haxe.Log.trace("hintid: " + hintid,{ fileName : "UI.hx", lineNumber : 413, className : "UI", methodName : "giveHint"});
 		switch(hintid) {
 		case 0:
 			displaytext = "HINT: Probeer altijd met mensen te praten als je vast zit.";

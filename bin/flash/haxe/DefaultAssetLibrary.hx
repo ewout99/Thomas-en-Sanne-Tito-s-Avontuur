@@ -299,28 +299,18 @@ class DefaultAssetLibrary extends AssetLibrary {
 		type.set ("audio/Papers.mp3", AssetType.MUSIC);
 		className.set ("audio/Papers.ogg", __ASSET__audio_papers_ogg);
 		type.set ("audio/Papers.ogg", AssetType.SOUND);
-		className.set ("music/gamemusic.mp3", __ASSET__music_gamemusic_mp3);
-		type.set ("music/gamemusic.mp3", AssetType.MUSIC);
-		className.set ("music/gamemusic.ogg", __ASSET__music_gamemusic_ogg);
-		type.set ("music/gamemusic.ogg", AssetType.MUSIC);
-		className.set ("music/menumusic.mp3", __ASSET__music_menumusic_mp3);
-		type.set ("music/menumusic.mp3", AssetType.MUSIC);
-		className.set ("music/menumusic.ogg", __ASSET__music_menumusic_ogg);
-		type.set ("music/menumusic.ogg", AssetType.SOUND);
-		className.set ("music/Old/GameMusic.mp3", __ASSET__music_old_gamemusic_mp3);
-		type.set ("music/Old/GameMusic.mp3", AssetType.MUSIC);
-		className.set ("music/Old/GameMusic.ogg", __ASSET__music_old_gamemusic_ogg);
-		type.set ("music/Old/GameMusic.ogg", AssetType.SOUND);
-		className.set ("music/Old/Menu.mp3", __ASSET__music_old_menu_mp3);
-		type.set ("music/Old/Menu.mp3", AssetType.MUSIC);
-		className.set ("music/Old/Menu.ogg", __ASSET__music_old_menu_ogg);
-		type.set ("music/Old/Menu.ogg", AssetType.SOUND);
-		className.set ("music/Old/Winning.mp3", __ASSET__music_old_winning_mp3);
-		type.set ("music/Old/Winning.mp3", AssetType.MUSIC);
-		className.set ("music/winningmusic.mp3", __ASSET__music_winningmusic_mp3);
-		type.set ("music/winningmusic.mp3", AssetType.MUSIC);
-		className.set ("music/winningmusic.ogg", __ASSET__music_winningmusic_ogg);
-		type.set ("music/winningmusic.ogg", AssetType.MUSIC);
+		className.set ("music/gameMusic.mp3", __ASSET__music_gamemusic_mp3);
+		type.set ("music/gameMusic.mp3", AssetType.MUSIC);
+		className.set ("music/gameMusic.ogg", __ASSET__music_gamemusic_ogg);
+		type.set ("music/gameMusic.ogg", AssetType.MUSIC);
+		className.set ("music/menuMusic.mp3", __ASSET__music_menumusic_mp3);
+		type.set ("music/menuMusic.mp3", AssetType.MUSIC);
+		className.set ("music/menuMusic.ogg", __ASSET__music_menumusic_ogg);
+		type.set ("music/menuMusic.ogg", AssetType.SOUND);
+		className.set ("music/winningMusic.mp3", __ASSET__music_winningmusic_mp3);
+		type.set ("music/winningMusic.mp3", AssetType.MUSIC);
+		className.set ("music/winningMusic.ogg", __ASSET__music_winningmusic_ogg);
+		type.set ("music/winningMusic.ogg", AssetType.MUSIC);
 		
 		
 		#elseif html5
@@ -834,47 +824,27 @@ class DefaultAssetLibrary extends AssetLibrary {
 		path.set (id, id);
 		
 		type.set (id, AssetType.SOUND);
-		id = "music/gamemusic.mp3";
+		id = "music/gameMusic.mp3";
 		path.set (id, id);
 		
 		type.set (id, AssetType.MUSIC);
-		id = "music/gamemusic.ogg";
+		id = "music/gameMusic.ogg";
 		path.set (id, id);
 		
 		type.set (id, AssetType.MUSIC);
-		id = "music/menumusic.mp3";
+		id = "music/menuMusic.mp3";
 		path.set (id, id);
 		
 		type.set (id, AssetType.MUSIC);
-		id = "music/menumusic.ogg";
+		id = "music/menuMusic.ogg";
 		path.set (id, id);
 		
 		type.set (id, AssetType.SOUND);
-		id = "music/Old/GameMusic.mp3";
+		id = "music/winningMusic.mp3";
 		path.set (id, id);
 		
 		type.set (id, AssetType.MUSIC);
-		id = "music/Old/GameMusic.ogg";
-		path.set (id, id);
-		
-		type.set (id, AssetType.SOUND);
-		id = "music/Old/Menu.mp3";
-		path.set (id, id);
-		
-		type.set (id, AssetType.MUSIC);
-		id = "music/Old/Menu.ogg";
-		path.set (id, id);
-		
-		type.set (id, AssetType.SOUND);
-		id = "music/Old/Winning.mp3";
-		path.set (id, id);
-		
-		type.set (id, AssetType.MUSIC);
-		id = "music/winningmusic.mp3";
-		path.set (id, id);
-		
-		type.set (id, AssetType.MUSIC);
-		id = "music/winningmusic.ogg";
+		id = "music/winningMusic.ogg";
 		path.set (id, id);
 		
 		type.set (id, AssetType.MUSIC);
@@ -890,11 +860,6 @@ class DefaultAssetLibrary extends AssetLibrary {
 		#else
 		
 		#if openfl
-		
-		
-		
-		
-		
 		
 		
 		
@@ -1417,38 +1382,23 @@ class DefaultAssetLibrary extends AssetLibrary {
 		className.set ("audio/Papers.ogg", __ASSET__audio_papers_ogg);
 		type.set ("audio/Papers.ogg", AssetType.SOUND);
 		
-		className.set ("music/gamemusic.mp3", __ASSET__music_gamemusic_mp3);
-		type.set ("music/gamemusic.mp3", AssetType.MUSIC);
+		className.set ("music/gameMusic.mp3", __ASSET__music_gamemusic_mp3);
+		type.set ("music/gameMusic.mp3", AssetType.MUSIC);
 		
-		className.set ("music/gamemusic.ogg", __ASSET__music_gamemusic_ogg);
-		type.set ("music/gamemusic.ogg", AssetType.MUSIC);
+		className.set ("music/gameMusic.ogg", __ASSET__music_gamemusic_ogg);
+		type.set ("music/gameMusic.ogg", AssetType.MUSIC);
 		
-		className.set ("music/menumusic.mp3", __ASSET__music_menumusic_mp3);
-		type.set ("music/menumusic.mp3", AssetType.MUSIC);
+		className.set ("music/menuMusic.mp3", __ASSET__music_menumusic_mp3);
+		type.set ("music/menuMusic.mp3", AssetType.MUSIC);
 		
-		className.set ("music/menumusic.ogg", __ASSET__music_menumusic_ogg);
-		type.set ("music/menumusic.ogg", AssetType.SOUND);
+		className.set ("music/menuMusic.ogg", __ASSET__music_menumusic_ogg);
+		type.set ("music/menuMusic.ogg", AssetType.SOUND);
 		
-		className.set ("music/Old/GameMusic.mp3", __ASSET__music_old_gamemusic_mp3);
-		type.set ("music/Old/GameMusic.mp3", AssetType.MUSIC);
+		className.set ("music/winningMusic.mp3", __ASSET__music_winningmusic_mp3);
+		type.set ("music/winningMusic.mp3", AssetType.MUSIC);
 		
-		className.set ("music/Old/GameMusic.ogg", __ASSET__music_old_gamemusic_ogg);
-		type.set ("music/Old/GameMusic.ogg", AssetType.SOUND);
-		
-		className.set ("music/Old/Menu.mp3", __ASSET__music_old_menu_mp3);
-		type.set ("music/Old/Menu.mp3", AssetType.MUSIC);
-		
-		className.set ("music/Old/Menu.ogg", __ASSET__music_old_menu_ogg);
-		type.set ("music/Old/Menu.ogg", AssetType.SOUND);
-		
-		className.set ("music/Old/Winning.mp3", __ASSET__music_old_winning_mp3);
-		type.set ("music/Old/Winning.mp3", AssetType.MUSIC);
-		
-		className.set ("music/winningmusic.mp3", __ASSET__music_winningmusic_mp3);
-		type.set ("music/winningmusic.mp3", AssetType.MUSIC);
-		
-		className.set ("music/winningmusic.ogg", __ASSET__music_winningmusic_ogg);
-		type.set ("music/winningmusic.ogg", AssetType.MUSIC);
+		className.set ("music/winningMusic.ogg", __ASSET__music_winningmusic_ogg);
+		type.set ("music/winningMusic.ogg", AssetType.MUSIC);
 		
 		
 		if (useManifest) {
@@ -2181,21 +2131,11 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:keep @:bind #if display private #end class __ASSET__music_gamemusic_ogg extends flash.media.Sound { }
 @:keep @:bind #if display private #end class __ASSET__music_menumusic_mp3 extends flash.media.Sound { }
 @:keep @:bind #if display private #end class __ASSET__music_menumusic_ogg extends flash.media.Sound { }
-@:keep @:bind #if display private #end class __ASSET__music_old_gamemusic_mp3 extends flash.media.Sound { }
-@:keep @:bind #if display private #end class __ASSET__music_old_gamemusic_ogg extends flash.media.Sound { }
-@:keep @:bind #if display private #end class __ASSET__music_old_menu_mp3 extends flash.media.Sound { }
-@:keep @:bind #if display private #end class __ASSET__music_old_menu_ogg extends flash.media.Sound { }
-@:keep @:bind #if display private #end class __ASSET__music_old_winning_mp3 extends flash.media.Sound { }
 @:keep @:bind #if display private #end class __ASSET__music_winningmusic_mp3 extends flash.media.Sound { }
 @:keep @:bind #if display private #end class __ASSET__music_winningmusic_ogg extends flash.media.Sound { }
 
 
 #elseif html5
-
-
-
-
-
 
 
 
@@ -2466,17 +2406,12 @@ class DefaultAssetLibrary extends AssetLibrary {
 @:file("assets/audio/Opendrawer.ogg") #if display private #end class __ASSET__audio_opendrawer_ogg extends lime.utils.ByteArray {}
 @:file("assets/audio/Papers.mp3") #if display private #end class __ASSET__audio_papers_mp3 extends lime.utils.ByteArray {}
 @:file("assets/audio/Papers.ogg") #if display private #end class __ASSET__audio_papers_ogg extends lime.utils.ByteArray {}
-@:file("assets/music/gamemusic.mp3") #if display private #end class __ASSET__music_gamemusic_mp3 extends lime.utils.ByteArray {}
-@:file("assets/music/gamemusic.ogg") #if display private #end class __ASSET__music_gamemusic_ogg extends lime.utils.ByteArray {}
-@:file("assets/music/menumusic.mp3") #if display private #end class __ASSET__music_menumusic_mp3 extends lime.utils.ByteArray {}
-@:file("assets/music/menumusic.ogg") #if display private #end class __ASSET__music_menumusic_ogg extends lime.utils.ByteArray {}
-@:file("assets/music/Old/GameMusic.mp3") #if display private #end class __ASSET__music_old_gamemusic_mp3 extends lime.utils.ByteArray {}
-@:file("assets/music/Old/GameMusic.ogg") #if display private #end class __ASSET__music_old_gamemusic_ogg extends lime.utils.ByteArray {}
-@:file("assets/music/Old/Menu.mp3") #if display private #end class __ASSET__music_old_menu_mp3 extends lime.utils.ByteArray {}
-@:file("assets/music/Old/Menu.ogg") #if display private #end class __ASSET__music_old_menu_ogg extends lime.utils.ByteArray {}
-@:file("assets/music/Old/Winning.mp3") #if display private #end class __ASSET__music_old_winning_mp3 extends lime.utils.ByteArray {}
-@:file("assets/music/winningmusic.mp3") #if display private #end class __ASSET__music_winningmusic_mp3 extends lime.utils.ByteArray {}
-@:file("assets/music/winningmusic.ogg") #if display private #end class __ASSET__music_winningmusic_ogg extends lime.utils.ByteArray {}
+@:file("assets/music/gameMusic.mp3") #if display private #end class __ASSET__music_gamemusic_mp3 extends lime.utils.ByteArray {}
+@:file("assets/music/gameMusic.ogg") #if display private #end class __ASSET__music_gamemusic_ogg extends lime.utils.ByteArray {}
+@:file("assets/music/menuMusic.mp3") #if display private #end class __ASSET__music_menumusic_mp3 extends lime.utils.ByteArray {}
+@:file("assets/music/menuMusic.ogg") #if display private #end class __ASSET__music_menumusic_ogg extends lime.utils.ByteArray {}
+@:file("assets/music/winningMusic.mp3") #if display private #end class __ASSET__music_winningmusic_mp3 extends lime.utils.ByteArray {}
+@:file("assets/music/winningMusic.ogg") #if display private #end class __ASSET__music_winningmusic_ogg extends lime.utils.ByteArray {}
 
 
 
