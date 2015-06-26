@@ -51,6 +51,8 @@ class UI extends Sprite
 		modobj4 ("end");
 		modobj5 ("end");
 		modobj6 ("end");
+		
+		objective1start ();
 	}
 	
 	private function drawUI ()
@@ -294,6 +296,11 @@ class UI extends Sprite
 		}
 	}
 
+	function objective1start ()
+	{
+		notify ("OPDRACHT: Tito is ontsnapt! Hij is hier ergens naar binnen gerend... Probeer hem te vinden.");
+	}
+	
 	function objective1click (event:MouseEvent)
 	{
 		notify ("OPDRACHT: Tito is ontsnapt! Hij is hier ergens naar binnen gerend... Probeer hem te vinden.");
@@ -301,12 +308,12 @@ class UI extends Sprite
 	
 	function objective2click (event:MouseEvent)
 	{
-		notify ("OPDRACHT: Karin zegt dat je het beter aan de archivist kan vragen, als je hem een folder kan brengen die die is verloren.");
+		notify ("OPDRACHT: Karin zegt dat je het beter aan de archivaris kan vragen, als je hem een folder kan brengen die hij is verloren.");
 	}
 	
 	function objective3click (event:MouseEvent)
 	{
-		notify ("OPDRACHT: Je hebt de folder gevonden! Breng hem naar de archivist toe.");
+		notify ("OPDRACHT: Je hebt de folder gevonden! Breng hem naar de archivaris toe.");
 	}
 	
 	function objective4click (event:MouseEvent)

@@ -11,11 +11,13 @@ import openfl.Assets;
  */
 class Objects extends Sprite
 {
+	//Initializes the variables with same basic values
 	public var itemid:Int = 0;
 	public var itemtype:String = "NONE";
 	public var iteminteracttext:String = "Er is hier weinig te vinden...";
 	var markerid:Int = 0;
 
+	//Sets up the object with an marker to indicate its usability
 	public function new(id:Int, type:String, text:String) 
 	{
 		super ();
@@ -28,6 +30,7 @@ class Objects extends Sprite
 		
 		if ( itemid != 0 )
 		{
+			//loads image with markerid provided below
 			var marker:Bitmap = new Bitmap (Assets.getBitmapData("img/marker_" + markerid + ".png"));
 			
 			marker.width = 25;
@@ -39,36 +42,17 @@ class Objects extends Sprite
 		}
 	}
 	
+	//Changes the easily addable item type string into a usable id for the image asset loader.
 	function namemarker ()
 	{
-		if (itemtype == "FURNITURE")
+		switch ( itemtype )
 		{
-			markerid = 1;
-		}
-		
-		else if (itemtype == "NPC")
-		{
-			markerid = 2;
-		}
-		
-		else if (itemtype == "PLANT")
-		{
-			markerid = 3;
-		}
-		
-		else if (itemtype == "ITEM")
-		{
-			markerid = 4;
-		}
-		
-		else if (itemtype == "OBJECTIVE")
-		{
-			markerid = 5;
-		}
-		
-		else
-		{
-			markerid = 0;
+			case "FURNITURE" : markerid = 1;
+			case "NPC" : markerid = 2;
+			case "PLANT" : markerid = 3;
+			case "ITEM" : markerid = 4;
+			case "OBJECTIVE" : markerid = 5;
+			case "NONE" : markerid = 0;
 		}
 	}
 }

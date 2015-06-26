@@ -13,12 +13,12 @@ import openfl.Assets;
 class Options extends Sprite
 {
 	// Button variables
-	private var returnButton:Button = new Button ("Main Menu", "img/middlebutton.png", "img/middlebuttonhover.png");
-	private var increaseSound:Button = new Button ("+ Sound", "img/middlebutton.png", "img/middlebuttonhover.png");
-	private var decreaseSound:Button = new Button ("- Sound", "img/middlebutton.png", "img/middlebuttonhover.png");
-	private var increaseMusic:Button = new Button ("+ Music", "img/middlebutton.png", "img/middlebuttonhover.png");
-	private var decreaseMusic:Button = new Button ("- Music", "img/middlebutton.png", "img/middlebuttonhover.png");
-	private var returnGame:Button = new Button ("Back to Game", "img/middlebutton.png", "img/middlebuttonhover.png");
+	private var returnButton:Button = new Button ("Hoofdmenu", "img/middlebutton.png", "img/middlebuttonhover.png");
+	private var increaseSound:Button = new Button ("+ Geluid", "img/middlebutton.png", "img/middlebuttonhover.png");
+	private var decreaseSound:Button = new Button ("- Geluid", "img/middlebutton.png", "img/middlebuttonhover.png");
+	private var increaseMusic:Button = new Button ("+ Muziek", "img/middlebutton.png", "img/middlebuttonhover.png");
+	private var decreaseMusic:Button = new Button ("- Muziek", "img/middlebutton.png", "img/middlebuttonhover.png");
+	private var returnGame:Button = new Button ("Terug naar Spel", "img/middlebutton.png", "img/middlebuttonhover.png");
 	// For some reason stage.*** won't work this was the solution
 	var X:Int = Lib.current.stage.stageWidth;
 	var Y:Int = Lib.current.stage.stageHeight;

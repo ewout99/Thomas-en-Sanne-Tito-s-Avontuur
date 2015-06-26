@@ -25,7 +25,7 @@ class Music extends Sprite
 	var GameMusic = Assets.getSound("music/gamemusic.mp3");
 	var Menu = Assets.getSound("music/menumusic.mp3");
 	var Winning = Assets.getSound("music/winningmusic.mp3");
-	#elseif html5
+	#elseif html
 	var GameMusic = Assets.getSound("music/gamemusic.ogg");
 	var Menu = Assets.getSound("music/menumusic.ogg");
 	var Winning = Assets.getSound("music/winningmusic.ogg");

@@ -456,6 +456,8 @@ class Game extends Sprite
 				miss1 = true;
 				ui.modobj1 ("end");
 				ui.modobj2 ("start");
+				
+				ui.notify ("OPDRACHT: Karin zegt dat je het beter aan de archivaris kan vragen, als je hem een folder kan brengen die hij is verloren.");
 			}
 		}
 		
@@ -466,6 +468,8 @@ class Game extends Sprite
 				miss2 = true;
 				ui.modobj2 ("end");
 				ui.modobj3 ("start");
+				
+				ui.notify ("OPDRACHT: Je hebt de folder gevonden! Breng hem naar de archivaris toe.");
 			}
 		}
 		
@@ -476,6 +480,8 @@ class Game extends Sprite
 				miss3 = true;
 				ui.modobj3 ("end");
 				ui.modobj4 ("start");
+				
+				ui.notify ("OPDRACHT: De archivist zegt dat de concierge het misschien weet in ruil voor een blikje fris.");
 			}
 		}
 		
@@ -486,6 +492,8 @@ class Game extends Sprite
 				miss4 = true;
 				ui.modobj4 ("end");
 				ui.modobj5 ("start");
+				
+				ui.notify ("OPDRACHT: Je hebt een blikje fris gevonden! Breng het naar de concierge toe.");
 			}
 		}
 		
@@ -496,6 +504,8 @@ class Game extends Sprite
 				miss5 = true;
 				ui.modobj5 ("end");
 				ui.modobj6 ("start");
+				
+				ui.notify ("OPDRACHT: De concierge heeft Tito gezien! Hij verstopt zich in een van de planten!");
 			}
 		}
 		
