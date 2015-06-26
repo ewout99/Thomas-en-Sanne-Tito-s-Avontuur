@@ -12,10 +12,13 @@ import openfl.Assets;
 
 class Level extends Sprite
 {
+	// Variables for the different bitmaps that make up the level
 	var levelcoll:Bitmap = new Bitmap (Assets.getBitmapData("img/level/collision.png"));
 	var levelback:Bitmap = new Bitmap (Assets.getBitmapData("img/level/floorplan.png"));
 	var levelwall:Bitmap = new Bitmap (Assets.getBitmapData("img/level/floorwalls.png"));
 	
+	// Initialzation of the level
+	// Adds all the 
 	public function new() 
 	{
 		super ();
@@ -25,13 +28,13 @@ class Level extends Sprite
 		addChild ( levelwall );
 	}
 	
-	public function transparencycheck (x:Int, y:Int)
+	// Checks if the transparcy for colsion
+	// Returns a bool
+	public function transparencycheck (x:Int, y:Int):Bool
 	{
 		var checkvalid:Bool = false;
 		
 		var checkcol:Int = levelcoll.bitmapData.getPixel32 (x, y);
-		
-		//trace (x + "   " + y + "   " + checkcol);
 		
 		if (checkcol == -16777216)
 		{

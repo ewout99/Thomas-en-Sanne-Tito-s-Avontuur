@@ -17,11 +17,14 @@ import openfl.text.TextField;
  */
 class UI extends Sprite
 {
+	// Fix for the stage height and width
 	var UIx:Int = Lib.current.stage.stageWidth;
 	var UIy:Int = Lib.current.stage.stageHeight;
+	// Button variables
 	public var hint:Button = new Button("", "img/Hinthover.png", "img/Hint.png");
 	public var progressInt:Int = 1;
 	
+	// Textfields variables
 	var textfield:TextField = new TextField ();
 	var textfield2:TextField = new TextField ();
 	var textfield3:TextField = new TextField ();
@@ -30,9 +33,10 @@ class UI extends Sprite
 	var tooltip3:TextField = new TextField ();
 	var tooltip4:TextField = new TextField ();
 	
-	var curstage = Lib.current.stage;
+	//var curstage = Lib.current.stage;
 	
 	var objectives = new Bitmap(Assets.getBitmapData("img/Objectives.png"));
+	// Objectives varibales
 	var objective1:Button;
 	var objective2:Button;
 	var objective3:Button;
@@ -137,7 +141,10 @@ class UI extends Sprite
 	{
 		if ( change == "start" )
 		{
-			removeChild ( objective1 );
+			if (objective1 != null)
+			{
+				removeChild ( objective1 );
+			}
 			objective1 = new Button ("1","img/objectives/objective_1.png","img/objectives/objective_1.png");
 			objective1.width = objective1.width / 1.5;
 			objective1.height = objective1.height / 1.5;
@@ -150,7 +157,10 @@ class UI extends Sprite
 		
 		else if ( change == "end" )
 		{
-			removeChild ( objective1 );
+			if (objective1 != null) 
+			{
+				removeChild ( objective1 );
+			}
 			objective1 = new Button ("1","img/objectives/objective_2_alt.png","img/objectives/objective_2_alt.png");
 			objective1.width = objective1.width / 1.5;
 			objective1.height = objective1.height / 1.5;
@@ -165,7 +175,10 @@ class UI extends Sprite
 	{
 		if ( change == "start" )
 		{
-			removeChild ( objective2 );
+			if ( objective2 != null )
+			{
+				removeChild ( objective2 );
+			}
 			objective2 = new Button ("2","img/objectives/objective_2.png","img/objectives/objective_2.png");
 			objective2.width = objective2.width / 1.5;
 			objective2.height = objective2.height / 1.5;
@@ -177,7 +190,10 @@ class UI extends Sprite
 		
 		else if ( change == "end" )
 		{
-			removeChild ( objective2 );
+			if ( objective2 != null )
+			{
+				removeChild ( objective2 );
+			}
 			objective2 = new Button ("2","img/objectives/objective_1_alt.png","img/objectives/objective_1_alt.png");
 			objective2.width = objective2.width / 1.5;
 			objective2.height = objective2.height / 1.5;
@@ -192,7 +208,10 @@ class UI extends Sprite
 	{
 		if ( change == "start" )
 		{
-			removeChild ( objective3 );
+			if ( objective3 != null)
+			{
+				removeChild ( objective3 );
+			}
 			objective3 = new Button ("3","img/objectives/objective_3.png","img/objectives/objective_3.png");
 			objective3.width = objective3.width / 1.5;
 			objective3.height = objective3.height / 1.5;
@@ -204,7 +223,10 @@ class UI extends Sprite
 		
 		else if ( change == "end" )
 		{
-			removeChild ( objective3 );
+			if ( objective3 != null)
+			{
+				removeChild ( objective3 );
+			}
 			objective3 = new Button ("3","img/objectives/objective_3_alt.png","img/objectives/objective_3_alt.png");
 			objective3.width = objective3.width / 1.5;
 			objective3.height = objective3.height / 1.5;
@@ -219,7 +241,10 @@ class UI extends Sprite
 	{
 		if ( change == "start" )
 		{
-			removeChild ( objective4 );
+			if ( objective4 != null )
+			{
+				removeChild ( objective4 );
+			}
 			objective4 = new Button ("4","img/objectives/objective_4.png","img/objectives/objective_4.png");
 			objective4.width = objective4.width / 1.5;
 			objective4.height = objective4.height / 1.5;
@@ -231,7 +256,10 @@ class UI extends Sprite
 		
 		else if ( change == "end" )
 		{
-			removeChild ( objective4 );
+			if (objective4 != null)
+			{
+				removeChild ( objective4 );
+			}
 			objective4 = new Button ("4","img/objectives/objective_4_alt.png","img/objectives/objective_4_alt.png");
 			objective4.width = objective4.width / 1.5;
 			objective4.height = objective4.height / 1.5;
@@ -246,7 +274,10 @@ class UI extends Sprite
 	{
 		if ( change == "start" )
 		{
-			removeChild ( objective5 );
+			if ( objective5 != null)
+			{
+				removeChild ( objective5 );
+			}
 			objective5 = new Button ("5","img/objectives/objective_5.png","img/objectives/objective_5.png");
 			objective5.width = objective5.width / 1.5;
 			objective5.height = objective5.height / 1.5;
@@ -258,7 +289,10 @@ class UI extends Sprite
 		
 		else if ( change == "end" )
 		{
-			removeChild ( objective5 );
+			if ( objective5 != null)
+			{
+				removeChild ( objective5 );
+			}
 			objective5 = new Button ("5","img/objectives/objective_5_alt.png","img/objectives/objective_5_alt.png");
 			objective5.width = objective5.width / 1.5;
 			objective5.height = objective5.height / 1.5;
@@ -273,7 +307,10 @@ class UI extends Sprite
 	{
 		if ( change == "start" )
 		{
-			removeChild ( objective6 );
+			if (objective6 != null)
+			{
+				removeChild ( objective6 );
+			}
 			objective6 = new Button ("6","img/objectives/objective_6.png","img/objectives/objective_6.png");
 			objective6.width = objective6.width / 1.5;
 			objective6.height = objective6.height / 1.5;
@@ -285,7 +322,10 @@ class UI extends Sprite
 		
 		else if ( change == "end" )
 		{
-			removeChild ( objective6 );
+			if (objective6 != null)
+			{
+				removeChild ( objective6 );
+			}
 			objective6 = new Button ("6","img/objectives/objective_1_alt.png","img/objectives/objective_1_alt.png");
 			objective6.width = objective6.width / 1.5;
 			objective6.height = objective6.height / 1.5;
@@ -333,11 +373,29 @@ class UI extends Sprite
 	
 	public function notify (text:String)
 	{
-		removeChild ( textfield );
-		removeChild ( textfield2 );
-		removeChild ( textfield3 );
-		textfield3.text = textfield2.text;
-		textfield2.text = textfield.text;
+		addChild ( textfield );
+		addChild ( textfield2 );
+		addChild ( textfield3 );
+		if ( textfield != null)
+		{
+			removeChild ( textfield );
+		}
+		if ( textfield2 != null)
+		{
+			removeChild ( textfield2 );
+		}
+		if ( textfield3 != null)
+		{
+			removeChild ( textfield3 );
+		}
+		if (textfield2 != null) 
+		{
+			textfield3.text = textfield2.text;
+		}
+		if (textfield != null) 
+		{
+			textfield2.text = textfield.text;
+		}
 		textfield.text = text;
 		addChild ( textfield );
 		addChild ( textfield2 );

@@ -23,6 +23,7 @@ class Options extends Sprite
 	var X:Int = Lib.current.stage.stageWidth;
 	var Y:Int = Lib.current.stage.stageHeight;
 	
+	// Intiliazation of the options screen
 	public function new() 
 	{
 		super();
@@ -30,6 +31,7 @@ class Options extends Sprite
 		drawButton();
 	}
 	
+	// Adds background to the options screen
 	private	function drawbackground()
 	{
 		var background = new Bitmap(Assets.getBitmapData("img/Optionsbackground.png"));
@@ -67,10 +69,16 @@ class Options extends Sprite
 		addChild(returnButton);
 		returnButton.addEventListener(MouseEvent.CLICK, back);
 		
-		returnGame.x = (X / 2 - returnButton.width / 2 );
-		returnGame.y = (Y * 4 / 5 - returnButton.height / 2 );
-		//addChild(returnGame); IES BORKED, STARTS NEW GAME
-		returnGame.addEventListener(MouseEvent.CLICK, backgame);
+		// Return to the current game
+		// only starts if there is a current game
+		if (Main.getInstance().currentGame != null)
+		{
+			returnGame.x = (X / 2 - returnButton.width / 2 );
+			returnGame.y = (Y * (9 / 10) - returnButton.height / 2 );
+			addChild(returnGame);
+			returnGame.addEventListener(MouseEvent.CLICK, backgame);
+		}
+		
 	}
 	
 	// Lets the buttons adjust the float in Main
@@ -94,9 +102,10 @@ class Options extends Sprite
 		}
 	}
 	
+	// Returns the to current game
 	function backgame (e:MouseEvent)
 	{
-		Main.getInstance().switchScreen(Main.GAME_SCREEN);
+		Main.getInstance().switchScreen(Main.CURRENT_GAME);
 	}
 	
 	// Return to the main menu

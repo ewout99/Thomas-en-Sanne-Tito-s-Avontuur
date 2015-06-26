@@ -7,7 +7,7 @@ import openfl.events.MouseEvent;
 import openfl.Assets;
 
 /**
- * ...
+ * Not fully developed so not implemented into the game here for later use.
  * @author Linnea
  */
 class ChatBubble extends Sprite

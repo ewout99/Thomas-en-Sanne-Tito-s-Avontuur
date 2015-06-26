@@ -15,9 +15,6 @@ import openfl.Lib;
 
 class Player extends Sprite
 {
-	//var stageY:Int = Lib.current.stage.stageHeight;
-	//var stageX:Int = Lib.current.stage.stageWidth;
-	//public var activeKey:Int = 0;
 	var animationtimer:Timer = new Timer (100);
 	var currentpath:String = "front_";
 	var currentframe:Int = 1;
@@ -43,32 +40,6 @@ class Player extends Sprite
 		
 		updategraphic ("front_1");
 	}
-	
-	/*public function animate ( path:String )
-	{
-		lastpath = path;
-		
-		var animationcounter = 1;
-		
-		animationtimer.run = function ()
-		{
-			if (animationcounter == 5)
-			{
-				animationcounter = 1;
-			}
-			
-			updategraphic (path + animationcounter);
-			
-			animationcounter ++;
-		}
-	}*/
-	
-	/*public function stopanimation ()
-	{
-		animationtimer.stop ();
-		
-		updategraphic ( lastpath + "1" );
-	}*/
 	
 	public function updateplayer (key:String)
 	{
@@ -117,7 +88,10 @@ class Player extends Sprite
 	{
 		var data:BitmapData = Assets.getBitmapData ("img/" + charType2 + "/" + path + ".png");
 	 
-		removeChild (character);
+		if (character != null) 
+		{
+			removeChild (character);
+		}
 		character = new Bitmap (data);
 		character.x = character.x - character.width / 2;
 		character.y = character.y - character.height + 5;

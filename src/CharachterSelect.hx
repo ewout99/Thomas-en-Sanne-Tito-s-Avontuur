@@ -29,6 +29,7 @@ class CharachterSelect extends Sprite
 		drawButtons ();
 	}
 	
+	// Draws the background and the two characters
 	function drawstuff ()
 	{
         var background = new Bitmap(Assets.getBitmapData("img/Characterbackground.png"));
@@ -94,6 +95,7 @@ class CharachterSelect extends Sprite
 		}
 	}
 	
+	// Call back to the Main menu screen
 	function back(e:MouseEvent)
 	{
 		Main.getInstance().switchScreen(Main.MAIN_MENU_SCREEN);

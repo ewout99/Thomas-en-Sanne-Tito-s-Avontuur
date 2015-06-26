@@ -12,11 +12,8 @@ import openfl.Assets.loadSound;
 /**
  * ...
  * @author Linnea
- * 
  * music class for the game
  * will repeat a song until public function ends it
- * 
- * 
  */
 class Music extends Sprite 
 {
@@ -32,7 +29,6 @@ class Music extends Sprite
 	#end
 
 	// variables for music volume and a soundchannel
-	
 	var musicVolume:Float;
 	var soundChannel:SoundChannel;
 	
@@ -43,7 +39,6 @@ class Music extends Sprite
 	}
 	
 	// function to adjust the volume in this class, gets the musicvolume float as a input.
-	
 	public function updateMusicVolume (input:Float, inputDirection:String)
 	{
 		if (inputDirection == "up")
@@ -61,10 +56,9 @@ class Music extends Sprite
 	}
 	
 	// function to stop all music
-	
 	public function stopMusic ()
 	{
-		#if html
+		#if html5
 		soundChannel.stop();
 		#elseif flash
 		soundChannel.stop ();
@@ -72,11 +66,13 @@ class Music extends Sprite
 	}
 	
 	// starts the ingame music (currently not implemented due to not having statisfactory music)
-	
 	public function gameMusic ()
-	
 	{
-		#if html
+		#if html5
+		soundChannel = GameMusic.play();
+		soundChannel.soundTransform = new SoundTransform(musicVolume);
+		soundChannel.addEventListener(Event.SOUND_COMPLETE, gameMusicRepeat );
+		#elseif flash
 		soundChannel = GameMusic.play();
 		soundChannel.soundTransform = new SoundTransform(musicVolume);
 		soundChannel.addEventListener(Event.SOUND_COMPLETE, gameMusicRepeat );
@@ -87,7 +83,11 @@ class Music extends Sprite
 	
 	function gameMusicRepeat (event:Event)
 	{
-		#if html
+		#if html5
+		soundChannel = GameMusic.play();
+		soundChannel.soundTransform = new SoundTransform(musicVolume);
+		soundChannel.addEventListener(Event.SOUND_COMPLETE, gameMusicRepeat );
+		#elseif flash
 		soundChannel = GameMusic.play();
 		soundChannel.soundTransform = new SoundTransform(musicVolume);
 		soundChannel.addEventListener(Event.SOUND_COMPLETE, gameMusicRepeat );
@@ -95,12 +95,13 @@ class Music extends Sprite
 	}
 	
 	// starts the menu music
-	
 	public function mainMenuMusic ()
-	
 	{
-		#if html
-		trace("playing music");
+		#if html5
+		soundChannel = Menu.play();
+		soundChannel.soundTransform = new SoundTransform(musicVolume);
+		soundChannel.addEventListener(Event.SOUND_COMPLETE, mainMenuMusicRepeat );
+		#elseif flash
 		soundChannel = Menu.play();
 		soundChannel.soundTransform = new SoundTransform(musicVolume);
 		soundChannel.addEventListener(Event.SOUND_COMPLETE, mainMenuMusicRepeat );
@@ -108,10 +109,13 @@ class Music extends Sprite
 	}
 	
 	// repeats the menu music
-	
 	function mainMenuMusicRepeat (event:Event)
 	{
-		#if html
+		#if html5
+		soundChannel = Menu.play();
+		soundChannel.soundTransform = new SoundTransform(musicVolume);
+		soundChannel.addEventListener(Event.SOUND_COMPLETE, gameMusicRepeat );
+		#elseif flash
 		soundChannel = Menu.play();
 		soundChannel.soundTransform = new SoundTransform(musicVolume);
 		soundChannel.addEventListener(Event.SOUND_COMPLETE, gameMusicRepeat );
