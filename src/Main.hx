@@ -13,9 +13,11 @@ import openfl.system.System;
 class Main extends Sprite 
 {
 	var inited:Bool;
+	// Varbiables for msic and sound calls
 	public var music:Music = new Music();
 	public var sound:Sound = new Sound();
 	
+	// Variables for Screen switching
 	public static inline var MAIN_MENU_SCREEN:String = "main menu screen";
 	public static inline var CHAR_SELECT_SCREEN:String = "char select screen";
 	public static inline var CONTACT_SCREEN:String = "contact screen";
@@ -23,11 +25,17 @@ class Main extends Sprite
 	public static inline var OPTIONS_SCREEN:String = "options screen";
 	public static inline var GAME_SCREEN:String = "game screen";
 	public static inline var VICTORY_SCREEN:String = "victory screen";
+	public static inline var CURRENT_GAME:String = "current game";
+	var currentScreen:Sprite;
 	
+	// Variables for the currentgame
 	public var currentChar:Int = 0;
 	public var currentLevel:Int = 0;
 	
-	var currentScreen:Sprite;
+	// Variable to switch back to the menu and the game
+	public var currentGame:Game;
+	
+	// Singelton stuff
 	public static var instance:Main;
 	
 	
@@ -44,7 +52,7 @@ class Main extends Sprite
 		instance = this;
 		switchScreen (Main.MAIN_MENU_SCREEN);
 		addChild (sound);
-		//addChild (music);
+		addChild (music);
 	}
 	
 	/**
@@ -87,6 +95,8 @@ class Main extends Sprite
 				currentScreen = new Game();
 			case Main.VICTORY_SCREEN:
 				currentScreen = new Victory();
+			case Main.CURRENT_GAME:
+				currentScreen = currentGame;
 		}
 		addChild (currentScreen);
 	}
@@ -119,6 +129,7 @@ class Main extends Sprite
 		Lib.current.addChild(new Main());
 	}
 	
+	// Exit fuction for the game
 	public function exit()
 	{
 		System.exit(0);

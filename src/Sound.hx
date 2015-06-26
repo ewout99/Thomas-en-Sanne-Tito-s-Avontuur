@@ -12,10 +12,8 @@ import openfl.Assets.loadSound;
 
 
 /**
- * ...
+ * Class that holds and plays all the sound effects.
  * @author Linnea
- * 
- * 
  */
 class Sound extends Sprite 
 {
@@ -52,7 +50,6 @@ class Sound extends Sprite
 	#end
 	
 	// creating the needed variables, one volume, and 2 sepparate sound channels.
-	
 	var soundVolume: Float;
 	var ambChannel:SoundChannel;
 	var channel:SoundChannel;
@@ -70,6 +67,7 @@ class Sound extends Sprite
 	
 	}
 	
+	// Plays the sound that is requestex int the input string
 	public function playSound(input:String)
 	{
 		switch(input)
@@ -87,7 +85,6 @@ class Sound extends Sprite
 	}
 	
 	//function to adjust the volume in this class, gets the soundvolume float as a input.
-	
 	public function updateSoundVolume (input:Float, inputDirection:String)
 	{
 		if (inputDirection == "up")

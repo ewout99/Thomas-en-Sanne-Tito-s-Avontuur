@@ -6,14 +6,16 @@ import openfl.events.MouseEvent;
 import openfl.Lib;
 
 /**
- * ...
+ * Vicotry class shown at the end of the game
  * @author Kjell Neumann
  */
 class Victory extends Sprite
 {
+	// Fix for the stage width and height
 	var X:Int = Lib.current.stage.stageWidth;
 	var Y:Int = Lib.current.stage.stageHeight;
 
+	// Initilaztion of the victory screen
 	public function new() 
 	{
 		super ();
@@ -28,6 +30,7 @@ class Victory extends Sprite
 		backbutton.addEventListener (MouseEvent.CLICK, clicked);
 	}
 	
+	// Call back to the menu screen
 	function clicked (e:MouseEvent)
 	{
 		Main.getInstance().switchScreen(Main.MAIN_MENU_SCREEN);

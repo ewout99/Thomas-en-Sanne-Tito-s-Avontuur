@@ -16,6 +16,7 @@ class Contact extends Sprite
 	var X:Int = Lib.current.stage.stageWidth;
 	var Y:Int = Lib.current.stage.stageHeight;
 	
+	// New function for initialzing the contact screen
 	public function new() 
 	{
 		super();
@@ -23,12 +24,14 @@ class Contact extends Sprite
 		drawButton();
 	}
 	
+	// Draws the background for the contact screen
 	private	function drawbackground()
 	{
 		var background = new Bitmap(Assets.getBitmapData("img/Contactbackground.png"));
 		addChildAt (background, 0);
 	}
 	
+	// Add the buttons to the contact screen
 	function drawButton ()
 	{
 		returnButton.x = (X / 2 - returnButton.width /2 );
@@ -36,6 +39,8 @@ class Contact extends Sprite
 		addChild(returnButton);
 		returnButton.addEventListener(MouseEvent.CLICK, back);
 	}
+	
+	// Function to go back the main menu screen
 	function back(e:MouseEvent)
 	{
 		Main.getInstance().switchScreen(Main.MAIN_MENU_SCREEN);

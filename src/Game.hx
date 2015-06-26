@@ -4,6 +4,7 @@ import openfl.display.Sprite;
 import openfl.ui.Keyboard;
 import openfl.events.KeyboardEvent;
 import openfl.events.MouseEvent;
+import openfl.events.Event;
 import openfl.Lib;
 import haxe.Timer;
 
@@ -14,6 +15,7 @@ import haxe.Timer;
  */
 class Game extends Sprite
 {
+	// Varibales for initlzation
 	var level:Level;
 	var player:Player;
 	var ui:UI;
@@ -40,7 +42,8 @@ class Game extends Sprite
 	var key_d:Bool = false;
 	var key_e:Bool = false;
 	public var activekey:String = "none";
-
+	
+	// Initilaztion of the game
 	public function new() 
 	{
 		super();
@@ -49,6 +52,8 @@ class Game extends Sprite
 		dirtyitemcreate ();
 		createplayer ();
 		createUI();
+		initMusic();
+		Main.getInstance().currentGame = this;
 		
 		init ();
 	}
@@ -61,6 +66,7 @@ class Game extends Sprite
 	
 	//Makes player sprite adjust to pressed keys
 	
+	// Sets the keybools to true
 	function keypress (event:KeyboardEvent)
 	{
 		switch ( event.keyCode)
@@ -73,6 +79,7 @@ class Game extends Sprite
 		}
 	}
 	
+	// Sets the keybools to false
 	function keyrelease (event:KeyboardEvent)
 	{
 		switch ( event.keyCode )
@@ -87,10 +94,9 @@ class Game extends Sprite
 		{
 			activekey = "none";
 		}
-		
-		//trace ("level.x= " + level.x + " player.x= " + player.x);
 	}
 	
+	// Function for interacting
 	function interact ()
 	{
 		var returnedobject = checkvalid ();
@@ -116,6 +122,7 @@ class Game extends Sprite
 	//                                                                    //
 	//====================================================================//
 	
+	// Adds the event listeners and calls the update function
 	function init ()
 	{
 		updatetimer = new Timer (40);
@@ -163,6 +170,20 @@ class Game extends Sprite
 		
 		addChild(ui);
 	}
+	
+	// Adds event listener to the game
+	function initMusic()
+	{
+		addEventListener(Event.ADDED_TO_STAGE, startMusic);
+		
+	}
+	
+	// Starts the music
+	function startMusic (e:Event)
+	{
+		Main.getInstance().music.gameMusic();
+	}
+
 
 	//====================================================================//
 	//                                                                    //
@@ -443,10 +464,12 @@ class Game extends Sprite
 	
 	//====================================================================//
 	//                                                                    //
-	//            Mission Stuff. Kjell is a really cool guy.              //
+	//            Mission Stuff. Kjell is a really cool guy.   			  //
+	//				Yes he is kinda of awesome!!						  //
 	//                                                                    //
 	//====================================================================//
 	
+	//Missions handlers to keep track of the mission and the item
 	function missionhandler (itemid:Int)
 	{
 		if (miss1 == false)

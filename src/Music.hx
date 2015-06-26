@@ -12,11 +12,8 @@ import openfl.Assets.loadSound;
 /**
  * ...
  * @author Linnea
- * 
  * music class for the game
  * will repeat a song until public function ends it
- * 
- * 
  */
 class Music extends Sprite 
 {
@@ -32,7 +29,6 @@ class Music extends Sprite
 	#end
 
 	// variables for music volume and a soundchannel
-	
 	var musicVolume:Float;
 	var soundChannel:SoundChannel;
 	
@@ -43,7 +39,6 @@ class Music extends Sprite
 	}
 	
 	// function to adjust the volume in this class, gets the musicvolume float as a input.
-	
 	public function updateMusicVolume (input:Float, inputDirection:String)
 	{
 		if (inputDirection == "up")
@@ -61,7 +56,6 @@ class Music extends Sprite
 	}
 	
 	// function to stop all music
-	
 	public function stopMusic ()
 	{
 		#if html5
@@ -72,9 +66,7 @@ class Music extends Sprite
 	}
 	
 	// starts the ingame music (currently not implemented due to not having statisfactory music)
-	
 	public function gameMusic ()
-	
 	{
 		#if html5
 		soundChannel = GameMusic.play();
@@ -103,12 +95,9 @@ class Music extends Sprite
 	}
 	
 	// starts the menu music
-	
 	public function mainMenuMusic ()
-	
 	{
 		#if html5
-		trace("playing music");
 		soundChannel = Menu.play();
 		soundChannel.soundTransform = new SoundTransform(musicVolume);
 		soundChannel.addEventListener(Event.SOUND_COMPLETE, mainMenuMusicRepeat );
@@ -120,7 +109,6 @@ class Music extends Sprite
 	}
 	
 	// repeats the menu music
-	
 	function mainMenuMusicRepeat (event:Event)
 	{
 		#if html5
